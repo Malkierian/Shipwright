@@ -12,6 +12,7 @@
 #include <string.h>
 
 #include "global.h"
+#include "soh/Enhancements/game-interactor/GameInteractor_Anchor.h"
 
 extern PlayState* gPlayState;
 
@@ -789,6 +790,9 @@ void Entrance_SetEntranceDiscovered(u16 entranceIndex) {
     if (entranceIndex > MAX_ENTRANCE_RANDO_USED_INDEX || Entrance_GetIsEntranceDiscovered(entranceIndex)) {
         return;
     }
+#ifdef ENABLE_REMOTE_CONTROL
+    Anchor_EntranceDiscovered(entranceIndex);
+#endif
 
     u16 bitsPerIndex = sizeof(u32) * 8;
     u32 idx = entranceIndex / bitsPerIndex;

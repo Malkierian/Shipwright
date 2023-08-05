@@ -7,8 +7,10 @@
 #include <soh/Enhancements/randomizer/adult_trade_shuffle.h>
 #include <soh/Enhancements/nametag.h>
 #include <soh/Enhancements/randomizer/randomizer_check_tracker.h>
+#include <soh/Enhancements/randomizer/randomizer_entrance.h>
 #include <soh/util.h>
 #include <nlohmann/json.hpp>
+#include <unordered_set>
 
 extern "C" {
 #include <variables.h>
@@ -134,11 +136,13 @@ void from_json(const json& j, Inventory& inventory) {
 void to_json(json& j, const SohStats& sohStats) {
     j = json{
         {"fileCreatedAt", sohStats.fileCreatedAt},
+        {"entrancesDiscovered", sohStats.entrancesDiscovered},
     };
 }
 
 void from_json(const json& j, SohStats& sohStats) {
     j.contains("fileCreatedAt") ? j.at("fileCreatedAt").get_to(sohStats.fileCreatedAt) : gSaveContext.sohStats.fileCreatedAt;
+    j.at("entrancesDiscovered").get_to(sohStats.entrancesDiscovered);
 }
 
 void to_json(json& j, const SaveContext& saveContext) {
@@ -189,10 +193,11 @@ void from_json(const json& j, SaveContext& saveContext) {
 
 std::map<uint32_t, AnchorClient> GameInteractorAnchor::AnchorClients = {};
 std::vector<uint32_t> GameInteractorAnchor::FairyIndexToClientId = {};
-std::string GameInteractorAnchor::clientVersion = "Anchor 9 + Triforce Hunt + Tracker Rework";
+std::string GameInteractorAnchor::clientVersion = "Anchor 9 + Triforce Hunt + Tracker Rework 2";
 std::string GameInteractorAnchor::seed = "00000";
 std::vector<std::pair<uint16_t, int16_t>> receivedItems = {};
 std::vector<AnchorMessage> anchorMessages = {};
+std::unordered_set<uint16_t> remoteEntrancesDiscovered = {};
 uint32_t notificationId = 0;
 
 void Anchor_DisplayMessage(AnchorMessage message = {}) {
@@ -409,6 +414,11 @@ void GameInteractorAnchor::HandleRemoteJson(nlohmann::json payload) {
         auto data = payload["checkData"].get<RandomizerCheckTrackerData>();
         CheckTracker::UpdateCheck(check, data);
     }
+    if (payload["type"] == "ENTRANCE_DISCOVERED") {
+        auto entranceIndex = payload["entranceIndex"].get<uint16_t>();
+        remoteEntrancesDiscovered.insert(entranceIndex);
+        Entrance_SetEntranceDiscovered(entranceIndex);
+    }
     if (payload["type"] == "UPDATE_BEANS_BOUGHT" && GameInteractor::IsSaveLoaded()) {
         BEANS_BOUGHT = payload["amount"].get<uint8_t>();
     }
@@ -477,6 +487,10 @@ void Anchor_ParseSaveStateFromRemote(nlohmann::json payload) {
             gPlayState->actorCtx.flags.clear = loadedData.sceneFlags[i].clear;
             gPlayState->actorCtx.flags.collect = loadedData.sceneFlags[i].collect;
         }
+    }
+
+    for (int i = 0; i < SAVEFILE_ENTRANCES_DISCOVERED_IDX_COUNT; i++) {
+        gSaveContext.sohStats.entrancesDiscovered[i] = loadedData.sohStats.entrancesDiscovered[i];
     }
 
     for (int i = 0; i < 14; i++) {
@@ -695,6 +709,21 @@ void Anchor_RegisterHooks() {
 
         GameInteractorAnchor::Instance->TransmitJsonToRemote(payload);
     });
+}
+
+void Anchor_EntranceDiscovered(uint16_t entranceIndex) {
+    if (!GameInteractor::Instance->isRemoteInteractorConnected || !GameInteractor::Instance->IsSaveLoaded())
+        return;
+    if (!remoteEntrancesDiscovered.empty() && remoteEntrancesDiscovered.contains(entranceIndex)) {
+        remoteEntrancesDiscovered.erase(remoteEntrancesDiscovered.find(entranceIndex));
+        return;
+    }
+    nlohmann::json payload;
+
+    payload["type"] = "ENTRANCE_DISCOVERED";
+    payload["entranceIndex"] = entranceIndex;
+
+    GameInteractorAnchor::Instance->TransmitJsonToRemote(payload);
 }
 
 void Anchor_UpdateCheckData(uint32_t locationIndex) {

@@ -285,7 +285,9 @@ void SetCheckCollected(RandomizerCheck rc) {
     } else {
         gSaveContext.checkTrackerData[rc].skipped = false;
     }
-    checkAreas.erase(checkAreas.begin());
+    if (!checkAreas.empty() && checkAreas.at(0) == rcObj.rcArea) {
+        checkAreas.erase(checkAreas.begin());
+    }
     SaveManager::Instance->SaveSection(gSaveContext.fileNum, sectionId, true);
 
 #ifdef ENABLE_REMOTE_CONTROL
@@ -669,6 +671,9 @@ void CheckTrackerItemReceive(GetItemEntry giEntry) {
             return;
         } else if (giEntry.itemId == ITEM_BRACELET) {
             SetCheckCollected(RC_GC_DARUNIAS_JOY);
+            return;
+        } else if (giEntry.itemId == ITEM_LETTER_ZELDA) {
+            SetCheckCollected(RC_HC_ZELDAS_LETTER);
             return;
         }
     }

@@ -1511,6 +1511,12 @@ void DrawRandomizerMenu() {
                 mCheckTrackerSettingsWindow->ToggleVisibility();
             }
         }
+        UIWidgets::Spacer(0);
+        if (mCheckTrackerSettingsWindow) {
+            if (ImGui::Button(GetWindowButtonText("Plando Maker", CVarGetInteger("gPlandoMakerEnabled", 0)).c_str(), buttonSize)) {
+                mCheckTrackerSettingsWindow->ToggleVisibility();
+            }
+        }
         ImGui::PopStyleVar(3);
         ImGui::PopStyleColor(1);
 

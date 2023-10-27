@@ -30,6 +30,7 @@
 #include "soh/Enhancements/presets.h"
 #include "soh/resource/type/Skeleton.h"
 #include "libultraship/libultraship.h"
+#include "soh/Enhancements/randomizer/plando.h"
 
 #ifdef ENABLE_CROWD_CONTROL
 #include "Enhancements/crowd-control/CrowdControl.h"
@@ -125,6 +126,7 @@ namespace SohGui {
     std::shared_ptr<ItemTrackerSettingsWindow> mItemTrackerSettingsWindow;
     std::shared_ptr<ItemTrackerWindow> mItemTrackerWindow;
     std::shared_ptr<RandomizerSettingsWindow> mRandomizerSettingsWindow;
+    std::shared_ptr<PlandoMakerWindow> mPlandoMakerWindow;
 
     void SetupGuiElements() {
         auto gui = LUS::Context::GetInstance()->GetWindow()->GetGui();
@@ -182,6 +184,8 @@ namespace SohGui {
         mItemTrackerSettingsWindow = std::make_shared<ItemTrackerSettingsWindow>("gItemTrackerSettingsEnabled", "Item Tracker Settings");
         gui->AddGuiWindow(mItemTrackerSettingsWindow);
         mRandomizerSettingsWindow = std::make_shared<RandomizerSettingsWindow>("gRandomizerSettingsEnabled", "Randomizer Settings");
+        gui->AddGuiWindow(mRandomizerSettingsWindow);
+        mPlandoMakerWindow = std::make_shared<PlandoMakerWindow>("gPlandoMakerEnabled", "Plando Maker");
         gui->AddGuiWindow(mRandomizerSettingsWindow);
     }
 

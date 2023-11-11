@@ -2424,6 +2424,7 @@ void func_8010BD88(PlayState* play, u16 arg1);
 u8 Message_GetState(MessageContext* msgCtx);
 void Message_Draw(PlayState* play);
 void Message_Update(PlayState* play);
+void Message_DumpText();
 void Message_SetTables(void);
 f32 Message_GetCharacterWidth(unsigned char characterIndex);
 void GameOver_Init(PlayState* play);

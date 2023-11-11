@@ -10,6 +10,7 @@
 #include "soh/Enhancements/presets.h"
 #include "soh/Enhancements/mods.h"
 #include "Enhancements/cosmetics/authenticGfxPatches.h"
+#include "functions.h"
 #ifdef ENABLE_CROWD_CONTROL
 #include "Enhancements/crowd-control/CrowdControl.h"
 #endif
@@ -155,6 +156,10 @@ void DrawShipMenu() {
 #endif
                             )) {
             std::reinterpret_pointer_cast<LUS::ConsoleWindow>(LUS::Context::GetInstance()->GetWindow()->GetGui()->GetGuiWindow("Console"))->Dispatch("reset");
+        }
+        UIWidgets::Spacer(0);
+        if (ImGui::MenuItem("Dump Text")) {
+            Message_DumpText();
         }
 #if !defined(__SWITCH__) && !defined(__WIIU__)
         UIWidgets::Spacer(0);

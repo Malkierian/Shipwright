@@ -362,7 +362,7 @@ void SaveManager::Init() {
     const std::filesystem::path sGlobalPath = sSavePath / std::string("global.sav");
     auto sOldSavePath = LUS::Context::GetPathRelativeToAppDirectory("oot_save.sav");
     auto sOldBackupSavePath = LUS::Context::GetPathRelativeToAppDirectory("oot_save.bak");
-    GameInteractor::Instance->RegisterGameHook<GameInteractor::OnExitGame>([this](uint32_t fileNum) { ThreadPoolWait(); });
+    GameInteractor::Instance->RegisterGameHook<GameInteractor::OnExitGame>([this](uint32_t fileNum) {ThreadPoolWait(); });
 
     // If the save directory does not exist, create it
     if (!std::filesystem::exists(sSavePath)) {

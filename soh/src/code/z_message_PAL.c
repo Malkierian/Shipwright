@@ -3394,6 +3394,27 @@ void Message_Update(PlayState* play) {
     }
 }
 
+void Message_DumpText() {
+    MessageTableEntry* messageTableEntry = sNesMessageEntryTablePtr;
+    while (messageTableEntry->textId < 0xFFFF && messageTableEntry->textId != 0xFDFD) {
+        Font font;
+
+        //foundSeg = messageTableEntry->segment;
+        font.charTexBuf[0] = messageTableEntry->typePos;
+
+        //nextSeg = messageTableEntry->segment;
+        font.msgOffset = messageTableEntry->segment;
+        font.msgLength = messageTableEntry->msgSize;
+        int32_t msgLength = font.msgLength;
+        char* src = (uintptr_t)font.msgOffset;
+        memcpy(font.msgBuf, src, msgLength);
+        font.msgBuf[msgLength] = 0;
+        msgLength++;
+        Log_Debug(messageTableEntry->textId, font.msgBuf);
+        messageTableEntry++;
+    }
+}
+
 void Message_SetTables(void) {
     OTRMessage_Init();
 

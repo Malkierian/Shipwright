@@ -2511,3 +2511,8 @@ extern "C" void Gfx_RegisterBlendedTexture(const char* name, u8* mask, u8* repla
 extern "C" void CheckTracker_OnMessageClose() {
     CheckTracker::CheckTrackerDialogClosed();
 }
+
+extern "C" void Log_Debug(int16_t id, const char* text) {
+    std::string msg = std::format("ID: 0x{:04X}; Text: {}", id, text);
+    SPDLOG_INFO(msg);
+}

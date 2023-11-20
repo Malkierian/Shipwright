@@ -908,80 +908,88 @@ int copy_file(const char* src, const char* dst) {
 // Threaded SaveFile takes copy of gSaveContext for local unmodified storage
 
 void SaveManager::SaveFileThreaded(int fileNum, SaveContext* saveContext, int sectionID) {
-    SPDLOG_INFO("Save File - fileNum: {}", fileNum);
-    // Needed for first time save, hasn't changed in forever anyway
-    saveBlock["version"] = 1;
-    if (sectionID == SECTION_ID_BASE) {
-        for (auto& sectionHandlerPair : sectionSaveHandlers) {
-            auto& saveFuncInfo = sectionHandlerPair.second;
-            // Don't call SaveFuncs for sections that aren't tied to game save
-            if (!saveFuncInfo.saveWithBase) {
-                continue;
-            }
-            nlohmann::json& sectionBlock = saveBlock["sections"][saveFuncInfo.name];
-            sectionBlock["version"] = sectionHandlerPair.second.version;
-            // If any save file is loaded for medatata, or a spoiler log is loaded (not sure which at this point), there is still data in the "randomizer" section
-            // This clears the randomizer data block if and only if the section being called is "randomizer" and the current save file is not a randomizer save file.
-            if (sectionHandlerPair.second.name == "randomizer" && !IS_RANDO) {
-                sectionBlock["data"] = nlohmann::json::object();
-                continue;
-            }
+    try {
+        SPDLOG_INFO("Save File - fileNum: {}", fileNum);
+        // Needed for first time save, hasn't changed in forever anyway
+        saveBlock["version"] = 1;
+        if (sectionID == SECTION_ID_BASE) {
+            for (auto& sectionHandlerPair : sectionSaveHandlers) {
+                auto& saveFuncInfo = sectionHandlerPair.second;
+                // Don't call SaveFuncs for sections that aren't tied to game save
+                if (!saveFuncInfo.saveWithBase) {
+                    continue;
+                }
+                nlohmann::json& sectionBlock = saveBlock["sections"][saveFuncInfo.name];
+                sectionBlock["version"] = sectionHandlerPair.second.version;
+                // If any save file is loaded for medatata, or a spoiler log is loaded (not sure which at this point),
+                // there is still data in the "randomizer" section This clears the randomizer data block if and only if
+                // the section being called is "randomizer" and the current save file is not a randomizer save file.
+                if (sectionHandlerPair.second.name == "randomizer" && !IS_RANDO) {
+                    sectionBlock["data"] = nlohmann::json::object();
+                    continue;
+                }
 
+                currentJsonContext = &sectionBlock["data"];
+                sectionHandlerPair.second.func(saveContext, sectionID, true);
+            }
+        } else {
+            SaveFuncInfo svi = sectionSaveHandlers.find(sectionID)->second;
+            auto& sectionName = svi.name;
+            auto sectionVersion = svi.version;
+            // If section has a parentSection, it is a subsection. Load parentSection version and set sectionBlock to
+            // parent string
+            if (svi.parentSection != -1 && svi.parentSection < sectionIndex) {
+                auto parentSvi = sectionSaveHandlers.find(svi.parentSection)->second;
+                sectionName = parentSvi.name;
+                sectionVersion = parentSvi.version;
+            }
+            nlohmann::json& sectionBlock = saveBlock["sections"][sectionName];
+            sectionBlock["version"] = sectionVersion;
             currentJsonContext = &sectionBlock["data"];
-            sectionHandlerPair.second.func(saveContext, sectionID, true);
+            svi.func(saveContext, sectionID, false);
         }
-    } else {
-        SaveFuncInfo svi = sectionSaveHandlers.find(sectionID)->second;
-        auto& sectionName = svi.name;
-        auto sectionVersion = svi.version;
-        // If section has a parentSection, it is a subsection. Load parentSection version and set sectionBlock to parent string
-        if (svi.parentSection != -1 && svi.parentSection < sectionIndex) {
-            auto parentSvi = sectionSaveHandlers.find(svi.parentSection)->second;
-            sectionName = parentSvi.name;
-            sectionVersion = parentSvi.version;
+
+        std::filesystem::path fileName = GetFileName(fileNum);
+        std::filesystem::path tempFile = GetFileTempName(fileNum);
+
+        if (std::filesystem::exists(tempFile)) {
+            std::filesystem::remove(tempFile);
         }
-        nlohmann::json& sectionBlock = saveBlock["sections"][sectionName];
-        sectionBlock["version"] = sectionVersion;
-        currentJsonContext = &sectionBlock["data"];
-        svi.func(saveContext, sectionID, false);
-    }
-
-    std::filesystem::path fileName = GetFileName(fileNum);
-    std::filesystem::path tempFile = GetFileTempName(fileNum);
-
-    if (std::filesystem::exists(tempFile)) {
-        std::filesystem::remove(tempFile);
-    }
 
 #if defined(__SWITCH__) || defined(__WIIU__)
-    FILE* w = fopen(tempFile.c_str(), "w");
-    std::string json_string = saveBlock.dump(4);
-    fwrite(json_string.c_str(), sizeof(char), json_string.length(), w);
-    fclose(w);
+        FILE* w = fopen(tempFile.c_str(), "w");
+        std::string json_string = saveBlock.dump(4);
+        fwrite(json_string.c_str(), sizeof(char), json_string.length(), w);
+        fclose(w);
 #else
-    std::ofstream output(tempFile);
-    output << std::setw(4) << saveBlock << std::endl;
-    output.close();
+        std::ofstream output(tempFile);
+        output << std::setw(4) << saveBlock << std::endl;
+        output.close();
 #endif
 
-    if (std::filesystem::exists(fileName)) {
-        std::filesystem::remove(fileName);
-    }
-    
+        if (std::filesystem::exists(fileName)) {
+            std::filesystem::remove(fileName);
+        }
+
 #if defined(__SWITCH__) || defined(__WIIU__)
-    copy_file(tempFile.c_str(), fileName.c_str());
+        copy_file(tempFile.c_str(), fileName.c_str());
 #else
-    std::filesystem::copy_file(tempFile, fileName);
+        std::filesystem::copy_file(tempFile, fileName);
 #endif
-    
-    if (std::filesystem::exists(tempFile)) {
-        std::filesystem::remove(tempFile);
-    }
 
-    delete saveContext;
-    InitMeta(fileNum);
-    GameInteractor::Instance->ExecuteHooks<GameInteractor::OnSaveFile>(fileNum);
-    SPDLOG_INFO("Save File Finish - fileNum: {}", fileNum);
+        if (std::filesystem::exists(tempFile)) {
+            std::filesystem::remove(tempFile);
+        }
+
+        delete saveContext;
+        InitMeta(fileNum);
+        GameInteractor::Instance->ExecuteHooks<GameInteractor::OnSaveFile>(fileNum);
+        SPDLOG_INFO("Save File Finish - fileNum: {}", fileNum);
+    } catch (const std::exception& e) {
+        SPDLOG_ERROR("Caught std::exception in SaveFileThreaded. Exception: {}", e.what());
+    } catch (...) {
+        SPDLOG_ERROR("Caught unknown exception in SaveFileThreaded.");
+    }
 }
 
 // SaveSection creates a copy of gSaveContext to prevent mid-save data modification, and passes its reference to SaveFileThreaded

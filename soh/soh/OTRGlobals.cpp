@@ -5,6 +5,8 @@
 #include <filesystem>
 #include <fstream>
 #include <chrono>
+#include <exception>
+#include <stdexcept>
 
 #include <ResourceManager.h>
 #include <File.h>
@@ -426,46 +428,52 @@ std::unordered_map<std::string, ExtensionEntry> ExtensionCache;
 
 void OTRAudio_Thread() {
     while (audio.running) {
-        {
+        try {
+            {
+                std::unique_lock<std::mutex> Lock(audio.mutex);
+                while (!audio.processing && audio.running) {
+                    audio.cv_to_thread.wait(Lock);
+                }
+
+                if (!audio.running) {
+                    break;
+                }
+            }
             std::unique_lock<std::mutex> Lock(audio.mutex);
-            while (!audio.processing && audio.running) {
-                audio.cv_to_thread.wait(Lock);
+            //AudioMgr_ThreadEntry(&gAudioMgr);
+            // 528 and 544 relate to 60 fps at 32 kHz 32000/60 = 533.333..
+            // in an ideal world, one third of the calls should use num_samples=544 and two thirds num_samples=528
+            //#define SAMPLES_HIGH 560
+            //#define SAMPLES_LOW 528
+            // PAL values
+            //#define SAMPLES_HIGH 656
+            //#define SAMPLES_LOW 624
+
+            // 44KHZ values
+            #define SAMPLES_HIGH 752
+            #define SAMPLES_LOW 720
+
+            #define AUDIO_FRAMES_PER_UPDATE (R_UPDATE_RATE > 0 ? R_UPDATE_RATE : 1 )
+            #define NUM_AUDIO_CHANNELS 2
+
+            int samples_left = AudioPlayer_Buffered();
+            u32 num_audio_samples = samples_left < AudioPlayer_GetDesiredBuffered() ? SAMPLES_HIGH : SAMPLES_LOW;
+
+            // 3 is the maximum authentic frame divisor.
+            s16 audio_buffer[SAMPLES_HIGH * NUM_AUDIO_CHANNELS * 3];
+            for (int i = 0; i < AUDIO_FRAMES_PER_UPDATE; i++) {
+                AudioMgr_CreateNextAudioBuffer(audio_buffer + i * (num_audio_samples * NUM_AUDIO_CHANNELS), num_audio_samples);
             }
 
-            if (!audio.running) {
-                break;
-            }
+            AudioPlayer_Play((u8*)audio_buffer, num_audio_samples * (sizeof(int16_t) * NUM_AUDIO_CHANNELS * AUDIO_FRAMES_PER_UPDATE));
+
+            audio.processing = false;
+            audio.cv_from_thread.notify_one();
+        } catch (const std::exception& e) {
+            SPDLOG_ERROR("Caught std::exception in OTRAudio_Thread. Exception: {}", e.what());
+        } catch (...) {
+            SPDLOG_ERROR("Caught unknown exception in OTRAudio_Thread.");
         }
-        std::unique_lock<std::mutex> Lock(audio.mutex);
-        //AudioMgr_ThreadEntry(&gAudioMgr);
-        // 528 and 544 relate to 60 fps at 32 kHz 32000/60 = 533.333..
-        // in an ideal world, one third of the calls should use num_samples=544 and two thirds num_samples=528
-        //#define SAMPLES_HIGH 560
-        //#define SAMPLES_LOW 528
-        // PAL values
-        //#define SAMPLES_HIGH 656
-        //#define SAMPLES_LOW 624
-
-        // 44KHZ values
-        #define SAMPLES_HIGH 752
-        #define SAMPLES_LOW 720
-
-        #define AUDIO_FRAMES_PER_UPDATE (R_UPDATE_RATE > 0 ? R_UPDATE_RATE : 1 )
-        #define NUM_AUDIO_CHANNELS 2
-
-        int samples_left = AudioPlayer_Buffered();
-        u32 num_audio_samples = samples_left < AudioPlayer_GetDesiredBuffered() ? SAMPLES_HIGH : SAMPLES_LOW;
-
-        // 3 is the maximum authentic frame divisor.
-        s16 audio_buffer[SAMPLES_HIGH * NUM_AUDIO_CHANNELS * 3];
-        for (int i = 0; i < AUDIO_FRAMES_PER_UPDATE; i++) {
-            AudioMgr_CreateNextAudioBuffer(audio_buffer + i * (num_audio_samples * NUM_AUDIO_CHANNELS), num_audio_samples);
-        }
-
-        AudioPlayer_Play((u8*)audio_buffer, num_audio_samples * (sizeof(int16_t) * NUM_AUDIO_CHANNELS * AUDIO_FRAMES_PER_UPDATE));
-
-        audio.processing = false;
-        audio.cv_from_thread.notify_one();
     }
 }
 

@@ -517,6 +517,70 @@ void Context::ParseHintJson(nlohmann::json spoilerFileJson) {
     }
 }
 
+std::map<RandomizerGet, uint32_t> RandoGetToFlag = {
+    { RG_KOKIRI_SWORD,   EQUIP_FLAG_SWORD_KOKIRI },
+    { RG_MASTER_SWORD,   EQUIP_FLAG_SWORD_MASTER },
+    { RG_BIGGORON_SWORD, EQUIP_FLAG_SWORD_BGS },
+    { RG_DEKU_SHIELD,    EQUIP_FLAG_SHIELD_DEKU },
+    { RG_HYLIAN_SHIELD,  EQUIP_FLAG_SHIELD_HYLIAN },
+    { RG_MIRROR_SHIELD,  EQUIP_FLAG_SHIELD_MIRROR },
+    { RG_GORON_TUNIC,    EQUIP_FLAG_TUNIC_GORON },
+    { RG_ZORA_TUNIC,     EQUIP_FLAG_TUNIC_ZORA },
+    { RG_IRON_BOOTS,     EQUIP_FLAG_BOOTS_IRON },
+    { RG_HOVER_BOOTS,    EQUIP_FLAG_BOOTS_HOVER },
+};
+
+void Context::ApplyItemEffect(Item item, bool remove) {
+    switch (item.GetItemType()) {
+        case ITEMTYPE_ITEM:
+            break;
+        case ITEMTYPE_EQUIP:
+            RandomizerGet itemRG = item.GetRandomizerGet();
+            if (itemRG == RG_GIANTS_KNIFE) {
+                return;
+            }
+            uint32_t equipId = RandoGetToFlag.find(itemRG)->second;
+            if (remove) {
+                gSaveContext.inventory.equipment &= ~equipId;
+                if (equipId == EQUIP_FLAG_SWORD_BGS) {
+                    gSaveContext.bgsFlag = false;
+                }
+            } else {
+                gSaveContext.inventory.equipment |= equipId;
+                if (equipId == EQUIP_FLAG_SWORD_BGS) {
+                    gSaveContext.bgsFlag = true;
+                }
+            }
+            break;
+        case ITEMTYPE_MAP:
+            break;
+        case ITEMTYPE_COMPASS:
+            break;
+        case ITEMTYPE_BOSSKEY:
+            break;
+        case ITEMTYPE_SMALLKEY:
+            break;
+        case ITEMTYPE_TOKEN:
+            int change = remove ? -1 : 1;
+            gSaveContext.inventory.gsTokens += change;
+            break;
+        case ITEMTYPE_FORTRESS_SMALLKEY:
+            break;
+        case ITEMTYPE_EVENT:
+            break;
+        case ITEMTYPE_DROP:
+            break;
+        case ITEMTYPE_REFILL:
+            break;
+        case ITEMTYPE_SONG:
+            break;
+        case ITEMTYPE_SHOP:
+            break;
+        case ITEMTYPE_DUNGEONREWARD:
+            break;
+    }
+}
+
 std::shared_ptr<Settings> Context::GetSettings() {
     return mSettings;
 }

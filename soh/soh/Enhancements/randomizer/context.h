@@ -63,6 +63,7 @@ class Context {
     void SetSpoilerLoaded(bool spoilerLoaded = true);
     bool IsPlandoLoaded() const;
     void SetPlandoLoaded(bool plandoLoaded = true);
+    void ApplyItemEffect(Item item, bool remove);
     std::shared_ptr<Settings> GetSettings();
     std::shared_ptr<EntranceShuffler> GetEntranceShuffler();
     std::shared_ptr<Dungeons> GetDungeons();

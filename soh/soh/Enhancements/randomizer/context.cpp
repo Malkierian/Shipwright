@@ -541,14 +541,14 @@ void Context::ApplyItemEffect(Item item, bool remove) {
             }
             uint32_t equipId = RandoGetToFlag.find(itemRG)->second;
             if (remove) {
-                gSaveContext.inventory.equipment &= ~equipId;
+                mSaveContext->inventory.equipment &= ~equipId;
                 if (equipId == EQUIP_FLAG_SWORD_BGS) {
-                    gSaveContext.bgsFlag = false;
+                    mSaveContext->bgsFlag = false;
                 }
             } else {
-                gSaveContext.inventory.equipment |= equipId;
+                mSaveContext->inventory.equipment |= equipId;
                 if (equipId == EQUIP_FLAG_SWORD_BGS) {
-                    gSaveContext.bgsFlag = true;
+                    mSaveContext->bgsFlag = true;
                 }
             }
             break;
@@ -562,7 +562,7 @@ void Context::ApplyItemEffect(Item item, bool remove) {
             break;
         case ITEMTYPE_TOKEN:
             int change = remove ? -1 : 1;
-            gSaveContext.inventory.gsTokens += change;
+            mSaveContext->inventory.gsTokens += change;
             break;
         case ITEMTYPE_FORTRESS_SMALLKEY:
             break;
@@ -604,7 +604,19 @@ std::shared_ptr<Logic> Context::GetLogic() {
     return mLogic;
 }
 
+std::shared_ptr<SaveContext> Context::GetSaveContext() {
+    if (mSaveContext.get() == nullptr) {
+        mSaveContext = std::make_shared<Logic>();
+    }
+    return mSaveContext;
+}
+
+void Context::SetSaveContext(SaveContext* context) {
+    mSaveContext = std::make_shared<SaveContext>(context);
+}
+
 void Context::ResetLogic() {
+    mSaveContext = std::make_shared<SaveContext>();
     mLogic->Reset();
 }
 

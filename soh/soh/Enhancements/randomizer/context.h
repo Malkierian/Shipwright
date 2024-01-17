@@ -69,6 +69,8 @@ class Context {
     std::shared_ptr<Dungeons> GetDungeons();
     DungeonInfo* GetDungeon(size_t key) const;
     std::shared_ptr<Logic> GetLogic();
+    std::shared_ptr<SaveContext> GetSaveContext();
+    void SetSaveContext(SaveContext* context);
     void ResetLogic();
     std::shared_ptr<Trials> GetTrials();
     TrialInfo* GetTrial(size_t key) const;
@@ -111,6 +113,7 @@ class Context {
     std::shared_ptr<EntranceShuffler> mEntranceShuffler;
     std::shared_ptr<Dungeons> mDungeons;
     std::shared_ptr<Logic> mLogic;
+    std::shared_ptr<SaveContext> mSaveContext;
     std::shared_ptr<Trials> mTrials;
     bool mSeedGenerated = false;
     bool mSpoilerLoaded = false;

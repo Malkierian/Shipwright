@@ -92,6 +92,11 @@ class Context {
     bool playthroughBeatable = false;
     bool allLocationsReachable = false;
     RandomizerArea GetAreaFromString(std::string str);
+    uint8_t InventorySlot(uint32_t item);
+    bool CheckInventory(uint32_t item);
+    bool CheckEquipment(uint32_t item);
+    bool CheckQuestItem(uint32_t item);
+    bool CheckRandoInf(uint32_t flag);
 
   private:
     static std::weak_ptr<Context> mContext;

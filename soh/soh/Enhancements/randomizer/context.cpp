@@ -534,21 +534,23 @@ void Context::ApplyItemEffect(Item item, bool remove) {
     switch (item.GetItemType()) {
         case ITEMTYPE_ITEM:
             break;
-        case ITEMTYPE_EQUIP:
-            RandomizerGet itemRG = item.GetRandomizerGet();
-            if (itemRG == RG_GIANTS_KNIFE) {
-                return;
-            }
-            uint32_t equipId = RandoGetToFlag.find(itemRG)->second;
-            if (remove) {
-                mSaveContext->inventory.equipment &= ~equipId;
-                if (equipId == EQUIP_FLAG_SWORD_BGS) {
-                    mSaveContext->bgsFlag = false;
+        case ITEMTYPE_EQUIP: 
+            {
+                RandomizerGet itemRG = item.GetRandomizerGet();
+                if (itemRG == RG_GIANTS_KNIFE) {
+                    return;
                 }
-            } else {
-                mSaveContext->inventory.equipment |= equipId;
-                if (equipId == EQUIP_FLAG_SWORD_BGS) {
-                    mSaveContext->bgsFlag = true;
+                uint32_t equipId = RandoGetToFlag.find(itemRG)->second;
+                if (remove) {
+                    mSaveContext->inventory.equipment &= ~equipId;
+                    if (equipId == EQUIP_FLAG_SWORD_BGS) {
+                        mSaveContext->bgsFlag = false;
+                    }
+                } else {
+                    mSaveContext->inventory.equipment |= equipId;
+                    if (equipId == EQUIP_FLAG_SWORD_BGS) {
+                        mSaveContext->bgsFlag = true;
+                    }
                 }
             }
             break;
@@ -561,8 +563,7 @@ void Context::ApplyItemEffect(Item item, bool remove) {
         case ITEMTYPE_SMALLKEY:
             break;
         case ITEMTYPE_TOKEN:
-            int change = remove ? -1 : 1;
-            mSaveContext->inventory.gsTokens += change;
+            mSaveContext->inventory.gsTokens += remove ? -1 : 1;
             break;
         case ITEMTYPE_FORTRESS_SMALLKEY:
             break;
@@ -606,13 +607,13 @@ std::shared_ptr<Logic> Context::GetLogic() {
 
 std::shared_ptr<SaveContext> Context::GetSaveContext() {
     if (mSaveContext.get() == nullptr) {
-        mSaveContext = std::make_shared<Logic>();
+        mSaveContext = std::make_shared<SaveContext>();
     }
     return mSaveContext;
 }
 
 void Context::SetSaveContext(SaveContext* context) {
-    mSaveContext = std::make_shared<SaveContext>(context);
+    mSaveContext = std::shared_ptr<SaveContext>(context);
 }
 
 void Context::ResetLogic() {
@@ -639,4 +640,46 @@ Option& Context::GetOption(const RandomizerSettingKey key) const {
 TrickOption& Context::GetTrickOption(const RandomizerTrick key) const {
     return mSettings->GetTrickOption(key);
 }
+
+uint8_t Context::InventorySlot(uint32_t item) {
+    return gItemSlots[item];
+}
+
+bool Context::CheckInventory(uint32_t item) {
+    return mSaveContext->inventory.items[InventorySlot(item)] != ITEM_NONE;
+}
+
+bool Context::CheckEquipment(uint32_t equipFlag) {
+    return (equipFlag & gSaveContext.inventory.equipment) != 0;
+}
+
+bool Context::CheckQuestItem(uint32_t item) {
+    return ((1 << item) & gSaveContext.inventory.questItems) != 0;
+}
+
+bool Context::CheckRandoInf(uint32_t flag) {
+    return mSaveContext->randomizerInf[flag >> 4] & (1 << (flag & 0xF));
+}
+
+#define AMMO(item) gSaveContext.inventory.ammo[SLOT(item)]
+#define BEANS_BOUGHT AMMO(ITEM_BEAN + 1)
+
+#define ALL_EQUIP_VALUE(equip) ((s32)(gSaveContext.inventory.equipment & gEquipMasks[equip]) >> gEquipShifts[equip])
+#define CUR_EQUIP_VALUE(equip) ((s32)(gSaveContext.equips.equipment & gEquipMasks[equip]) >> gEquipShifts[equip])
+#define OWNED_EQUIP_FLAG(equip, value) (gBitFlags[value] << gEquipShifts[equip])
+#define OWNED_EQUIP_FLAG_ALT(equip, value) ((1 << (value)) << gEquipShifts[equip])
+#define CHECK_OWNED_EQUIP(equip, value) (OWNED_EQUIP_FLAG(equip, value) & gSaveContext.inventory.equipment)
+#define CHECK_OWNED_EQUIP_ALT(equip, value) (gBitFlags[(value) + (equip)*4] & gSaveContext.inventory.equipment)
+
+#define SWORD_EQUIP_TO_PLAYER(swordEquip) (swordEquip)
+#define SHIELD_EQUIP_TO_PLAYER(shieldEquip) (shieldEquip)
+#define TUNIC_EQUIP_TO_PLAYER(tunicEquip) ((tunicEquip)-1)
+#define BOOTS_EQUIP_TO_PLAYER(bootsEquip) ((bootsEquip)-1)
+
+#define CUR_UPG_VALUE(upg) ((s32)(gSaveContext.inventory.upgrades & gUpgradeMasks[upg]) >> gUpgradeShifts[upg])
+#define CAPACITY(upg, value) gUpgradeCapacities[upg][value]
+#define CUR_CAPACITY(upg) CAPACITY(upg, CUR_UPG_VALUE(upg))
+
+#define CHECK_QUEST_ITEM(item) (gBitFlags[item] & gSaveContext.inventory.questItems)
+#define CHECK_DUNGEON_ITEM(item, dungeonIndex) (gSaveContext.inventory.dungeonItems[dungeonIndex] & gBitFlags[item])
 } // namespace Rando

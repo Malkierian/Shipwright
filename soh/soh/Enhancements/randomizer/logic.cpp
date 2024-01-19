@@ -24,51 +24,53 @@ namespace Rando {
     }
 
     bool Logic::HasItem(RandomizerGet itemName) {
-        return  (itemName == RG_DINS_FIRE              && DinsFire)            ||
-                (itemName == RG_FARORES_WIND           && FaroresWind)         ||
-                (itemName == RG_NAYRUS_LOVE            && NayrusLove)          ||
-                (itemName == RG_LENS_OF_TRUTH          && LensOfTruth)         ||
-                (itemName == RG_FAIRY_BOW              && Bow)                 ||
-                (itemName == RG_MEGATON_HAMMER         && Hammer)              ||
-                (itemName == RG_IRON_BOOTS             && IronBoots)           ||
-                (itemName == RG_HOVER_BOOTS            && HoverBoots)          ||
-                (itemName == RG_HOOKSHOT               && Hookshot)            ||
-                (itemName == RG_LONGSHOT               && Longshot)            ||
-                (itemName == RG_SILVER_GAUNTLETS       && SilverGauntlets)     ||
-                (itemName == RG_GOLDEN_GAUNTLETS       && GoldenGauntlets)     ||
-                (itemName == RG_GORON_TUNIC            && GoronTunic)          ||
-                (itemName == RG_ZORA_TUNIC             && ZoraTunic)           ||
-                (itemName == RG_SCARECROW              && Scarecrow)           ||
-                (itemName == RG_DISTANT_SCARECROW      && DistantScarecrow)    ||
-                (itemName == RG_HYLIAN_SHIELD          && HylianShield)        ||
-                (itemName == RG_MIRROR_SHIELD          && MirrorShield)        ||
-                (itemName == RG_MASTER_SWORD           && MasterSword)         ||
-                (itemName == RG_BIGGORON_SWORD         && BiggoronSword)       ||
-                (itemName == RG_FAIRY_SLINGSHOT        && Slingshot)           ||
-                (itemName == RG_BOOMERANG              && Boomerang)           ||
-                (itemName == RG_KOKIRI_SWORD           && KokiriSword)         ||
-                (itemName == RG_STICKS                 && Sticks)              ||
-                (itemName == RG_DEKU_SHIELD            && DekuShield)          ||
-                (itemName == RG_FIRE_ARROWS            && FireArrows)          ||
-                (itemName == RG_ICE_ARROWS             && IceArrows)           ||
-                (itemName == RG_LIGHT_ARROWS           && LightArrows)         ||
-                (itemName == RG_OCARINA_A_BUTTON       && OcarinaAButton)      ||
-                (itemName == RG_OCARINA_C_LEFT_BUTTON  && OcarinaCLeftButton)  ||
-                (itemName == RG_OCARINA_C_RIGHT_BUTTON && OcarinaCRightButton) ||
-                (itemName == RG_OCARINA_C_DOWN_BUTTON  && OcarinaCDownButton)  ||
-                (itemName == RG_OCARINA_C_UP_BUTTON    && OcarinaCUpButton)    ||
-                (itemName == RG_ZELDAS_LULLABY         && ZeldasLullaby)       ||
-                (itemName == RG_EPONAS_SONG            && EponasSong)          ||
-                (itemName == RG_SARIAS_SONG            && SariasSong)          ||
-                (itemName == RG_SUNS_SONG              && SunsSong)            ||
-                (itemName == RG_SONG_OF_TIME           && SongOfTime)          ||
-                (itemName == RG_SONG_OF_STORMS         && SongOfStorms)        ||
-                (itemName == RG_MINUET_OF_FOREST       && MinuetOfForest)      ||
-                (itemName == RG_BOLERO_OF_FIRE         && BoleroOfFire)        ||
-                (itemName == RG_SERENADE_OF_WATER      && SerenadeOfWater)     ||
-                (itemName == RG_REQUIEM_OF_SPIRIT      && RequiemOfSpirit)     ||
-                (itemName == RG_NOCTURNE_OF_SHADOW     && NocturneOfShadow)    ||
-                (itemName == RG_PRELUDE_OF_LIGHT       && PreludeOfLight);
+        auto ctx = Rando::Context::GetInstance();
+        return  (itemName == RG_DINS_FIRE              && ctx->CheckInventory(ITEM_DINS_FIRE))            ||
+                (itemName == RG_FARORES_WIND           && ctx->CheckInventory(ITEM_FARORES_WIND))         ||
+                (itemName == RG_NAYRUS_LOVE            && ctx->CheckInventory(ITEM_NAYRUS_LOVE))          ||
+                (itemName == RG_LENS_OF_TRUTH          && ctx->CheckInventory(ITEM_LENS))         ||
+                (itemName == RG_FAIRY_BOW              && ctx->CheckInventory(ITEM_BOW))                 ||
+                (itemName == RG_MEGATON_HAMMER         && ctx->CheckInventory(ITEM_HAMMER))              ||
+                (itemName == RG_IRON_BOOTS             && ctx->CheckEquipment(EQUIP_FLAG_BOOTS_IRON))           ||
+                (itemName == RG_HOVER_BOOTS            && ctx->CheckEquipment(EQUIP_FLAG_BOOTS_HOVER))          ||
+                (itemName == RG_HOOKSHOT               && ctx->CheckInventory(ITEM_HOOKSHOT) == ITEM_HOOKSHOT)            ||
+                (itemName == RG_LONGSHOT               && ctx->CheckInventory(ITEM_LONGSHOT) == ITEM_LONGSHOT)            ||
+                (itemName == RG_SILVER_GAUNTLETS       && (ctx->CheckInventory(ITEM_GAUNTLETS_SILVER) == ITEM_GAUNTLETS_SILVER || 
+                                                           ctx->CheckInventory(ITEM_GAUNTLETS_SILVER) == ITEM_GAUNTLETS_GOLD))     ||
+                (itemName == RG_GOLDEN_GAUNTLETS       && ctx->CheckInventory(ITEM_GAUNTLETS_GOLD) == ITEM_GAUNTLETS_GOLD)     ||
+                (itemName == RG_GORON_TUNIC            && ctx->CheckEquipment(EQUIP_FLAG_TUNIC_GORON))          ||
+                (itemName == RG_ZORA_TUNIC             && ctx->CheckEquipment(EQUIP_FLAG_TUNIC_ZORA))           ||
+                (itemName == RG_SCARECROW              && Scarecrow())           ||
+                (itemName == RG_DISTANT_SCARECROW      && DistantScarecrow())    ||
+                (itemName == RG_HYLIAN_SHIELD          && ctx->CheckEquipment(EQUIP_FLAG_SHIELD_HYLIAN))        ||
+                (itemName == RG_MIRROR_SHIELD          && ctx->CheckEquipment(EQUIP_FLAG_SHIELD_MIRROR))        ||
+                (itemName == RG_MASTER_SWORD           && ctx->CheckEquipment(EQUIP_FLAG_SWORD_MASTER))         ||
+                (itemName == RG_BIGGORON_SWORD         && ctx->CheckEquipment(EQUIP_FLAG_SWORD_BGS) && ctx->GetSaveContext()->bgsFlag)       ||
+                (itemName == RG_FAIRY_SLINGSHOT        && ctx->CheckInventory(ITEM_SLINGSHOT))           ||
+                (itemName == RG_BOOMERANG              && ctx->CheckInventory(ITEM_BOOMERANG))           ||
+                (itemName == RG_KOKIRI_SWORD           && ctx->CheckEquipment(EQUIP_FLAG_SWORD_KOKIRI))         ||
+                (itemName == RG_STICKS                 && ctx->CheckInventory(ITEM_STICK))              ||
+                (itemName == RG_DEKU_SHIELD            && ctx->CheckEquipment(EQUIP_FLAG_SHIELD_DEKU))          ||
+                (itemName == RG_FIRE_ARROWS            && ctx->CheckInventory(ITEM_ARROW_FIRE))          ||
+                (itemName == RG_ICE_ARROWS             && ctx->CheckInventory(ITEM_ARROW_ICE))           ||
+                (itemName == RG_LIGHT_ARROWS           && ctx->CheckInventory(ITEM_ARROW_LIGHT))         ||
+                (itemName == RG_OCARINA_A_BUTTON       && ctx->CheckRandoInf(RAND_INF_HAS_OCARINA_A))      ||
+                (itemName == RG_OCARINA_C_LEFT_BUTTON  && ctx->CheckRandoInf(RAND_INF_HAS_OCARINA_C_LEFT))  ||
+                (itemName == RG_OCARINA_C_RIGHT_BUTTON && ctx->CheckRandoInf(RAND_INF_HAS_OCARINA_C_RIGHT)) ||
+                (itemName == RG_OCARINA_C_DOWN_BUTTON  && ctx->CheckRandoInf(RAND_INF_HAS_OCARINA_C_DOWN))  ||
+                (itemName == RG_OCARINA_C_UP_BUTTON    && ctx->CheckRandoInf(RAND_INF_HAS_OCARINA_C_UP))    ||
+                (itemName == RG_ZELDAS_LULLABY         && ctx->CheckQuestItem(QUEST_SONG_LULLABY))       ||
+                (itemName == RG_EPONAS_SONG            && ctx->CheckQuestItem(QUEST_SONG_EPONA))          ||
+                (itemName == RG_SARIAS_SONG            && ctx->CheckQuestItem(QUEST_SONG_SARIA))          ||
+                (itemName == RG_SUNS_SONG              && ctx->CheckQuestItem(QUEST_SONG_SUN))            ||
+                (itemName == RG_SONG_OF_TIME           && ctx->CheckQuestItem(QUEST_SONG_TIME))          ||
+                (itemName == RG_SONG_OF_STORMS         && ctx->CheckQuestItem(QUEST_SONG_STORMS))        ||
+                (itemName == RG_MINUET_OF_FOREST       && ctx->CheckQuestItem(QUEST_SONG_MINUET))      ||
+                (itemName == RG_BOLERO_OF_FIRE         && ctx->CheckQuestItem(QUEST_SONG_BOLERO))        ||
+                (itemName == RG_SERENADE_OF_WATER      && ctx->CheckQuestItem(QUEST_SONG_SERENADE))     ||
+                (itemName == RG_REQUIEM_OF_SPIRIT      && ctx->CheckQuestItem(QUEST_SONG_REQUIEM))     ||
+                (itemName == RG_NOCTURNE_OF_SHADOW     && ctx->CheckQuestItem(QUEST_SONG_NOCTURNE))    ||
+                (itemName == RG_PRELUDE_OF_LIGHT       && ctx->CheckQuestItem(QUEST_SONG_PRELUDE));
     }
 
     //Can the passed in item be used?
@@ -254,11 +256,6 @@ namespace Rando {
         AdultsWallet    = ProgressiveWallet     >= 1;
         BiggoronSword   = BiggoronSword || ProgressiveGiantKnife >= 2;
 
-        //you need at least 2 buttons for scarecrow song
-        ScarecrowSong    = ScarecrowSong || (ctx->GetOption(RSK_SKIP_SCARECROWS_SONG) && Ocarina && OcarinaButtons >= 2) || (ChildScarecrow && AdultScarecrow);
-        Scarecrow        = Hookshot && ScarecrowSong;
-        DistantScarecrow = Longshot && ScarecrowSong;
-
         //Drop Access
         DekuStickDrop = StickPot || DekuBabaSticks;
         DekuNutDrop   = (NutPot  || NutCrate         || DekuBabaNuts) && AmmoCanDrop;
@@ -439,33 +436,18 @@ namespace Rando {
         }
     }
 
-    bool Logic::EventsUpdated() {
-        if (DekuTreeClearPast        != DekuTreeClear        ||
-            GoronRubyPast            != GoronRuby            ||
-            ZoraSapphirePast         != ZoraSapphire         ||
-            ForestTrialClearPast     != ForestTrialClear     ||
-            FireTrialClearPast       != FireTrialClear       ||
-            WaterTrialClearPast      != WaterTrialClear      ||
-            ShadowTrialClearPast     != ShadowTrialClear     ||
-            SpiritTrialClearPast     != SpiritTrialClear     ||
-            LightTrialClearPast      != LightTrialClear      ||
-            DrainWellPast            != DrainWell            ||
-            DampesWindmillAccessPast != DampesWindmillAccess ||
-            TimeTravelPast           != TimeTravel) {
-            DekuTreeClearPast         = DekuTreeClear;
-            GoronRubyPast             = GoronRuby;
-            ZoraSapphirePast          = ZoraSapphire;
-            ForestTrialClearPast      = ForestTrialClear;
-            FireTrialClearPast        = FireTrialClear;
-            WaterTrialClearPast       = WaterTrialClear;
-            ShadowTrialClearPast      = ShadowTrialClear;
-            SpiritTrialClearPast      = SpiritTrialClear;
-            LightTrialClearPast       = LightTrialClear;
-            DrainWellPast             = DrainWell;
-            DampesWindmillAccessPast  = DampesWindmillAccess;
-            return true;
-        }
-        return false;
+    //you need at least 2 buttons for scarecrow song
+    bool Logic::ScarecrowSong() {
+        return (Context::GetInstance()->GetOption(RSK_SKIP_SCARECROWS_SONG) && Ocarina && OcarinaButtons >= 2) ||
+            (ChildScarecrow && AdultScarecrow);
+    }
+                           
+    bool Logic::Scarecrow() {
+        return HasItem(RG_HOOKSHOT) && ScarecrowSong();
+    }
+
+    bool Logic::DistantScarecrow() {
+        return HasItem(RG_LONGSHOT) && ScarecrowSong();
     }
 
     void Logic::Reset() {
@@ -704,9 +686,6 @@ namespace Rando {
 
         ChildScarecrow   = false;
         AdultScarecrow   = false;
-        ScarecrowSong    = false;
-        Scarecrow        = false;
-        DistantScarecrow = false;
 
         Bombs            = false;
         DekuShield       = false;
@@ -807,19 +786,5 @@ namespace Rando {
         AtDampeTime               = false;
         DeliverLetter             = false;
         TimeTravel                = false;
-
-        DrainWellPast            = false;
-        DampesWindmillAccessPast = false;
-        DekuTreeClearPast        = false;
-        GoronRubyPast            = false;
-        ZoraSapphirePast         = false;
-        ForestTrialClearPast     = false;
-        FireTrialClearPast       = false;
-        WaterTrialClearPast      = false;
-        SpiritTrialClearPast     = false;
-        ShadowTrialClearPast     = false;
-        LightTrialClearPast      = false;
-        BuyDekuShieldPast        = false;
-        TimeTravelPast           = false;
     }
 }

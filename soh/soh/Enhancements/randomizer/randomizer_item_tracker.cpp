@@ -337,7 +337,7 @@ bool IsValidSaveFile() {
 }
 
 bool HasSong(ItemTrackerItem item) {
-    return (1 << item.id) & gSaveContext.inventory.questItems;
+    return ((1 << item.id) & gSaveContext.inventory.questItems) != 0;
 }
 
 bool HasQuestItem(ItemTrackerItem item) {

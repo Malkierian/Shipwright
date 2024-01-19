@@ -243,9 +243,9 @@ class Logic {
 
     bool ChildScarecrow = false;
     bool AdultScarecrow = false;
-    bool ScarecrowSong = false;
-    bool Scarecrow = false;
-    bool DistantScarecrow = false;
+    bool ScarecrowSong();
+    bool Scarecrow();
+    bool DistantScarecrow();
 
     bool Bombs = false;
     bool DekuShield = false;
@@ -389,22 +389,6 @@ class Logic {
     uint8_t AddedProgressiveOcarinas = 0;
     uint8_t TokensInPool = 0;
 
-    // Event checking past
-    bool DrainWellPast = false;
-    bool DampesWindmillAccessPast = false;
-    bool DekuTreeClearPast = false;
-    bool GoronRubyPast = false;
-    bool ZoraSapphirePast = false;
-    bool ForestTrialClearPast = false;
-    bool FireTrialClearPast = false;
-    bool WaterTrialClearPast = false;
-    bool SpiritTrialClearPast = false;
-    bool ShadowTrialClearPast = false;
-    bool LightTrialClearPast = false;
-    bool BuyDekuShieldPast = false;
-    bool TimeTravelPast = false;
-
-    SaveContext* mSaveContext;
     Logic();
     void UpdateHelpers();
     bool CanUse(RandomizerGet itemName);
@@ -414,7 +398,6 @@ class Logic {
     bool SmallKeys(RandomizerRegion dungeon, uint8_t requiredAmountGlitchless, uint8_t requiredAmountGlitched);
     bool CanDoGlitch(GlitchType glitch);
     bool CanEquipSwap(RandomizerGet itemName);
-    bool EventsUpdated();
     void Reset();
 
   private:

@@ -533,6 +533,9 @@ std::map<RandomizerGet, uint32_t> RandoGetToFlag = {
 void Context::ApplyItemEffect(Item item, bool remove) {
     switch (item.GetItemType()) {
         case ITEMTYPE_ITEM:
+            if (remove) {
+                
+            }
             break;
         case ITEMTYPE_EQUIP: 
             {

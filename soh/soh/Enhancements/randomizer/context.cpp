@@ -530,11 +530,114 @@ std::map<RandomizerGet, uint32_t> RandoGetToFlag = {
     { RG_HOVER_BOOTS,    EQUIP_FLAG_BOOTS_HOVER },
 };
 
+std::map<uint32_t, uint32_t> RandoGetToDungeonScene = {
+    { RG_FOREST_TEMPLE_SMALL_KEY,           SCENE_FOREST_TEMPLE },
+    { RG_FIRE_TEMPLE_SMALL_KEY,             SCENE_FIRE_TEMPLE },
+    { RG_WATER_TEMPLE_SMALL_KEY,            SCENE_WATER_TEMPLE },
+    { RG_SPIRIT_TEMPLE_SMALL_KEY,           SCENE_SPIRIT_TEMPLE },
+    { RG_SHADOW_TEMPLE_SMALL_KEY,           SCENE_SHADOW_TEMPLE },
+    { RG_BOTTOM_OF_THE_WELL_SMALL_KEY,      SCENE_BOTTOM_OF_THE_WELL },
+    { RG_GERUDO_TRAINING_GROUNDS_SMALL_KEY, SCENE_GERUDO_TRAINING_GROUND },
+    { RG_GERUDO_FORTRESS_SMALL_KEY,         SCENE_THIEVES_HIDEOUT },
+    { RG_GANONS_CASTLE_SMALL_KEY,           SCENE_INSIDE_GANONS_CASTLE },
+    { RG_FOREST_TEMPLE_KEY_RING,            SCENE_FOREST_TEMPLE },
+    { RG_FIRE_TEMPLE_KEY_RING,              SCENE_FIRE_TEMPLE },
+    { RG_WATER_TEMPLE_KEY_RING,             SCENE_WATER_TEMPLE },
+    { RG_SPIRIT_TEMPLE_KEY_RING,            SCENE_SPIRIT_TEMPLE },
+    { RG_SHADOW_TEMPLE_KEY_RING,            SCENE_SHADOW_TEMPLE },
+    { RG_BOTTOM_OF_THE_WELL_KEY_RING,       SCENE_BOTTOM_OF_THE_WELL },
+    { RG_GERUDO_TRAINING_GROUNDS_KEY_RING,  SCENE_GERUDO_TRAINING_GROUND },
+    { RG_GERUDO_FORTRESS_KEY_RING,          SCENE_THIEVES_HIDEOUT },
+    { RG_GANONS_CASTLE_KEY_RING,            SCENE_INSIDE_GANONS_CASTLE },
+    { RG_FOREST_TEMPLE_BOSS_KEY,            SCENE_FOREST_TEMPLE },
+    { RG_FIRE_TEMPLE_BOSS_KEY,              SCENE_FIRE_TEMPLE },
+    { RG_WATER_TEMPLE_BOSS_KEY,             SCENE_WATER_TEMPLE },
+    { RG_SPIRIT_TEMPLE_BOSS_KEY,            SCENE_SPIRIT_TEMPLE },
+    { RG_SHADOW_TEMPLE_BOSS_KEY,            SCENE_SHADOW_TEMPLE },
+    { RG_GANONS_CASTLE_BOSS_KEY,            SCENE_INSIDE_GANONS_CASTLE },
+    { RG_DEKU_TREE_MAP,                     SCENE_DEKU_TREE },
+    { RG_DODONGOS_CAVERN_MAP,               SCENE_DODONGOS_CAVERN },
+    { RG_JABU_JABUS_BELLY_MAP,              SCENE_JABU_JABU },
+    { RG_FOREST_TEMPLE_MAP,                 SCENE_FOREST_TEMPLE },
+    { RG_FIRE_TEMPLE_MAP,                   SCENE_FIRE_TEMPLE },
+    { RG_WATER_TEMPLE_MAP,                  SCENE_WATER_TEMPLE },
+    { RG_SPIRIT_TEMPLE_MAP,                 SCENE_SPIRIT_TEMPLE },
+    { RG_SHADOW_TEMPLE_MAP,                 SCENE_SHADOW_TEMPLE },
+    { RG_BOTTOM_OF_THE_WELL_MAP,            SCENE_BOTTOM_OF_THE_WELL },
+    { RG_ICE_CAVERN_MAP,                    SCENE_ICE_CAVERN },
+    { RG_DEKU_TREE_COMPASS,                 SCENE_DEKU_TREE },
+    { RG_DODONGOS_CAVERN_COMPASS,           SCENE_DODONGOS_CAVERN },
+    { RG_JABU_JABUS_BELLY_COMPASS,          SCENE_JABU_JABU },
+    { RG_FOREST_TEMPLE_COMPASS,             SCENE_FOREST_TEMPLE },
+    { RG_FIRE_TEMPLE_COMPASS,               SCENE_FIRE_TEMPLE },
+    { RG_WATER_TEMPLE_COMPASS,              SCENE_WATER_TEMPLE },
+    { RG_SPIRIT_TEMPLE_COMPASS,             SCENE_SPIRIT_TEMPLE },
+    { RG_SHADOW_TEMPLE_COMPASS,             SCENE_SHADOW_TEMPLE },
+    { RG_BOTTOM_OF_THE_WELL_COMPASS,        SCENE_BOTTOM_OF_THE_WELL },
+    { RG_ICE_CAVERN_COMPASS,                SCENE_ICE_CAVERN },
+    { RG_TREASURE_GAME_SMALL_KEY,           SCENE_TREASURE_BOX_SHOP }
+};
+
+std::map<uint32_t, uint32_t> RandoGetToQuestItem = {
+    { RG_FOREST_MEDALLION,       QUEST_MEDALLION_FOREST },
+    { RG_FIRE_MEDALLION,         QUEST_MEDALLION_FIRE },
+    { RG_WATER_MEDALLION,        QUEST_MEDALLION_WATER },
+    { RG_SPIRIT_MEDALLION,       QUEST_MEDALLION_SPIRIT },
+    { RG_SHADOW_MEDALLION,       QUEST_MEDALLION_SHADOW },
+    { RG_LIGHT_MEDALLION,        QUEST_MEDALLION_LIGHT },
+    { RG_MINUET_OF_FOREST,       QUEST_SONG_MINUET },
+    { RG_BOLERO_OF_FIRE,         QUEST_SONG_BOLERO },
+    { RG_SERENADE_OF_WATER,      QUEST_SONG_SERENADE },
+    { RG_REQUIEM_OF_SPIRIT,      QUEST_SONG_REQUIEM },
+    { RG_NOCTURNE_OF_SHADOW,     QUEST_SONG_NOCTURNE },
+    { RG_PRELUDE_OF_LIGHT,       QUEST_SONG_PRELUDE },
+    { RG_ZELDAS_LULLABY,         QUEST_SONG_LULLABY },
+    { RG_EPONAS_SONG,            QUEST_SONG_EPONA },
+    { RG_SARIAS_SONG,            QUEST_SONG_SARIA },
+    { RG_SUNS_SONG,              QUEST_SONG_SUN },
+    { RG_SONG_OF_TIME,           QUEST_SONG_TIME },
+    { RG_SONG_OF_STORMS,         QUEST_SONG_STORMS },
+    { RG_KOKIRI_EMERALD,         QUEST_KOKIRI_EMERALD },
+    { RG_GORON_RUBY,             QUEST_GORON_RUBY },
+    { RG_ZORA_SAPPHIRE,          QUEST_ZORA_SAPPHIRE },
+    { RG_STONE_OF_AGONY,         QUEST_STONE_OF_AGONY },
+    { RG_GERUDO_MEMBERSHIP_CARD, QUEST_GERUDO_CARD },
+};
+
 void Context::ApplyItemEffect(Item item, bool remove) {
     switch (item.GetItemType()) {
         case ITEMTYPE_ITEM:
-            if (remove) {
-                
+            {
+                auto randoGet = item.GetRandomizerGet();
+                if (item.GetGIEntry()->getItemCategory == ITEM_CATEGORY_MAJOR || item.GetGIEntry()->getItemCategory == ITEM_CATEGORY_LESSER) {
+                    switch (item.GetRandomizerGet()) {
+                        case RG_GERUDO_MEMBERSHIP_CARD:
+                            SetQuestItem(QUEST_GERUDO_CARD, remove);
+                            break;
+                        case RG_WEIRD_EGG:
+                            mSaveContext->randomizerInf[RAND_INF_WEIRD_EGG] = 1;
+                            break;
+                        case RG_ZELDAS_LETTER:
+                            mSaveContext->randomizerInf[RAND_INF_ZELDAS_LETTER] = 1;
+                            break;
+                        case RG_POCKET_EGG:
+                        case RG_COJIRO:
+                        case RG_ODD_MUSHROOM:
+                        case RG_ODD_POTION:
+                        case RG_POACHERS_SAW:
+                        case RG_BROKEN_SWORD:
+                        case RG_PRESCRIPTION:
+                        case RG_EYEBALL_FROG:
+                        case RG_EYEDROPS:
+                        case RG_CLAIM_CHECK:
+                            if (remove) {
+                                mSaveContext->adultTradeItems &= ~(1 << (item.GetItemID() - ITEM_POCKET_EGG));
+                            } else {
+                                mSaveContext->adultTradeItems |= (1 << (item.GetItemID() - ITEM_POCKET_EGG));
+                            }
+                            break;
+                    }
+                } // junk items don't have variables, so we can skip them
             }
             break;
         case ITEMTYPE_EQUIP: 
@@ -557,30 +660,51 @@ void Context::ApplyItemEffect(Item item, bool remove) {
                 }
             }
             break;
+        case ITEMTYPE_DUNGEONREWARD:
+        case ITEMTYPE_SONG:
+            SetQuestItem(RandoGetToQuestItem.find(item.GetRandomizerGet())->second, remove);
+            break;
         case ITEMTYPE_MAP:
+            SetDungeonItem(DUNGEON_MAP, RandoGetToDungeonScene.find(item.GetRandomizerGet())->second, remove);
             break;
         case ITEMTYPE_COMPASS:
+            SetDungeonItem(DUNGEON_COMPASS, RandoGetToDungeonScene.find(item.GetRandomizerGet())->second, remove);
             break;
         case ITEMTYPE_BOSSKEY:
+            SetDungeonItem(DUNGEON_KEY_BOSS, RandoGetToDungeonScene.find(item.GetRandomizerGet())->second, remove);
             break;
-        case ITEMTYPE_SMALLKEY:
+        case ITEMTYPE_FORTRESS_SMALLKEY:
+        case ITEMTYPE_SMALLKEY: 
+            {
+                auto randoGet = item.GetRandomizerGet();
+                auto keyRing = randoGet >= RG_FOREST_TEMPLE_KEY_RING && randoGet <= RG_GANONS_CASTLE_KEY_RING;
+                auto dungeonIndex = RandoGetToDungeonScene.find(randoGet)->second;
+                if (remove) {
+                        if (keyRing) {
+                            mSaveContext->inventory.dungeonKeys[dungeonIndex] = 0;
+                        } else {
+                            mSaveContext->inventory.dungeonKeys[dungeonIndex] -= 1;
+                        }
+                } else {
+                        if (keyRing) {
+                            mSaveContext->inventory.dungeonKeys[dungeonIndex] = 10;
+                        } else {
+                            mSaveContext->inventory.dungeonKeys[dungeonIndex] += 1;
+                        }
+                }
+            }
             break;
         case ITEMTYPE_TOKEN:
             mSaveContext->inventory.gsTokens += remove ? -1 : 1;
             break;
-        case ITEMTYPE_FORTRESS_SMALLKEY:
-            break;
+            // currently noVariable pointers in Logic, so nothing to do here
         case ITEMTYPE_EVENT:
             break;
         case ITEMTYPE_DROP:
             break;
         case ITEMTYPE_REFILL:
             break;
-        case ITEMTYPE_SONG:
-            break;
         case ITEMTYPE_SHOP:
-            break;
-        case ITEMTYPE_DUNGEONREWARD:
             break;
     }
 }
@@ -653,11 +777,31 @@ bool Context::CheckInventory(uint32_t item) {
 }
 
 bool Context::CheckEquipment(uint32_t equipFlag) {
-    return (equipFlag & gSaveContext.inventory.equipment) != 0;
+    return (equipFlag & mSaveContext->inventory.equipment) != 0;
 }
 
 bool Context::CheckQuestItem(uint32_t item) {
-    return ((1 << item) & gSaveContext.inventory.questItems) != 0;
+    return ((1 << item) & mSaveContext->inventory.questItems) != 0;
+}
+
+void Context::SetQuestItem(uint32_t item, bool remove) {
+    if (remove) {
+        mSaveContext->inventory.questItems &= ~(1 << item);
+    } else {
+        mSaveContext->inventory.questItems |= (1 << item);
+    }
+}
+
+bool Context::CheckDungeonItem(uint32_t item, uint32_t dungeonIndex) {
+    return mSaveContext->inventory.dungeonItems[dungeonIndex] & gBitFlags[item];
+}
+
+void Context::SetDungeonItem(uint32_t item, uint32_t dungeonIndex, bool remove) {
+    if (remove) {
+        mSaveContext->inventory.dungeonItems[dungeonIndex] &= ~gBitFlags[item];
+    } else {
+        mSaveContext->inventory.dungeonItems[dungeonIndex] |= gBitFlags[item];
+    }
 }
 
 bool Context::CheckRandoInf(uint32_t flag) {
@@ -683,6 +827,4 @@ bool Context::CheckRandoInf(uint32_t flag) {
 #define CAPACITY(upg, value) gUpgradeCapacities[upg][value]
 #define CUR_CAPACITY(upg) CAPACITY(upg, CUR_UPG_VALUE(upg))
 
-#define CHECK_QUEST_ITEM(item) (gBitFlags[item] & gSaveContext.inventory.questItems)
-#define CHECK_DUNGEON_ITEM(item, dungeonIndex) (gSaveContext.inventory.dungeonItems[dungeonIndex] & gBitFlags[item])
 } // namespace Rando

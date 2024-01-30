@@ -96,6 +96,9 @@ class Context {
     bool CheckInventory(uint32_t item);
     bool CheckEquipment(uint32_t item);
     bool CheckQuestItem(uint32_t item);
+    void SetQuestItem(uint32_t item, bool remove);
+    bool CheckDungeonItem(uint32_t item, uint32_t dungeonIndex);
+    void SetDungeonItem(uint32_t item, uint32_t dungeonIndex, bool remove);
     bool CheckRandoInf(uint32_t flag);
 
   private:

@@ -604,21 +604,23 @@ std::map<uint32_t, uint32_t> RandoGetToQuestItem = {
     { RG_GERUDO_MEMBERSHIP_CARD, QUEST_GERUDO_CARD },
 };
 
+std::vector<uint32_t> HookshotLookup = { ITEM_NONE, ITEM_HOOKSHOT, ITEM_LONGSHOT };
+
 void Context::ApplyItemEffect(Item item, bool remove) {
     switch (item.GetItemType()) {
         case ITEMTYPE_ITEM:
             {
                 auto randoGet = item.GetRandomizerGet();
                 if (item.GetGIEntry()->getItemCategory == ITEM_CATEGORY_MAJOR || item.GetGIEntry()->getItemCategory == ITEM_CATEGORY_LESSER) {
-                    switch (item.GetRandomizerGet()) {
+                    switch (randoGet) {
                         case RG_GERUDO_MEMBERSHIP_CARD:
                             SetQuestItem(QUEST_GERUDO_CARD, remove);
                             break;
                         case RG_WEIRD_EGG:
-                            mSaveContext->randomizerInf[RAND_INF_WEIRD_EGG] = 1;
+                            SetRandoInf(RAND_INF_WEIRD_EGG, remove);
                             break;
                         case RG_ZELDAS_LETTER:
-                            mSaveContext->randomizerInf[RAND_INF_ZELDAS_LETTER] = 1;
+                            SetRandoInf(RAND_INF_ZELDAS_LETTER, remove);
                             break;
                         case RG_POCKET_EGG:
                         case RG_COJIRO:
@@ -635,6 +637,136 @@ void Context::ApplyItemEffect(Item item, bool remove) {
                             } else {
                                 mSaveContext->adultTradeItems |= (1 << (item.GetItemID() - ITEM_POCKET_EGG));
                             }
+                            break;
+                        case RG_PROGRESSIVE_HOOKSHOT:
+                        {
+                            auto it = std::find(HookshotLookup.begin(), HookshotLookup.end(), CheckInventory(ITEM_HOOKSHOT));
+                            if (it != HookshotLookup.end()) {
+                                auto newItem = it - HookshotLookup.begin() + (remove ? -1 : 1);
+                                if (newItem < 0) {
+                                    newItem = 0;
+                                } else if (newItem > 2) {
+                                    newItem = 2;
+                                }
+                                SetInventory(ITEM_HOOKSHOT, HookshotLookup[newItem]);
+                            }
+                        }   break;
+                        case RG_PROGRESSIVE_STRENGTH:
+                        {
+                            auto currentLevel = CurrentUpgrade(UPG_STRENGTH);
+                            auto newLevel = currentLevel + remove ? -1 : 1;
+                            SetUpgrade(UPG_STRENGTH, remove ? -1 : 1);
+                        }   break;
+                        case RG_PROGRESSIVE_BOMB_BAG:
+                        {
+                            auto currentLevel = CurrentUpgrade(UPG_BOMB_BAG);
+                            auto newLevel = currentLevel + remove ? -1 : 1;
+                            if (currentLevel == 0 && !remove || currentLevel == 1 && remove) {
+                                SetInventory(ITEM_BOMB, remove ? ITEM_NONE : ITEM_BOMB);
+                            }
+                            SetUpgrade(UPG_BOMB_BAG, newLevel);
+                        }   break;
+                        case RG_PROGRESSIVE_BOW:
+                        {
+                            auto currentLevel = CurrentUpgrade(UPG_QUIVER);
+                            auto newLevel = currentLevel + remove ? -1 : 1;
+                            if (currentLevel == 0 && !remove || currentLevel == 1 && remove) {
+                                SetInventory(ITEM_BOW, remove ? ITEM_NONE : ITEM_BOW);
+                            }
+                            SetUpgrade(UPG_QUIVER, newLevel);
+                        }   break;
+                        case RG_PROGRESSIVE_SLINGSHOT:
+                        {
+                            auto currentLevel = CurrentUpgrade(UPG_BULLET_BAG);
+                            auto newLevel = currentLevel + remove ? -1 : 1;
+                            if (currentLevel == 0 && !remove || currentLevel == 1 && remove) {
+                                SetInventory(ITEM_SLINGSHOT, remove ? ITEM_NONE : ITEM_SLINGSHOT);
+                            }
+                            SetUpgrade(UPG_BULLET_BAG, newLevel);
+                        }   break;
+                        case RG_PROGRESSIVE_WALLET:
+                        {
+                            auto currentLevel = CurrentUpgrade(UPG_WALLET);
+                            auto newLevel = currentLevel + remove ? -1 : 1;
+                            SetUpgrade(UPG_WALLET, newLevel);
+                        }   break;
+                        case RG_PROGRESSIVE_SCALE:
+                        {
+                            auto currentLevel = CurrentUpgrade(UPG_SCALE);
+                            auto newLevel = currentLevel + remove ? -1 : 1;
+                            SetUpgrade(UPG_SCALE, newLevel);
+                        }   break;
+                        case RG_PROGRESSIVE_NUT_UPGRADE:
+                        {
+                            auto currentLevel = CurrentUpgrade(UPG_NUTS);
+                            auto newLevel = currentLevel + remove ? -1 : 1;
+                            if (currentLevel == 0 && !remove || currentLevel == 1 && remove) {
+                                SetInventory(ITEM_NUT, remove ? ITEM_NONE : ITEM_NUT);
+                            }
+                            SetUpgrade(UPG_NUTS, newLevel);
+                        }   break;
+                        case RG_PROGRESSIVE_STICK_UPGRADE:
+                        {
+                            auto currentLevel = CurrentUpgrade(UPG_STICKS);
+                            auto newLevel = currentLevel + remove ? -1 : 1;
+                            if (currentLevel == 0 && !remove || currentLevel == 1 && remove) {
+                                SetInventory(ITEM_STICK, remove ? ITEM_NONE : ITEM_STICK);
+                            }
+                            SetUpgrade(UPG_STICKS, newLevel);
+                        }   break;
+                        case RG_PROGRESSIVE_BOMBCHUS:
+                            SetInventory(ITEM_BOMBCHU, remove ? ITEM_NONE : ITEM_BOMBCHU);
+                            break;
+                        case RG_PROGRESSIVE_MAGIC_METER:
+                            mSaveContext->magicLevel += remove ? -1 : 1;
+                            break;
+                        case ITEM_HEART_CONTAINER:
+                            mSaveContext->health += remove ? -4 : 4;
+                            break;
+                        case ITEM_HEART_PIECE:
+                        case ITEM_HEART_PIECE_2:
+                            mSaveContext->health += remove ? -1 : 1;
+                            break;
+                        case RG_BOOMERANG:
+                        case RG_LENS_OF_TRUTH:
+                        case RG_MEGATON_HAMMER:
+                        case RG_DINS_FIRE:
+                        case RG_FARORES_WIND:
+                        case RG_NAYRUS_LOVE:
+                        case RG_FIRE_ARROWS:
+                        case RG_ICE_ARROWS:
+                        case RG_LIGHT_ARROWS:
+                            SetInventory(item.GetItemID(), remove ? ITEM_NONE : item.GetItemID());
+                            break;
+                        case RG_STONE_OF_AGONY:
+                            SetQuestItem(QUEST_STONE_OF_AGONY, remove);
+                            break;
+                        case RG_MAGIC_BEAN:
+                        case RG_MAGIC_BEAN_PACK:
+                        {
+                            auto change = item.GetRandomizerGet() == RG_MAGIC_BEAN ? 1 : 10;
+                            //auto current = 
+
+                        }   break;
+                        case RG_DOUBLE_DEFENSE:
+                            mSaveContext->isDoubleDefenseAcquired = 1;
+                            break;
+                        case RG_EMPTY_BOTTLE:
+                        case RG_BOTTLE_WITH_MILK:
+                        case RG_BOTTLE_WITH_RED_POTION:
+                        case RG_BOTTLE_WITH_GREEN_POTION:
+                        case RG_BOTTLE_WITH_BLUE_POTION:
+                        case RG_BOTTLE_WITH_FAIRY:
+                        case RG_BOTTLE_WITH_FISH:
+                        case RG_BOTTLE_WITH_BLUE_FIRE:
+                        case RG_BOTTLE_WITH_BUGS:
+                        case RG_BOTTLE_WITH_POE:
+                        case RG_BOTTLE_WITH_BIG_POE:
+                        case RG_RUTOS_LETTER:
+                            /*ChangeBottles(remove);
+                            if (item.GetRandomizerGet() == RG_RUTOS_LETTER) {
+                                Flags_SetEventChkInf(EVENTCHKINF_OBTAINED_RUTOS_LETTER)
+                            }*/
                             break;
                     }
                 } // junk items don't have variables, so we can skip them
@@ -772,8 +904,26 @@ uint8_t Context::InventorySlot(uint32_t item) {
     return gItemSlots[item];
 }
 
+uint32_t Context::CurrentUpgrade(uint32_t upgrade) {
+    return (gSaveContext.inventory.upgrades & gUpgradeMasks[upgrade]) >> gUpgradeShifts[upgrade];
+}
+
+void Context::SetUpgrade(uint32_t upgrade, uint8_t level) {
+    gSaveContext.inventory.upgrades &= gUpgradeNegMasks[upgrade];
+    gSaveContext.inventory.upgrades |= level << gUpgradeShifts[upgrade];
+}
+
 bool Context::CheckInventory(uint32_t item) {
+    if (item == ITEM_HOOKSHOT) {
+        return logic->ProgressiveHookshot > 0;
+    } else if (item == ITEM_LONGSHOT) {
+        return logic->ProgressiveHookshot > 1;
+    }
     return mSaveContext->inventory.items[InventorySlot(item)] != ITEM_NONE;
+}
+
+void Context::SetInventory(uint32_t itemSlot, uint32_t item) {
+    mSaveContext->inventory.items[InventorySlot(itemSlot)] = item;
 }
 
 bool Context::CheckEquipment(uint32_t equipFlag) {
@@ -808,7 +958,27 @@ bool Context::CheckRandoInf(uint32_t flag) {
     return mSaveContext->randomizerInf[flag >> 4] & (1 << (flag & 0xF));
 }
 
-#define AMMO(item) gSaveContext.inventory.ammo[SLOT(item)]
+void Context::SetRandoInf(uint32_t flag, bool disable) {
+    if (disable) {
+        mSaveContext->randomizerInf[flag >> 4] |= (1 << (flag & 0xF));
+    } else {
+        mSaveContext->randomizerInf[flag >> 4] &= ~(1 << (flag & 0xF));
+    }
+}
+
+bool Context::CheckEventChkInf(int32_t flag) {
+    return mSaveContext->eventChkInf[flag >> 4] & (1 << (flag & 0xF));
+}
+
+void Context::SetEventChkInf(int32_t flag, bool disable) {
+    mSaveContext->eventChkInf[flag >> 4] &= ~(1 << (flag & 0xF));
+    mSaveContext->eventChkInf[flag >> 4] |= (1 << (flag & 0xF));
+}
+
+uint8_t Context::GetAmmo(uint32_t item) {
+    return gSaveContext.inventory.ammo[gItemSlots[item]];
+}
+
 #define BEANS_BOUGHT AMMO(ITEM_BEAN + 1)
 
 #define ALL_EQUIP_VALUE(equip) ((s32)(gSaveContext.inventory.equipment & gEquipMasks[equip]) >> gEquipShifts[equip])
@@ -823,7 +993,6 @@ bool Context::CheckRandoInf(uint32_t flag) {
 #define TUNIC_EQUIP_TO_PLAYER(tunicEquip) ((tunicEquip)-1)
 #define BOOTS_EQUIP_TO_PLAYER(bootsEquip) ((bootsEquip)-1)
 
-#define CUR_UPG_VALUE(upg) ((s32)(gSaveContext.inventory.upgrades & gUpgradeMasks[upg]) >> gUpgradeShifts[upg])
 #define CAPACITY(upg, value) gUpgradeCapacities[upg][value]
 #define CUR_CAPACITY(upg) CAPACITY(upg, CUR_UPG_VALUE(upg))
 

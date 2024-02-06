@@ -33,11 +33,10 @@ namespace Rando {
                 (itemName == RG_MEGATON_HAMMER         && ctx->CheckInventory(ITEM_HAMMER))              ||
                 (itemName == RG_IRON_BOOTS             && ctx->CheckEquipment(EQUIP_FLAG_BOOTS_IRON))           ||
                 (itemName == RG_HOVER_BOOTS            && ctx->CheckEquipment(EQUIP_FLAG_BOOTS_HOVER))          ||
-                (itemName == RG_HOOKSHOT               && ctx->CheckInventory(ITEM_HOOKSHOT) == ITEM_HOOKSHOT)            ||
-                (itemName == RG_LONGSHOT               && ctx->CheckInventory(ITEM_LONGSHOT) == ITEM_LONGSHOT)            ||
-                (itemName == RG_SILVER_GAUNTLETS       && (ctx->CheckInventory(ITEM_GAUNTLETS_SILVER) == ITEM_GAUNTLETS_SILVER || 
-                                                           ctx->CheckInventory(ITEM_GAUNTLETS_SILVER) == ITEM_GAUNTLETS_GOLD))     ||
-                (itemName == RG_GOLDEN_GAUNTLETS       && ctx->CheckInventory(ITEM_GAUNTLETS_GOLD) == ITEM_GAUNTLETS_GOLD)     ||
+                (itemName == RG_HOOKSHOT               && ctx->CheckInventory(ITEM_HOOKSHOT))            ||
+                (itemName == RG_LONGSHOT               && ctx->CheckInventory(ITEM_LONGSHOT))            ||
+                (itemName == RG_SILVER_GAUNTLETS       && ctx->CurrentUpgrade(UPG_STRENGTH) >= 2) || 
+                (itemName == RG_GOLDEN_GAUNTLETS       && ctx->CurrentUpgrade(UPG_STRENGTH) == 3)     ||
                 (itemName == RG_GORON_TUNIC            && ctx->CheckEquipment(EQUIP_FLAG_TUNIC_GORON))          ||
                 (itemName == RG_ZORA_TUNIC             && ctx->CheckEquipment(EQUIP_FLAG_TUNIC_ZORA))           ||
                 (itemName == RG_SCARECROW              && Scarecrow())           ||

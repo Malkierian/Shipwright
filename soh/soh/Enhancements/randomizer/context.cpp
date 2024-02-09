@@ -762,11 +762,10 @@ void Context::ApplyItemEffect(Item item, bool remove) {
                         case RG_BOTTLE_WITH_BUGS:
                         case RG_BOTTLE_WITH_POE:
                         case RG_BOTTLE_WITH_BIG_POE:
+                            logic->Bottles += (remove ? -1 : 1);
+                            break;
                         case RG_RUTOS_LETTER:
-                            /*ChangeBottles(remove);
-                            if (item.GetRandomizerGet() == RG_RUTOS_LETTER) {
-                                Flags_SetEventChkInf(EVENTCHKINF_OBTAINED_RUTOS_LETTER)
-                            }*/
+                            SetEventChkInf(EVENTCHKINF_OBTAINED_RUTOS_LETTER, remove);
                             break;
                     }
                 } // junk items don't have variables, so we can skip them
@@ -971,8 +970,11 @@ bool Context::CheckEventChkInf(int32_t flag) {
 }
 
 void Context::SetEventChkInf(int32_t flag, bool disable) {
-    mSaveContext->eventChkInf[flag >> 4] &= ~(1 << (flag & 0xF));
-    mSaveContext->eventChkInf[flag >> 4] |= (1 << (flag & 0xF));
+    if (disable) {
+        mSaveContext->eventChkInf[flag >> 4] &= ~(1 << (flag & 0xF));
+    } else {
+        mSaveContext->eventChkInf[flag >> 4] |= (1 << (flag & 0xF));
+    }
 }
 
 uint8_t Context::GetAmmo(uint32_t item) {

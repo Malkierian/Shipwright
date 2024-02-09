@@ -237,7 +237,7 @@ namespace Rando {
                            (OcarinaCRightButton ? 1 : 0) +
                            (OcarinaCUpButton ? 1 : 0) +
                            (OcarinaCDownButton ? 1 : 0);
-        NumBottles      = ((NoBottles) ? 0 : (Bottles + ((DeliverLetter) ? 1 : 0)));
+        NumBottles      = ctx->CheckInventory(ITEM_BOTTLE) ? (Bottles + (ctx->CheckEventChkInf(EVENTCHKINF_KING_ZORA_MOVED ? 1 : 0))) : 0;
         HasBottle       = NumBottles >= 1;
         Slingshot       = (ProgressiveBulletBag >= 1) && (BuySeed || AmmoCanDrop);
         Ocarina         = ProgressiveOcarina    >= 1;

@@ -198,7 +198,7 @@ void AreaTable_Init_JabuJabusBelly() {
   }, {
                   //Exits
                   Entrance(RR_JABU_JABUS_BELLY_MQ_MAIN,      {[]{return true;}}),
-                  Entrance(RR_JABU_JABUS_BELLY_MQ_BOSS_AREA, {[]{return logic->Sticks || (logic->CanUse(RG_DINS_FIRE) && logic->KokiriSword);}}),
+                  Entrance(RR_JABU_JABUS_BELLY_MQ_BOSS_AREA, {[]{return logic->Sticks || (logic->CanUse(RG_DINS_FIRE) && logic->LogicKokiriSword);}}),
   });
 
   areaTable[RR_JABU_JABUS_BELLY_MQ_BOSS_AREA] = Area("Jabu Jabus Belly MQ Boss Area", "Jabu Jabus Belly", RA_JABU_JABUS_BELLY, NO_DAY_NIGHT_CYCLE, {

@@ -8,7 +8,7 @@ void AreaTable_Init_LostWoods() {
                   //Events
                   EventAccess(&logic->BeanPlantFairy,           {[]{return logic->BeanPlantFairy   || (CanPlantBean(RR_KOKIRI_FOREST) && logic->CanUse(RG_SONG_OF_STORMS));}}),
                   EventAccess(&logic->GossipStoneFairy,         {[]{return logic->GossipStoneFairy || logic->CanSummonGossipFairyWithoutSuns;}}),
-                  EventAccess(&logic->ShowedMidoSwordAndShield, {[]{return logic->ShowedMidoSwordAndShield || (logic->IsChild && logic->KokiriSword && logic->DekuShield);}}),
+                  EventAccess(&logic->ShowedMidoSwordAndShield, {[]{return logic->ShowedMidoSwordAndShield || (logic->IsChild && logic->LogicKokiriSword && logic->DekuShield);}}),
                 }, {
                   //Locations
                   LocationAccess(RC_KF_KOKIRI_SWORD_CHEST,   {[]{return logic->IsChild;}}),
@@ -34,7 +34,7 @@ void AreaTable_Init_LostWoods() {
                   //Events
                   EventAccess(&logic->DekuBabaSticks,           {[]{return logic->DekuBabaSticks || ((logic->IsAdult && (logic->CanUse(RG_MASTER_SWORD) || logic->CanUse(RG_BIGGORON_SWORD) || logic->CanUse(RG_KOKIRI_SWORD)) && !randoCtx->GetOption(RSK_SHUFFLE_DUNGEON_ENTRANCES)) || (logic->IsChild && (logic->CanUse(RG_KOKIRI_SWORD) || logic->CanUse(RG_BIGGORON_SWORD) || logic->CanUse(RG_MASTER_SWORD) || logic->CanUse(RG_BOOMERANG))));}}),
                   EventAccess(&logic->DekuBabaNuts,             {[]{return logic->DekuBabaNuts   || ((logic->IsAdult && (logic->CanUse(RG_MASTER_SWORD) || logic->CanUse(RG_BIGGORON_SWORD) || logic->CanUse(RG_KOKIRI_SWORD)) && !randoCtx->GetOption(RSK_SHUFFLE_DUNGEON_ENTRANCES)) || (logic->IsChild && (logic->CanJumpslash || logic->CanUse(RG_FAIRY_SLINGSHOT) || logic->HasExplosives || logic->CanUse(RG_DINS_FIRE))));}}),
-                  EventAccess(&logic->ShowedMidoSwordAndShield, {[]{return logic->ShowedMidoSwordAndShield || (logic->IsChild && logic->KokiriSword && logic->DekuShield);}}),
+                  EventAccess(&logic->ShowedMidoSwordAndShield, {[]{return logic->ShowedMidoSwordAndShield || (logic->IsChild && logic->LogicKokiriSword && logic->DekuShield);}}),
                 }, {
                   //Locations
                   LocationAccess(RC_KF_DEKU_TREE_LEFT_GOSSIP_STONE,  {[]{return true;}}),
@@ -224,7 +224,7 @@ void AreaTable_Init_LostWoods() {
 
   areaTable[RR_SFM_WOLFOS_GROTTO] = Area("SFM Wolfos Grotto", "SFM Wolfos Grotto", RA_NONE, NO_DAY_NIGHT_CYCLE, {}, {
                   //Locations
-                  LocationAccess(RC_SFM_WOLFOS_GROTTO_CHEST, {[]{return logic->IsAdult || logic->Slingshot || logic->Sticks || logic->KokiriSword || logic->CanUse(RG_DINS_FIRE) || logic->CanUse(RG_MEGATON_HAMMER) || logic->CanUse(RG_MASTER_SWORD) || logic->CanUse(RG_BIGGORON_SWORD);}}),
+                  LocationAccess(RC_SFM_WOLFOS_GROTTO_CHEST, {[]{return logic->IsAdult || logic->Slingshot || logic->Sticks || logic->LogicKokiriSword || logic->CanUse(RG_DINS_FIRE) || logic->CanUse(RG_MEGATON_HAMMER) || logic->CanUse(RG_MASTER_SWORD) || logic->CanUse(RG_BIGGORON_SWORD);}}),
                 }, {
                   //Exits
                   Entrance(RR_SFM_ENTRYWAY, {[]{return true;}}),

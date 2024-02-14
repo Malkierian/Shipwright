@@ -296,8 +296,8 @@ namespace Rando {
         // IsAdult = Age == AGE_ADULT;
 
         CanBlastOrSmash = HasExplosives || CanUse(RG_MEGATON_HAMMER);
-        CanChildAttack  = IsChild && (Slingshot || Boomerang || Sticks || KokiriSword || HasExplosives || CanUse(RG_DINS_FIRE) || CanUse(RG_MASTER_SWORD) || CanUse(RG_MEGATON_HAMMER) || CanUse(RG_BIGGORON_SWORD));
-        CanChildDamage  = IsChild && (Slingshot ||              Sticks || KokiriSword || HasExplosives || CanUse(RG_DINS_FIRE) || CanUse(RG_MASTER_SWORD) || CanUse(RG_MEGATON_HAMMER) || CanUse(RG_BIGGORON_SWORD));
+        CanChildAttack  = IsChild && (Slingshot || Boomerang || Sticks || LogicKokiriSword || HasExplosives || CanUse(RG_DINS_FIRE) || CanUse(RG_MASTER_SWORD) || CanUse(RG_MEGATON_HAMMER) || CanUse(RG_BIGGORON_SWORD));
+        CanChildDamage  = IsChild && (Slingshot ||              Sticks || LogicKokiriSword || HasExplosives || CanUse(RG_DINS_FIRE) || CanUse(RG_MASTER_SWORD) || CanUse(RG_MEGATON_HAMMER) || CanUse(RG_BIGGORON_SWORD));
         CanAdultAttack  = IsAdult && (CanUse(RG_FAIRY_BOW) || CanUse(RG_BOOMERANG)       || CanUse(RG_STICKS) || CanUse(RG_KOKIRI_SWORD) || HasExplosives || CanUse(RG_DINS_FIRE) || MasterSword || Hammer || BiggoronSword || Hookshot);
         CanAdultDamage  = IsAdult && (CanUse(RG_FAIRY_BOW) || CanUse(RG_STICKS)          || CanUse(RG_KOKIRI_SWORD) || HasExplosives || CanUse(RG_DINS_FIRE) || MasterSword || Hammer || BiggoronSword);
         CanStunDeku     = CanAdultAttack || CanChildAttack || Nuts || HasShield;
@@ -343,8 +343,8 @@ namespace Rando {
         CanUseMagicArrow   = CanUse(RG_FIRE_ARROWS) || CanUse(RG_ICE_ARROWS) || CanUse(RG_LIGHT_ARROWS);
 
         //Bridge and LACS Requirements
-        MedallionCount        = (ForestMedallion ? 1:0) + (FireMedallion ? 1:0) + (WaterMedallion ? 1:0) + (SpiritMedallion ? 1:0) + (ShadowMedallion ? 1:0) + (LightMedallion ? 1:0);
-        StoneCount            = (KokiriEmerald ? 1:0) + (GoronRuby ? 1:0) + (ZoraSapphire ? 1:0);
+        MedallionCount        = (ctx->CheckQuestItem(QUEST_MEDALLION_FOREST) ? 1:0) + (ctx->CheckQuestItem(QUEST_MEDALLION_FIRE) ? 1:0) + (ctx->CheckQuestItem(QUEST_MEDALLION_WATER) ? 1:0) + (ctx->CheckQuestItem(QUEST_MEDALLION_SPIRIT) ? 1:0) + (ctx->CheckQuestItem(QUEST_MEDALLION_SHADOW) ? 1:0) + (ctx->CheckQuestItem(QUEST_MEDALLION_LIGHT) ? 1:0);
+        StoneCount            = (ctx->CheckQuestItem(QUEST_KOKIRI_EMERALD) ? 1:0) + (ctx->CheckQuestItem(QUEST_GORON_RUBY) ? 1:0) + (ctx->CheckQuestItem(QUEST_ZORA_SAPPHIRE) ? 1:0);
         DungeonCount          = (DekuTreeClear ? 1:0) + (DodongosCavernClear ? 1:0) + (JabuJabusBellyClear ? 1:0) + (ForestTempleClear ? 1:0) + (FireTempleClear ? 1:0) + (WaterTempleClear ? 1:0) + (SpiritTempleClear ? 1:0) + (ShadowTempleClear ? 1:0);
         HasAllStones          = StoneCount == 3;
         HasAllMedallions      = MedallionCount == 6;
@@ -458,7 +458,7 @@ namespace Rando {
         AmmoCanDrop = /*AmmoDrops.IsNot(AMMODROPS_NONE) TODO: AmmoDrop setting*/ true;
 
         //Child item logic
-        KokiriSword   = false;
+        LogicKokiriSword   = false;
         ZeldasLetter  = false;
         WeirdEgg      = false;
         HasBottle     = false;

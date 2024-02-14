@@ -840,21 +840,23 @@ void Context::ApplyItemEffect(Item item, bool remove) {
         case ITEMTYPE_SMALLKEY: 
             {
                 auto randoGet = item.GetRandomizerGet();
-                auto keyRing = randoGet >= RG_FOREST_TEMPLE_KEY_RING && randoGet <= RG_GANONS_CASTLE_KEY_RING;
+                auto keyring = randoGet >= RG_FOREST_TEMPLE_KEY_RING && randoGet <= RG_GANONS_CASTLE_KEY_RING;
                 auto dungeonIndex = RandoGetToDungeonScene.find(randoGet)->second;
+                auto count = GetSmallKeyCount(dungeonIndex);
                 if (remove) {
-                        if (keyRing) {
-                            mSaveContext->inventory.dungeonKeys[dungeonIndex] = 0;
-                        } else {
-                            mSaveContext->inventory.dungeonKeys[dungeonIndex] -= 1;
-                        }
+                    if (keyring) {
+                        count = 0;
+                    } else {
+                        count -= 1;
+                    }
                 } else {
-                        if (keyRing) {
-                            mSaveContext->inventory.dungeonKeys[dungeonIndex] = 10;
-                        } else {
-                            mSaveContext->inventory.dungeonKeys[dungeonIndex] += 1;
-                        }
+                    if (keyring) {
+                        count = 10;
+                    } else {
+                        count += 1;
+                    }
                 }
+                SetSmallKeyCount(dungeonIndex, count);
             }
             break;
         case ITEMTYPE_TOKEN:
@@ -971,6 +973,14 @@ void Context::SetQuestItem(uint32_t item, bool remove) {
     } else {
         mSaveContext->inventory.questItems |= (1 << item);
     }
+}
+
+uint8_t Context::GetSmallKeyCount(uint32_t dungeonIndex) {
+    return mSaveContext->inventory.dungeonKeys[dungeonIndex];
+}
+
+void Context::SetSmallKeyCount(uint32_t dungeonIndex, uint8_t count) {
+    mSaveContext->inventory.dungeonKeys[dungeonIndex] = count;
 }
 
 bool Context::CheckDungeonItem(uint32_t item, uint32_t dungeonIndex) {

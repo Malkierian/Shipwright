@@ -518,16 +518,30 @@ void Context::ParseHintJson(nlohmann::json spoilerFileJson) {
 }
 
 std::map<RandomizerGet, uint32_t> RandoGetToFlag = {
-    { RG_KOKIRI_SWORD,   EQUIP_FLAG_SWORD_KOKIRI },
-    { RG_MASTER_SWORD,   EQUIP_FLAG_SWORD_MASTER },
-    { RG_BIGGORON_SWORD, EQUIP_FLAG_SWORD_BGS },
-    { RG_DEKU_SHIELD,    EQUIP_FLAG_SHIELD_DEKU },
-    { RG_HYLIAN_SHIELD,  EQUIP_FLAG_SHIELD_HYLIAN },
-    { RG_MIRROR_SHIELD,  EQUIP_FLAG_SHIELD_MIRROR },
-    { RG_GORON_TUNIC,    EQUIP_FLAG_TUNIC_GORON },
-    { RG_ZORA_TUNIC,     EQUIP_FLAG_TUNIC_ZORA },
-    { RG_IRON_BOOTS,     EQUIP_FLAG_BOOTS_IRON },
-    { RG_HOVER_BOOTS,    EQUIP_FLAG_BOOTS_HOVER },
+    { RG_KOKIRI_SWORD,           EQUIP_FLAG_SWORD_KOKIRI },
+    { RG_MASTER_SWORD,           EQUIP_FLAG_SWORD_MASTER },
+    { RG_BIGGORON_SWORD,         EQUIP_FLAG_SWORD_BGS },
+    { RG_DEKU_SHIELD,            EQUIP_FLAG_SHIELD_DEKU },
+    { RG_HYLIAN_SHIELD,          EQUIP_FLAG_SHIELD_HYLIAN },
+    { RG_MIRROR_SHIELD,          EQUIP_FLAG_SHIELD_MIRROR },
+    { RG_GORON_TUNIC,            EQUIP_FLAG_TUNIC_GORON },
+    { RG_ZORA_TUNIC,             EQUIP_FLAG_TUNIC_ZORA },
+    { RG_IRON_BOOTS,             EQUIP_FLAG_BOOTS_IRON },
+    { RG_HOVER_BOOTS,            EQUIP_FLAG_BOOTS_HOVER },
+    { RG_GOHMA_SOUL,             RAND_INF_GOHMA_SOUL },
+    { RG_KING_DODONGO_SOUL,      RAND_INF_KING_DODONGO_SOUL },
+    { RG_BARINADE_SOUL,          RAND_INF_GOHMA_SOUL },
+    { RG_PHANTOM_GANON_SOUL,     RAND_INF_GOHMA_SOUL },
+    { RG_VOLVAGIA_SOUL,          RAND_INF_GOHMA_SOUL },
+    { RG_MORPHA_SOUL,            RAND_INF_GOHMA_SOUL },
+    { RG_BONGO_BONGO_SOUL,       RAND_INF_GOHMA_SOUL },
+    { RG_TWINROVA_SOUL,          RAND_INF_GOHMA_SOUL },
+    { RG_GANON_SOUL,             RAND_INF_GOHMA_SOUL },
+    { RG_OCARINA_A_BUTTON,       RAND_INF_HAS_OCARINA_A },
+    { RG_OCARINA_C_UP_BUTTON,    RAND_INF_HAS_OCARINA_C_UP },
+    { RG_OCARINA_C_DOWN_BUTTON,  RAND_INF_HAS_OCARINA_C_DOWN },
+    { RG_OCARINA_C_LEFT_BUTTON,  RAND_INF_HAS_OCARINA_C_LEFT },
+    { RG_OCARINA_C_RIGHT_BUTTON, RAND_INF_HAS_OCARINA_C_RIGHT }
 };
 
 std::map<uint32_t, uint32_t> RandoGetToDungeonScene = {
@@ -745,8 +759,8 @@ void Context::ApplyItemEffect(Item item, bool remove) {
                         case RG_MAGIC_BEAN_PACK:
                         {
                             auto change = item.GetRandomizerGet() == RG_MAGIC_BEAN ? 1 : 10;
-                            //auto current = 
-
+                            auto current = GetAmmo(ITEM_BEAN);
+                            SetAmmo(ITEM_BEAN, current + (remove ? -change : change));
                         }   break;
                         case RG_DOUBLE_DEFENSE:
                             mSaveContext->isDoubleDefenseAcquired = 1;
@@ -767,6 +781,24 @@ void Context::ApplyItemEffect(Item item, bool remove) {
                         case RG_RUTOS_LETTER:
                             SetEventChkInf(EVENTCHKINF_OBTAINED_RUTOS_LETTER, remove);
                             break;
+                        case RG_GOHMA_SOUL:
+                        case RG_KING_DODONGO_SOUL:
+                        case RG_BARINADE_SOUL:
+                        case RG_PHANTOM_GANON_SOUL:
+                        case RG_VOLVAGIA_SOUL:
+                        case RG_MORPHA_SOUL:
+                        case RG_BONGO_BONGO_SOUL:
+                        case RG_TWINROVA_SOUL:
+                        case RG_GANON_SOUL:
+                        case RG_OCARINA_A_BUTTON:
+                        case RG_OCARINA_C_UP_BUTTON:
+                        case RG_OCARINA_C_DOWN_BUTTON:
+                        case RG_OCARINA_C_LEFT_BUTTON:
+                        case RG_OCARINA_C_RIGHT_BUTTON:
+                            SetRandoInf(RandoGetToFlag.at(randoGet), remove);
+                            break;
+                        case RG_TRIFORCE_PIECE:
+                            mSaveContext->triforcePiecesCollected += (remove ? -1 : 1);
                     }
                 } // junk items don't have variables, so we can skip them
             }
@@ -904,12 +936,12 @@ uint8_t Context::InventorySlot(uint32_t item) {
 }
 
 uint32_t Context::CurrentUpgrade(uint32_t upgrade) {
-    return (gSaveContext.inventory.upgrades & gUpgradeMasks[upgrade]) >> gUpgradeShifts[upgrade];
+    return (mSaveContext->inventory.upgrades & gUpgradeMasks[upgrade]) >> gUpgradeShifts[upgrade];
 }
 
 void Context::SetUpgrade(uint32_t upgrade, uint8_t level) {
-    gSaveContext.inventory.upgrades &= gUpgradeNegMasks[upgrade];
-    gSaveContext.inventory.upgrades |= level << gUpgradeShifts[upgrade];
+    mSaveContext->inventory.upgrades &= gUpgradeNegMasks[upgrade];
+    mSaveContext->inventory.upgrades |= level << gUpgradeShifts[upgrade];
 }
 
 bool Context::CheckInventory(uint32_t item) {
@@ -978,7 +1010,11 @@ void Context::SetEventChkInf(int32_t flag, bool disable) {
 }
 
 uint8_t Context::GetAmmo(uint32_t item) {
-    return gSaveContext.inventory.ammo[gItemSlots[item]];
+    return mSaveContext->inventory.ammo[gItemSlots[item]];
+}
+
+void Context::SetAmmo(uint32_t item, uint8_t count) {
+    mSaveContext->inventory.ammo[gItemSlots[item]] = count;
 }
 
 #define BEANS_BOUGHT AMMO(ITEM_BEAN + 1)

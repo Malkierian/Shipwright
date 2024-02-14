@@ -107,6 +107,7 @@ class Context {
     bool CheckEventChkInf(int32_t flag);
     void SetEventChkInf(int32_t flag, bool disable);
     uint8_t GetAmmo(uint32_t item);
+    void SetAmmo(uint32_t item, uint8_t count);
 
   private:
     static std::weak_ptr<Context> mContext;

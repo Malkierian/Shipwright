@@ -218,7 +218,7 @@ void AreaTable_Init_DodongosCavern() {
 
   areaTable[RR_DODONGOS_CAVERN_MQ_LOBBY] = Area("Dodongos Cavern MQ Lobby", "Dodongos Cavern", RA_DODONGOS_CAVERN, NO_DAY_NIGHT_CYCLE, {
                   //Events
-                  EventAccess(&logic->DekuBabaSticks,   {[]{return logic->DekuBabaSticks || (logic->IsAdult || logic->LogicKokiriSword || logic->Boomerang);}}),
+                  EventAccess(&logic->DekuBabaSticks,   {[]{return logic->DekuBabaSticks || (logic->IsAdult || logic->CanUse(RG_KOKIRI_SWORD) || logic->Boomerang);}}),
                   EventAccess(&logic->GossipStoneFairy, {[]{return logic->GossipStoneFairy || logic->CanSummonGossipFairy;}}),
   }, {
                   //Locations
@@ -237,7 +237,7 @@ void AreaTable_Init_DodongosCavern() {
                   //Exits
                   Entrance(RR_DODONGOS_CAVERN_MQ_LOWER_RIGHT_SIDE,  {[]{return Here(RR_DODONGOS_CAVERN_MQ_LOBBY, []{return logic->CanBlastOrSmash || (((logic->IsChild && logic->CanUse(RG_STICKS)) || logic->CanUse(RG_DINS_FIRE)) && logic->CanTakeDamage);});}}),
                   Entrance(RR_DODONGOS_CAVERN_MQ_BOMB_BAG_AREA,     {[]{return logic->IsAdult || (Here(RR_DODONGOS_CAVERN_MQ_LOBBY, []{return logic->IsAdult;}) && logic->HasExplosives) || (randoCtx->GetTrickOption(RT_DC_MQ_CHILD_BOMBS) && logic->CanJumpslash && logic->CanTakeDamage);}}),
-                    //Trick: logic->IsAdult || logic->HasExplosives || (LogicDCMQChildBombs && (logic->LogicKokiriSword || logic->Sticks) && DamageMultiplier.IsNot(DAMAGEMULTIPLIER_OHKO))
+                    //Trick: logic->IsAdult || logic->HasExplosives || (LogicDCMQChildBombs && (logic->CanUse(RG_KOKIRI_SWORD) || logic->Sticks) && DamageMultiplier.IsNot(DAMAGEMULTIPLIER_OHKO))
                   Entrance(RR_DODONGOS_CAVERN_MQ_BOSS_AREA,         {[]{return logic->HasExplosives || (logic->GoronBracelet && ((logic->IsAdult && randoCtx->GetTrickOption(RT_DC_MQ_ADULT_EYES)) || (logic->IsChild && randoCtx->GetTrickOption(RT_DC_MQ_CHILD_EYES))) && ((logic->IsChild && (logic->CanUse(RG_STICKS))) || logic->CanUse(RG_DINS_FIRE) || (logic->IsAdult && (randoCtx->GetTrickOption(RT_DC_JUMP) || logic->Hammer || logic->HoverBoots || logic->Hookshot))));}}), 
                     //Trick: logic->HasExplosives || (LogicDCMQEyes && logic->GoronBracelet && (logic->IsAdult || LogicDCMQChildBack) && ((logic->IsChild && logic->CanUse(RG_STICKS)) || logic->CanUse(RG_DINS_FIRE) || (logic->IsAdult && (LogicDCJump || logic->Hammer || logic->HoverBoots || logic->Hookshot))))
   });

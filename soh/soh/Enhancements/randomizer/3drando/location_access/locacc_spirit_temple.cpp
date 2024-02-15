@@ -31,9 +31,9 @@ void AreaTable_Init_SpiritTemple() {
                   EventAccess(&logic->NutCrate, {[]{return true;}}),
                 }, {
                   //Locations
-                  LocationAccess(RC_SPIRIT_TEMPLE_CHILD_BRIDGE_CHEST,        {[]{return (logic->Boomerang || logic->Slingshot || (logic->HasBombchus && randoCtx->GetTrickOption(RT_SPIRIT_CHILD_CHU))) && (logic->HasExplosives || ((logic->Nuts || logic->Boomerang) && (logic->Sticks || logic->LogicKokiriSword || logic->Slingshot)));}}),
-                  LocationAccess(RC_SPIRIT_TEMPLE_CHILD_EARLY_TORCHES_CHEST, {[]{return (logic->Boomerang || logic->Slingshot || (logic->HasBombchus && randoCtx->GetTrickOption(RT_SPIRIT_CHILD_CHU))) && (logic->HasExplosives || ((logic->Nuts || logic->Boomerang) && (logic->Sticks || logic->LogicKokiriSword || logic->Slingshot))) && (logic->Sticks || logic->CanUse(RG_DINS_FIRE));}}),
-                  LocationAccess(RC_SPIRIT_TEMPLE_GS_METAL_FENCE,            {[]{return (logic->Boomerang || logic->Slingshot || (logic->HasBombchus && randoCtx->GetTrickOption(RT_SPIRIT_CHILD_CHU))) && (logic->HasExplosives || ((logic->Nuts || logic->Boomerang) && (logic->Sticks || logic->LogicKokiriSword || logic->Slingshot)));}}),
+                  LocationAccess(RC_SPIRIT_TEMPLE_CHILD_BRIDGE_CHEST,        {[]{return (logic->Boomerang || logic->Slingshot || (logic->HasBombchus && randoCtx->GetTrickOption(RT_SPIRIT_CHILD_CHU))) && (logic->HasExplosives || ((logic->Nuts || logic->Boomerang) && (logic->Sticks || logic->CanUse(RG_KOKIRI_SWORD) || logic->Slingshot)));}}),
+                  LocationAccess(RC_SPIRIT_TEMPLE_CHILD_EARLY_TORCHES_CHEST, {[]{return (logic->Boomerang || logic->Slingshot || (logic->HasBombchus && randoCtx->GetTrickOption(RT_SPIRIT_CHILD_CHU))) && (logic->HasExplosives || ((logic->Nuts || logic->Boomerang) && (logic->Sticks || logic->CanUse(RG_KOKIRI_SWORD) || logic->Slingshot))) && (logic->Sticks || logic->CanUse(RG_DINS_FIRE));}}),
+                  LocationAccess(RC_SPIRIT_TEMPLE_GS_METAL_FENCE,            {[]{return (logic->Boomerang || logic->Slingshot || (logic->HasBombchus && randoCtx->GetTrickOption(RT_SPIRIT_CHILD_CHU))) && (logic->HasExplosives || ((logic->Nuts || logic->Boomerang) && (logic->Sticks || logic->CanUse(RG_KOKIRI_SWORD) || logic->Slingshot)));}}),
                 }, {
                   //Exits
                   Entrance(RR_SPIRIT_TEMPLE_CHILD_CLIMB, {[]{return logic->SmallKeys(RR_SPIRIT_TEMPLE, 1);}}),
@@ -156,12 +156,12 @@ void AreaTable_Init_SpiritTemple() {
 
   areaTable[RR_SPIRIT_TEMPLE_MQ_CHILD] = Area("Spirit Temple MQ Child", "Spirit Temple", RA_SPIRIT_TEMPLE, NO_DAY_NIGHT_CYCLE, {
                   //Events
-                  EventAccess(&logic->FairyPot, {[]{return logic->FairyPot || (logic->LogicKokiriSword && logic->HasBombchus && logic->Slingshot);}}),
+                  EventAccess(&logic->FairyPot, {[]{return logic->FairyPot || (logic->CanUse(RG_KOKIRI_SWORD) && logic->HasBombchus && logic->Slingshot);}}),
   }, {
                   //Locations
                   LocationAccess(RC_SPIRIT_TEMPLE_MQ_CHILD_HAMMER_SWITCH_CHEST,  {[]{return Here(RR_SPIRIT_TEMPLE_MQ_ADULT, []{return logic->SmallKeys(RR_SPIRIT_TEMPLE, 7) && logic->Hammer;});}}),
-                  LocationAccess(RC_SPIRIT_TEMPLE_MQ_MAP_ROOM_ENEMY_CHEST,       {[]{return logic->LogicKokiriSword && logic->HasBombchus && logic->Slingshot && logic->CanUse(RG_DINS_FIRE);}}),
-                  LocationAccess(RC_SPIRIT_TEMPLE_MQ_MAP_CHEST,                  {[]{return logic->LogicKokiriSword || logic->Bombs;}}),
+                  LocationAccess(RC_SPIRIT_TEMPLE_MQ_MAP_ROOM_ENEMY_CHEST,       {[]{return logic->CanUse(RG_KOKIRI_SWORD) && logic->HasBombchus && logic->Slingshot && logic->CanUse(RG_DINS_FIRE);}}),
+                  LocationAccess(RC_SPIRIT_TEMPLE_MQ_MAP_CHEST,                  {[]{return logic->CanUse(RG_KOKIRI_SWORD) || logic->Bombs;}}),
                   LocationAccess(RC_SPIRIT_TEMPLE_MQ_SILVER_BLOCK_HALLWAY_CHEST, {[]{return logic->HasBombchus && logic->SmallKeys(RR_SPIRIT_TEMPLE, 7) && logic->Slingshot && (logic->CanUse(RG_DINS_FIRE) || (Here(RR_SPIRIT_TEMPLE_MQ_ADULT, []{return logic->IsAdult && (logic->CanUse(RG_FIRE_ARROWS) || (randoCtx->GetTrickOption(RT_SPIRIT_MQ_FROZEN_EYE) && logic->CanUse(RG_FAIRY_BOW) && logic->CanUse(RG_SONG_OF_TIME)));})));}}),
                     //Trick: logic->HasBombchus && logic->SmallKeys(RR_SPIRIT_TEMPLE, 7) && logic->Slingshot && (logic->CanUse(RG_DINS_FIRE) || (SPIRIT_TEMPLE_MQ_ADULT.Adult() && logic->IsAdult && (logic->CanUse(RG_FIRE_ARROWS) || (LogicSpiritMQFrozenEye && logic->CanUse(RG_FAIRY_BOW) && logic->CanUse(RG_SONG_OF_TIME)))))
   }, {

@@ -280,7 +280,7 @@ void AreaTable_Init_ForestTemple() {
   if (randoCtx->GetDungeon(FOREST_TEMPLE)->IsMQ()) {
   areaTable[RR_FOREST_TEMPLE_MQ_LOBBY] = Area("Forest Temple MQ Lobby", "Forest Temple", RA_FOREST_TEMPLE, NO_DAY_NIGHT_CYCLE, {}, {
                   //Locations
-                  LocationAccess(RC_FOREST_TEMPLE_MQ_FIRST_ROOM_CHEST, {[]{return logic->CanJumpslash || logic->Bombs || logic->CanUse(RG_STICKS) || logic->Nuts || logic->HookshotOrBoomerang || logic->CanUse(RG_DINS_FIRE) || logic->LogicKokiriSword || logic->CanUse(RG_FAIRY_SLINGSHOT) || logic->CanUse(RG_FAIRY_BOW) || logic->CanUse(RG_HOVER_BOOTS);}}),
+                  LocationAccess(RC_FOREST_TEMPLE_MQ_FIRST_ROOM_CHEST, {[]{return logic->CanJumpslash || logic->Bombs || logic->CanUse(RG_STICKS) || logic->Nuts || logic->HookshotOrBoomerang || logic->CanUse(RG_DINS_FIRE) || logic->CanUse(RG_KOKIRI_SWORD) || logic->CanUse(RG_FAIRY_SLINGSHOT) || logic->CanUse(RG_FAIRY_BOW) || logic->CanUse(RG_HOVER_BOOTS);}}),
                   LocationAccess(RC_FOREST_TEMPLE_MQ_GS_FIRST_HALLWAY, {[]{return logic->HookshotOrBoomerang;}}),
   }, {
                   //Exits
@@ -293,7 +293,7 @@ void AreaTable_Init_ForestTemple() {
                   EventAccess(&logic->FairyPot, {[]{return true;}}),
   }, {
                   //Locations
-                  LocationAccess(RC_FOREST_TEMPLE_MQ_WOLFOS_CHEST,       {[]{return (logic->CanUse(RG_SONG_OF_TIME) || logic->IsChild) && (logic->CanJumpslash || logic->CanUse(RG_DINS_FIRE) || logic->CanUse(RG_STICKS) || logic->CanUse(RG_FAIRY_SLINGSHOT) || logic->LogicKokiriSword);}}),
+                  LocationAccess(RC_FOREST_TEMPLE_MQ_WOLFOS_CHEST,       {[]{return (logic->CanUse(RG_SONG_OF_TIME) || logic->IsChild) && (logic->CanJumpslash || logic->CanUse(RG_DINS_FIRE) || logic->CanUse(RG_STICKS) || logic->CanUse(RG_FAIRY_SLINGSHOT) || logic->CanUse(RG_KOKIRI_SWORD));}}),
                   LocationAccess(RC_FOREST_TEMPLE_MQ_GS_BLOCK_PUSH_ROOM, {[]{return logic->CanUse(RG_KOKIRI_SWORD) || logic->CanUse(RG_MASTER_SWORD) || logic->CanUse(RG_BIGGORON_SWORD) || logic->CanUse(RG_MEGATON_HAMMER);}}),
   }, {
                   //Exits

@@ -179,7 +179,7 @@ void AreaTable_Init_HyruleField() {
                   EventAccess(&logic->LinksCow, {[]{return logic->LinksCow || (logic->CanUse(RG_EPONAS_SONG) && logic->IsAdult && logic->AtDay);}}),
                 }, {
                   //Locations
-                  LocationAccess(RC_SONG_FROM_MALON,     {[]{return logic->IsChild && logic->ZeldasLetter && logic->Ocarina && logic->AtDay;}}),
+                  LocationAccess(RC_SONG_FROM_MALON,     {[]{return logic->IsChild && logic->CanUse(RG_ZELDAS_LETTER) && logic->Ocarina && logic->AtDay;}}),
                   LocationAccess(RC_LLR_GS_TREE,         {[]{return logic->IsChild;}}),
                   LocationAccess(RC_LLR_GS_RAIN_SHED,    {[]{return logic->IsChild && logic->AtNight && logic->CanGetNightTimeGS;}}),
                   LocationAccess(RC_LLR_GS_HOUSE_WINDOW, {[]{return logic->IsChild && logic->HookshotOrBoomerang && logic->AtNight && logic->CanGetNightTimeGS;}}),
@@ -195,7 +195,7 @@ void AreaTable_Init_HyruleField() {
 
   areaTable[RR_LLR_TALONS_HOUSE] = Area("LLR Talons House", "LLR Talons House", RA_NONE, NO_DAY_NIGHT_CYCLE, {}, {
                   //Locations
-                  LocationAccess(RC_LLR_TALONS_CHICKENS, {[]{return logic->IsChild && logic->AtDay && logic->ZeldasLetter;}}),
+                  LocationAccess(RC_LLR_TALONS_CHICKENS, {[]{return logic->IsChild && logic->AtDay && logic->CanUse(RG_ZELDAS_LETTER);}}),
                 }, {
                   //Exits
                   Entrance(RR_LON_LON_RANCH, {[]{return true;}}),

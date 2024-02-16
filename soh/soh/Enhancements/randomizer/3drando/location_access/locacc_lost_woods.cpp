@@ -200,7 +200,7 @@ void AreaTable_Init_LostWoods() {
                   EventAccess(&logic->GossipStoneFairy, {[]{return logic->GossipStoneFairy || logic->CanSummonGossipFairyWithoutSuns;}}),
                 }, {
                   //Locations
-                  LocationAccess(RC_SONG_FROM_SARIA,             {[]{return logic->IsChild && logic->ZeldasLetter;}}),
+                  LocationAccess(RC_SONG_FROM_SARIA,             {[]{return logic->IsChild && logic->CanUse(RG_ZELDAS_LETTER);}}),
                   LocationAccess(RC_SHEIK_IN_FOREST,             {[]{return logic->IsAdult;}}),
                   LocationAccess(RC_SFM_GS,                      {[]{return logic->IsAdult && logic->HookshotOrBoomerang && logic->AtNight && logic->CanGetNightTimeGS;}}),
                   LocationAccess(RC_SFM_MAZE_LOWER_GOSSIP_STONE, {[]{return true;}}),

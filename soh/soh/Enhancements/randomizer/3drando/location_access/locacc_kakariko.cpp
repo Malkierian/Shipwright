@@ -8,7 +8,7 @@ void AreaTable_Init_Kakariko() {
                   //Events
                   EventAccess(&logic->CojiroAccess,            {[]{return logic->CojiroAccess || (logic->IsAdult && logic->WakeUpAdultTalon);}}),
                   EventAccess(&logic->BugRock,                 {[]{return true;}}),
-                  EventAccess(&logic->KakarikoVillageGateOpen, {[]{return logic->KakarikoVillageGateOpen || (logic->IsChild && (logic->ZeldasLetter || randoCtx->GetOption(RSK_KAK_GATE).Is(RO_KAK_GATE_OPEN)));}}),
+                  EventAccess(&logic->KakarikoVillageGateOpen, {[]{return logic->KakarikoVillageGateOpen || (logic->IsChild && (logic->CanUse(RG_ZELDAS_LETTER) || randoCtx->GetOption(RSK_KAK_GATE).Is(RO_KAK_GATE_OPEN)));}}),
                 }, {
                   //Locations
                   LocationAccess(RC_SHEIK_IN_KAKARIKO,               {[]{return logic->IsAdult && logic->ForestMedallion && logic->FireMedallion && logic->WaterMedallion;}}),

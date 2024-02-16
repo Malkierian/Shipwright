@@ -31,7 +31,6 @@ class Logic {
     bool noVariable = false;
 
     // Child item logic
-    bool ZeldasLetter = false;
     bool WeirdEgg = false;
     bool HasBottle = false;
     bool Bombchus = false;

@@ -69,7 +69,10 @@ namespace Rando {
                 (itemName == RG_SERENADE_OF_WATER      && ctx->CheckQuestItem(QUEST_SONG_SERENADE))     ||
                 (itemName == RG_REQUIEM_OF_SPIRIT      && ctx->CheckQuestItem(QUEST_SONG_REQUIEM))     ||
                 (itemName == RG_NOCTURNE_OF_SHADOW     && ctx->CheckQuestItem(QUEST_SONG_NOCTURNE))    ||
-                (itemName == RG_PRELUDE_OF_LIGHT       && ctx->CheckQuestItem(QUEST_SONG_PRELUDE));
+                (itemName == RG_PRELUDE_OF_LIGHT       && ctx->CheckQuestItem(QUEST_SONG_PRELUDE))     ||
+                (itemName == RG_ZELDAS_LETTER          && ctx->CheckRandoInf(RAND_INF_ZELDAS_LETTER))     ||
+                (itemName == RG_RUTOS_LETTER           && ctx->CheckEventChkInf(EVENTCHKINF_OBTAINED_RUTOS_LETTER))     ||
+                (itemName == RG_WEIRD_EGG              && ctx->CheckRandoInf(RAND_INF_WEIRD_EGG));
     }
 
     //Can the passed in item be used?
@@ -124,6 +127,12 @@ namespace Rando {
                 return IsChild;// || StickAsAdult;
             case RG_DEKU_SHIELD:
                 return IsChild;// || DekuShieldAsAdult;
+            case RG_RUTOS_LETTER:
+                return IsChild;
+            case RG_ZELDAS_LETTER:
+                return IsChild;
+            case RG_WEIRD_EGG:
+                return IsChild;
 
             // Songs
             case RG_ZELDAS_LULLABY:
@@ -458,7 +467,6 @@ namespace Rando {
         AmmoCanDrop = /*AmmoDrops.IsNot(AMMODROPS_NONE) TODO: AmmoDrop setting*/ true;
 
         //Child item logic
-        ZeldasLetter  = false;
         WeirdEgg      = false;
         HasBottle     = false;
         Bombchus      = false;

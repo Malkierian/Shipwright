@@ -467,7 +467,6 @@ namespace Rando {
         AmmoCanDrop = /*AmmoDrops.IsNot(AMMODROPS_NONE) TODO: AmmoDrop setting*/ true;
 
         //Child item logic
-        WeirdEgg      = false;
         HasBottle     = false;
         Bombchus      = false;
         Bombchus5     = false;

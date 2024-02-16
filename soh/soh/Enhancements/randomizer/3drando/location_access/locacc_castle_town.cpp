@@ -92,7 +92,7 @@ void AreaTable_Init_CastleTown() {
                 }, {
                   //Exits
                   Entrance(RR_CASTLE_GROUNDS,          {[]{return true;}}),
-                  Entrance(RR_HC_GARDEN,               {[]{return logic->WeirdEgg || !randoCtx->GetOption(RSK_SHUFFLE_WEIRD_EGG);}}),
+                  Entrance(RR_HC_GARDEN,               {[]{return logic->CanUse(RG_WEIRD_EGG) || !randoCtx->GetOption(RSK_SHUFFLE_WEIRD_EGG);}}),
                   Entrance(RR_HC_GREAT_FAIRY_FOUNTAIN, {[]{return logic->CanBlastOrSmash;}}),
                   Entrance(RR_HC_STORMS_GROTTO,        {[]{return logic->CanOpenStormGrotto;}}),
   });

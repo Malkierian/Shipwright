@@ -38,15 +38,14 @@ class Logic {
     bool Bombchus20 = false;
     bool MagicBean = false;
     bool MagicBeanPack = false;
-    bool RutosLetter = false;
     bool Boomerang = false;
     bool DinsFire = false;
     bool FaroresWind = false;
     bool NayrusLove = false;
     bool LensOfTruth = false;
-    bool ShardOfAgony = false;
-    bool SkullMask = false;
-    bool MaskOfTruth = false;
+    bool LogicShardOfAgony = false;
+    bool SkullMask = false; //EventAccess
+    bool MaskOfTruth = false; //EventAccess
 
     // Adult logic
     bool Hammer = false;

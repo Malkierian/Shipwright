@@ -326,8 +326,8 @@ namespace Rando {
         CanTakeDamage       = Fairy || CanSurviveDamage;
         CanTakeDamageTwice  = (Fairy && NumBottles >= 2) || ((EffectiveHealth == 2) && (CanUse(RG_NAYRUS_LOVE) || Fairy)) || (EffectiveHealth > 2);
         //CanPlantBean        = IsChild && (MagicBean || MagicBeanPack);
-        CanOpenBombGrotto   = CanBlastOrSmash       && (ShardOfAgony || ctx->GetTrickOption(RT_GROTTOS_WITHOUT_AGONY));
-        CanOpenStormGrotto  = CanUse(RG_SONG_OF_STORMS) && (ShardOfAgony || ctx->GetTrickOption(RT_GROTTOS_WITHOUT_AGONY));
+        CanOpenBombGrotto   = CanBlastOrSmash       && (LogicShardOfAgony || ctx->GetTrickOption(RT_GROTTOS_WITHOUT_AGONY));
+        CanOpenStormGrotto  = CanUse(RG_SONG_OF_STORMS) && (LogicShardOfAgony || ctx->GetTrickOption(RT_GROTTOS_WITHOUT_AGONY));
         HookshotOrBoomerang = CanUse(RG_HOOKSHOT) || CanUse(RG_BOOMERANG);
         CanGetNightTimeGS   = (CanUse(RG_SUNS_SONG) || !ctx->GetOption(RSK_SKULLS_SUNS_SONG));
 
@@ -474,13 +474,12 @@ namespace Rando {
         Bombchus20    = false;
         MagicBean     = false;
         MagicBeanPack = false;
-        RutosLetter   = false;
         Boomerang     = false;
         DinsFire      = false;
         FaroresWind   = false;
         NayrusLove    = false;
         LensOfTruth   = false;
-        ShardOfAgony  = false;
+        LogicShardOfAgony  = false;
         SkullMask     = false;
         MaskOfTruth   = false;
 

@@ -38,12 +38,9 @@ class Logic {
     bool Bombchus20 = false;
     bool MagicBean = false;
     bool MagicBeanPack = false;
-    bool Boomerang = false;
     bool DinsFire = false;
     bool FaroresWind = false;
     bool NayrusLove = false;
-    bool LensOfTruth = false;
-    bool LogicShardOfAgony = false;
     bool SkullMask = false; //EventAccess
     bool MaskOfTruth = false; //EventAccess
 

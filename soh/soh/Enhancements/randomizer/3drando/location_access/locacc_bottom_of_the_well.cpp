@@ -39,9 +39,9 @@ void AreaTable_Init_BottomOfTheWell() {
                   LocationAccess(RC_BOTTOM_OF_THE_WELL_MAP_CHEST,                    {[]{return logic->HasExplosives || (((logic->SmallKeys(RR_BOTTOM_OF_THE_WELL, 3) && (randoCtx->GetTrickOption(RT_LENS_BOTW) || logic->CanUse(RG_LENS_OF_TRUTH))) || logic->CanUse(RG_DINS_FIRE) || (logic->Sticks && randoCtx->GetTrickOption(RT_BOTW_BASEMENT))) && logic->GoronBracelet);}}),
                   LocationAccess(RC_BOTTOM_OF_THE_WELL_FIRE_KEESE_CHEST,             {[]{return logic->SmallKeys(RR_BOTTOM_OF_THE_WELL, 3) && (randoCtx->GetTrickOption(RT_LENS_BOTW) || logic->CanUse(RG_LENS_OF_TRUTH));}}),
                   LocationAccess(RC_BOTTOM_OF_THE_WELL_LIKE_LIKE_CHEST,              {[]{return logic->SmallKeys(RR_BOTTOM_OF_THE_WELL, 3) && (randoCtx->GetTrickOption(RT_LENS_BOTW) || logic->CanUse(RG_LENS_OF_TRUTH));}}),
-                  LocationAccess(RC_BOTTOM_OF_THE_WELL_GS_WEST_INNER_ROOM,           {[]{return logic->Boomerang && (randoCtx->GetTrickOption(RT_LENS_BOTW) || logic->CanUse(RG_LENS_OF_TRUTH)) && logic->SmallKeys(RR_BOTTOM_OF_THE_WELL, 3);}}),
-                  LocationAccess(RC_BOTTOM_OF_THE_WELL_GS_EAST_INNER_ROOM,           {[]{return logic->Boomerang && (randoCtx->GetTrickOption(RT_LENS_BOTW) || logic->CanUse(RG_LENS_OF_TRUTH)) && logic->SmallKeys(RR_BOTTOM_OF_THE_WELL, 3);}}),
-                  LocationAccess(RC_BOTTOM_OF_THE_WELL_GS_LIKE_LIKE_CAGE,            {[]{return logic->SmallKeys(RR_BOTTOM_OF_THE_WELL, 3) && (randoCtx->GetTrickOption(RT_LENS_BOTW) || logic->CanUse(RG_LENS_OF_TRUTH)) && logic->Boomerang;}}),
+                  LocationAccess(RC_BOTTOM_OF_THE_WELL_GS_WEST_INNER_ROOM,           {[]{return logic->CanUse(RG_BOOMERANG) && (randoCtx->GetTrickOption(RT_LENS_BOTW) || logic->CanUse(RG_LENS_OF_TRUTH)) && logic->SmallKeys(RR_BOTTOM_OF_THE_WELL, 3);}}),
+                  LocationAccess(RC_BOTTOM_OF_THE_WELL_GS_EAST_INNER_ROOM,           {[]{return logic->CanUse(RG_BOOMERANG) && (randoCtx->GetTrickOption(RT_LENS_BOTW) || logic->CanUse(RG_LENS_OF_TRUTH)) && logic->SmallKeys(RR_BOTTOM_OF_THE_WELL, 3);}}),
+                  LocationAccess(RC_BOTTOM_OF_THE_WELL_GS_LIKE_LIKE_CAGE,            {[]{return logic->SmallKeys(RR_BOTTOM_OF_THE_WELL, 3) && (randoCtx->GetTrickOption(RT_LENS_BOTW) || logic->CanUse(RG_LENS_OF_TRUTH)) && logic->CanUse(RG_BOOMERANG);}}),
                 }, {
                   //Exits
                   Entrance(RR_BOTTOM_OF_THE_WELL_ENTRYWAY, {[]{return true;}}),
@@ -58,8 +58,8 @@ void AreaTable_Init_BottomOfTheWell() {
   }, {
                   //Locations
                   LocationAccess(RC_BOTTOM_OF_THE_WELL_MQ_COMPASS_CHEST,              {[]{return logic->CanUse(RG_KOKIRI_SWORD) || (logic->Sticks && randoCtx->GetTrickOption(RT_BOTW_CHILD_DEADHAND));}}),
-                  LocationAccess(RC_BOTTOM_OF_THE_WELL_MQ_DEAD_HAND_FREESTANDING_KEY, {[]{return logic->HasExplosives || (randoCtx->GetTrickOption(RT_BOTW_MQ_DEADHAND_KEY) && logic->Boomerang);}}),
-                    //Trick: logic->HasExplosives || (LogicBotWMQDeadHandKey && logic->Boomerang)
+                  LocationAccess(RC_BOTTOM_OF_THE_WELL_MQ_DEAD_HAND_FREESTANDING_KEY, {[]{return logic->HasExplosives || (randoCtx->GetTrickOption(RT_BOTW_MQ_DEADHAND_KEY) && logic->CanUse(RG_BOOMERANG));}}),
+                    //Trick: logic->HasExplosives || (LogicBotWMQDeadHandKey && logic->CanUse(RG_BOOMERANG))
                   LocationAccess(RC_BOTTOM_OF_THE_WELL_MQ_GS_BASEMENT,                {[]{return logic->CanChildAttack;}}),
                   LocationAccess(RC_BOTTOM_OF_THE_WELL_MQ_GS_COFFIN_ROOM,             {[]{return logic->CanChildAttack && logic->SmallKeys(RR_BOTTOM_OF_THE_WELL, 2);}}),
   }, {

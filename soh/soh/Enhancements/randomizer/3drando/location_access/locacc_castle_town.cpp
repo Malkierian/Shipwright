@@ -123,7 +123,7 @@ void AreaTable_Init_CastleTown() {
                   EventAccess(&logic->WanderingBugs,    {[]{return logic->WanderingBugs    || logic->CanBlastOrSmash;}}),
                 }, {
                   //Locations
-                  LocationAccess(RC_HC_GS_STORMS_GROTTO,           {[]{return (logic->CanBlastOrSmash && logic->HookshotOrBoomerang) || (logic->Boomerang && randoCtx->GetTrickOption(RT_HC_STORMS_GS));}}),
+                  LocationAccess(RC_HC_GS_STORMS_GROTTO,           {[]{return (logic->CanBlastOrSmash && logic->HookshotOrBoomerang) || (logic->CanUse(RG_BOOMERANG) && randoCtx->GetTrickOption(RT_HC_STORMS_GS));}}),
                   LocationAccess(RC_HC_STORMS_GROTTO_GOSSIP_STONE, {[]{return logic->CanBlastOrSmash;}}),
                 }, {
                   //Exits

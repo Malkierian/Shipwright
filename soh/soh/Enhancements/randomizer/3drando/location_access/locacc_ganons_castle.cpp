@@ -127,7 +127,7 @@ void AreaTable_Init_GanonsCastle() {
                   LocationAccess(RC_SHEIK_HINT_MQ_GC,  {[]{return true;}}),
                 }, {
                   //Exits
-                  Entrance(RR_GANONS_CASTLE_ENTRYWAY,        {[]{return (logic->CanUse(RG_MASTER_SWORD) || (logic->HasExplosives || ((logic->Nuts || logic->Boomerang) && (logic->Sticks || logic->CanUse(RG_KOKIRI_SWORD)))));}}),
+                  Entrance(RR_GANONS_CASTLE_ENTRYWAY,        {[]{return (logic->CanUse(RG_MASTER_SWORD) || (logic->HasExplosives || ((logic->Nuts || logic->CanUse(RG_BOOMERANG)) && (logic->Sticks || logic->CanUse(RG_KOKIRI_SWORD)))));}}),
                   Entrance(RR_GANONS_CASTLE_MQ_FOREST_TRIAL, {[]{return true;}}),
                   Entrance(RR_GANONS_CASTLE_MQ_FIRE_TRIAL,   {[]{return true;}}),
                   Entrance(RR_GANONS_CASTLE_MQ_WATER_TRIAL,  {[]{return true;}}),

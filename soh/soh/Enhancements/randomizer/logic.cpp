@@ -72,7 +72,8 @@ namespace Rando {
                 (itemName == RG_PRELUDE_OF_LIGHT       && ctx->CheckQuestItem(QUEST_SONG_PRELUDE))     ||
                 (itemName == RG_ZELDAS_LETTER          && ctx->CheckRandoInf(RAND_INF_ZELDAS_LETTER))     ||
                 (itemName == RG_RUTOS_LETTER           && ctx->CheckEventChkInf(EVENTCHKINF_OBTAINED_RUTOS_LETTER))     ||
-                (itemName == RG_WEIRD_EGG              && ctx->CheckRandoInf(RAND_INF_WEIRD_EGG));
+                (itemName == RG_WEIRD_EGG              && ctx->CheckRandoInf(RAND_INF_WEIRD_EGG))                   ||
+                (itemName == RG_STONE_OF_AGONY         && ctx->CheckQuestItem(QUEST_STONE_OF_AGONY));
     }
 
     //Can the passed in item be used?
@@ -168,10 +169,10 @@ namespace Rando {
 
     bool Logic::HasProjectile(HasProjectileAge age) {
         return HasExplosives ||
-               (age == HasProjectileAge::Child  && (Slingshot || Boomerang)) ||
+               (age == HasProjectileAge::Child  && (Slingshot || CanUse(RG_BOOMERANG))) ||
                (age == HasProjectileAge::Adult  && (Hookshot  || Bow      )) ||
-               (age == HasProjectileAge::Both   && (Slingshot || Boomerang)  && (Hookshot || Bow)) ||
-               (age == HasProjectileAge::Either && (Slingshot || Boomerang   ||  Hookshot || Bow));
+               (age == HasProjectileAge::Both   && (Slingshot || CanUse(RG_BOOMERANG))  && (Hookshot || Bow)) ||
+               (age == HasProjectileAge::Either && (Slingshot || CanUse(RG_BOOMERANG)   ||  Hookshot || Bow));
     }
 
     bool Logic::HasBossSoul(RandomizerGet itemName) {
@@ -305,7 +306,7 @@ namespace Rando {
         // IsAdult = Age == AGE_ADULT;
 
         CanBlastOrSmash = HasExplosives || CanUse(RG_MEGATON_HAMMER);
-        CanChildAttack  = IsChild && (Slingshot || Boomerang || Sticks || CanUse(RG_KOKIRI_SWORD) || HasExplosives || CanUse(RG_DINS_FIRE) || CanUse(RG_MASTER_SWORD) || CanUse(RG_MEGATON_HAMMER) || CanUse(RG_BIGGORON_SWORD));
+        CanChildAttack  = IsChild && (Slingshot || CanUse(RG_BOOMERANG) || Sticks || CanUse(RG_KOKIRI_SWORD) || HasExplosives || CanUse(RG_DINS_FIRE) || CanUse(RG_MASTER_SWORD) || CanUse(RG_MEGATON_HAMMER) || CanUse(RG_BIGGORON_SWORD));
         CanChildDamage  = IsChild && (Slingshot ||              Sticks || CanUse(RG_KOKIRI_SWORD) || HasExplosives || CanUse(RG_DINS_FIRE) || CanUse(RG_MASTER_SWORD) || CanUse(RG_MEGATON_HAMMER) || CanUse(RG_BIGGORON_SWORD));
         CanAdultAttack  = IsAdult && (CanUse(RG_FAIRY_BOW) || CanUse(RG_BOOMERANG)       || CanUse(RG_STICKS) || CanUse(RG_KOKIRI_SWORD) || HasExplosives || CanUse(RG_DINS_FIRE) || MasterSword || Hammer || BiggoronSword || Hookshot);
         CanAdultDamage  = IsAdult && (CanUse(RG_FAIRY_BOW) || CanUse(RG_STICKS)          || CanUse(RG_KOKIRI_SWORD) || HasExplosives || CanUse(RG_DINS_FIRE) || MasterSword || Hammer || BiggoronSword);
@@ -326,8 +327,8 @@ namespace Rando {
         CanTakeDamage       = Fairy || CanSurviveDamage;
         CanTakeDamageTwice  = (Fairy && NumBottles >= 2) || ((EffectiveHealth == 2) && (CanUse(RG_NAYRUS_LOVE) || Fairy)) || (EffectiveHealth > 2);
         //CanPlantBean        = IsChild && (MagicBean || MagicBeanPack);
-        CanOpenBombGrotto   = CanBlastOrSmash       && (LogicShardOfAgony || ctx->GetTrickOption(RT_GROTTOS_WITHOUT_AGONY));
-        CanOpenStormGrotto  = CanUse(RG_SONG_OF_STORMS) && (LogicShardOfAgony || ctx->GetTrickOption(RT_GROTTOS_WITHOUT_AGONY));
+        CanOpenBombGrotto   = CanBlastOrSmash       && (HasItem(RG_STONE_OF_AGONY) || ctx->GetTrickOption(RT_GROTTOS_WITHOUT_AGONY));
+        CanOpenStormGrotto  = CanUse(RG_SONG_OF_STORMS) && (HasItem(RG_STONE_OF_AGONY) || ctx->GetTrickOption(RT_GROTTOS_WITHOUT_AGONY));
         HookshotOrBoomerang = CanUse(RG_HOOKSHOT) || CanUse(RG_BOOMERANG);
         CanGetNightTimeGS   = (CanUse(RG_SUNS_SONG) || !ctx->GetOption(RSK_SKULLS_SUNS_SONG));
 
@@ -474,12 +475,9 @@ namespace Rando {
         Bombchus20    = false;
         MagicBean     = false;
         MagicBeanPack = false;
-        Boomerang     = false;
         DinsFire      = false;
         FaroresWind   = false;
         NayrusLove    = false;
-        LensOfTruth   = false;
-        LogicShardOfAgony  = false;
         SkullMask     = false;
         MaskOfTruth   = false;
 

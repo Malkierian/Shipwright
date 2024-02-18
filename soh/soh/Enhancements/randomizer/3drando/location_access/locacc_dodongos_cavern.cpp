@@ -218,7 +218,7 @@ void AreaTable_Init_DodongosCavern() {
 
   areaTable[RR_DODONGOS_CAVERN_MQ_LOBBY] = Area("Dodongos Cavern MQ Lobby", "Dodongos Cavern", RA_DODONGOS_CAVERN, NO_DAY_NIGHT_CYCLE, {
                   //Events
-                  EventAccess(&logic->DekuBabaSticks,   {[]{return logic->DekuBabaSticks || (logic->IsAdult || logic->CanUse(RG_KOKIRI_SWORD) || logic->Boomerang);}}),
+                  EventAccess(&logic->DekuBabaSticks,   {[]{return logic->DekuBabaSticks || (logic->IsAdult || logic->CanUse(RG_KOKIRI_SWORD) || logic->CanUse(RG_BOOMERANG));}}),
                   EventAccess(&logic->GossipStoneFairy, {[]{return logic->GossipStoneFairy || logic->CanSummonGossipFairy;}}),
   }, {
                   //Locations

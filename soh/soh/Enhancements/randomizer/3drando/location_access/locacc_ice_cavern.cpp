@@ -69,8 +69,8 @@ void AreaTable_Init_IceCavern() {
                   LocationAccess(RC_ICE_CAVERN_MQ_IRON_BOOTS_CHEST, {[]{return logic->IsAdult && (logic->CanJumpslash || logic->CanUse(RG_MEGATON_HAMMER));}}),
                   LocationAccess(RC_SHEIK_IN_ICE_CAVERN,            {[]{return logic->IsAdult && (logic->CanJumpslash || logic->CanUse(RG_MEGATON_HAMMER));}}),
                   LocationAccess(RC_ICE_CAVERN_MQ_GS_ICE_BLOCK,     {[]{return logic->CanAdultAttack || logic->CanChildAttack;}}),
-                  LocationAccess(RC_ICE_CAVERN_MQ_GS_SCARECROW,     {[]{return logic->CanUse(RG_SCARECROW) || (logic->HoverBoots && logic->CanUse(RG_LONGSHOT)) || (randoCtx->GetTrickOption(RT_ICE_MQ_SCARECROW) && logic->IsAdult);}}),
-                    //Tricks: (logic->CanUse(RG_SCARECROW) || (logic->HoverBoots && logic->CanUse(RG_LONGSHOT)) || LogicIceMQScarecrow) && logic->IsAdult
+                  LocationAccess(RC_ICE_CAVERN_MQ_GS_SCARECROW,     {[]{return logic->CanUse(RG_SCARECROW) || (logic->CanUse(RG_HOVER_BOOTS) && logic->CanUse(RG_LONGSHOT)) || (randoCtx->GetTrickOption(RT_ICE_MQ_SCARECROW) && logic->IsAdult);}}),
+                    //Tricks: (logic->CanUse(RG_SCARECROW) || (logic->CanUse(RG_HOVER_BOOTS) && logic->CanUse(RG_LONGSHOT)) || LogicIceMQScarecrow) && logic->IsAdult
   }, {});
 
   areaTable[RR_ICE_CAVERN_MQ_COMPASS_ROOM] = Area("Ice Cavern MQ Compass Room", "Ice Cavern", RA_ICE_CAVERN, NO_DAY_NIGHT_CYCLE, {}, {

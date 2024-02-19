@@ -51,12 +51,12 @@ void AreaTable_Init_ShadowTemple() {
                   LocationAccess(RC_SHADOW_TEMPLE_INVISIBLE_BLADES_VISIBLE_CHEST,   {[]{return logic->CanJumpslash;}}),
                   LocationAccess(RC_SHADOW_TEMPLE_INVISIBLE_BLADES_INVISIBLE_CHEST, {[]{return logic->CanJumpslash;}}),
                   LocationAccess(RC_SHADOW_TEMPLE_FALLING_SPIKES_LOWER_CHEST,       {[]{return true;}}),
-                  LocationAccess(RC_SHADOW_TEMPLE_FALLING_SPIKES_UPPER_CHEST,       {[]{return (randoCtx->GetTrickOption(RT_SHADOW_UMBRELLA) && logic->HoverBoots) || logic->GoronBracelet;}}),
-                  LocationAccess(RC_SHADOW_TEMPLE_FALLING_SPIKES_SWITCH_CHEST,      {[]{return (randoCtx->GetTrickOption(RT_SHADOW_UMBRELLA) && logic->HoverBoots) || logic->GoronBracelet;}}),
+                  LocationAccess(RC_SHADOW_TEMPLE_FALLING_SPIKES_UPPER_CHEST,       {[]{return (randoCtx->GetTrickOption(RT_SHADOW_UMBRELLA) && logic->CanUse(RG_HOVER_BOOTS)) || logic->GoronBracelet;}}),
+                  LocationAccess(RC_SHADOW_TEMPLE_FALLING_SPIKES_SWITCH_CHEST,      {[]{return (randoCtx->GetTrickOption(RT_SHADOW_UMBRELLA) && logic->CanUse(RG_HOVER_BOOTS)) || logic->GoronBracelet;}}),
                   LocationAccess(RC_SHADOW_TEMPLE_INVISIBLE_SPIKES_CHEST,           {[]{return logic->SmallKeys(RR_SHADOW_TEMPLE, 2, 3) && ((randoCtx->GetTrickOption(RT_LENS_SHADOW_PLATFORM) && randoCtx->GetTrickOption(RT_LENS_SHADOW)) || logic->CanUse(RG_LENS_OF_TRUTH));}}),
                   LocationAccess(RC_SHADOW_TEMPLE_FREESTANDING_KEY,                 {[]{return logic->SmallKeys(RR_SHADOW_TEMPLE, 2, 3) && ((randoCtx->GetTrickOption(RT_LENS_SHADOW_PLATFORM) && randoCtx->GetTrickOption(RT_LENS_SHADOW)) || logic->CanUse(RG_LENS_OF_TRUTH)) && logic->Hookshot && (logic->Bombs || logic->GoronBracelet || (randoCtx->GetTrickOption(RT_SHADOW_FREESTANDING_KEY) && logic->HasBombchus));}}),
                   LocationAccess(RC_SHADOW_TEMPLE_GS_LIKE_LIKE_ROOM,                {[]{return logic->CanJumpslash;}}),
-                  LocationAccess(RC_SHADOW_TEMPLE_GS_FALLING_SPIKES_ROOM,           {[]{return logic->Hookshot || (randoCtx->GetTrickOption(RT_SHADOW_UMBRELLA_GS) && logic->HoverBoots);}}),
+                  LocationAccess(RC_SHADOW_TEMPLE_GS_FALLING_SPIKES_ROOM,           {[]{return logic->Hookshot || (randoCtx->GetTrickOption(RT_SHADOW_UMBRELLA_GS) && logic->CanUse(RG_HOVER_BOOTS));}}),
                   LocationAccess(RC_SHADOW_TEMPLE_GS_SINGLE_GIANT_POT,              {[]{return logic->SmallKeys(RR_SHADOW_TEMPLE, 2, 3) && ((randoCtx->GetTrickOption(RT_LENS_SHADOW_PLATFORM) && randoCtx->GetTrickOption(RT_LENS_SHADOW)) || logic->CanUse(RG_LENS_OF_TRUTH)) && logic->Hookshot;}}),
                 }, {
                   //Exits
@@ -93,8 +93,8 @@ void AreaTable_Init_ShadowTemple() {
   areaTable[RR_SHADOW_TEMPLE_MQ_BEGINNING] = Area("Shadow Temple MQ Beginning", "Shadow Temple", RA_SHADOW_TEMPLE, NO_DAY_NIGHT_CYCLE, {}, {}, {
                   //Exits
                   Entrance(RR_SHADOW_TEMPLE_ENTRYWAY,          {[]{return true;}}),
-                  Entrance(RR_SHADOW_TEMPLE_MQ_FIRST_BEAMOS,   {[]{return logic->IsAdult && (logic->CanUse(RG_FIRE_ARROWS) || logic->HoverBoots || (randoCtx->GetTrickOption(RT_SHADOW_MQ_GAP) && logic->CanUse(RG_LONGSHOT)));}}),
-                    //Trick: logic->IsAdult && (logic->CanUse(RG_FIRE_ARROWS) || logic->HoverBoots || (LogicShadowMQGap && logic->CanUse(RG_LONGSHOT)))
+                  Entrance(RR_SHADOW_TEMPLE_MQ_FIRST_BEAMOS,   {[]{return logic->IsAdult && (logic->CanUse(RG_FIRE_ARROWS) || logic->CanUse(RG_HOVER_BOOTS) || (randoCtx->GetTrickOption(RT_SHADOW_MQ_GAP) && logic->CanUse(RG_LONGSHOT)));}}),
+                    //Trick: logic->IsAdult && (logic->CanUse(RG_FIRE_ARROWS) || logic->CanUse(RG_HOVER_BOOTS) || (LogicShadowMQGap && logic->CanUse(RG_LONGSHOT)))
                   Entrance(RR_SHADOW_TEMPLE_MQ_DEAD_HAND_AREA, {[]{return logic->HasExplosives && logic->SmallKeys(RR_SHADOW_TEMPLE, 6);}}),
   });
 
@@ -130,15 +130,15 @@ void AreaTable_Init_ShadowTemple() {
                   //Locations
                   LocationAccess(RC_SHADOW_TEMPLE_MQ_BEAMOS_SILVER_RUPEES_CHEST,  {[]{return logic->IsAdult && logic->CanUse(RG_LONGSHOT);}}),
                   LocationAccess(RC_SHADOW_TEMPLE_MQ_FALLING_SPIKES_LOWER_CHEST,  {[]{return true;}}),
-                  LocationAccess(RC_SHADOW_TEMPLE_MQ_FALLING_SPIKES_UPPER_CHEST,  {[]{return (randoCtx->GetTrickOption(RT_SHADOW_UMBRELLA) && logic->HoverBoots) || logic->GoronBracelet;}}),
-                  LocationAccess(RC_SHADOW_TEMPLE_MQ_FALLING_SPIKES_SWITCH_CHEST, {[]{return (randoCtx->GetTrickOption(RT_SHADOW_UMBRELLA) && logic->HoverBoots) || logic->GoronBracelet;}}),
-                  LocationAccess(RC_SHADOW_TEMPLE_MQ_INVISIBLE_SPIKES_CHEST,      {[]{return logic->CanJumpslash && logic->HoverBoots && logic->SmallKeys(RR_SHADOW_TEMPLE, 3) && ((randoCtx->GetTrickOption(RT_LENS_SHADOW_MQ) && randoCtx->GetTrickOption(RT_LENS_SHADOW_MQ_PLATFORM)) || logic->CanUse(RG_LENS_OF_TRUTH));}}),
-                  LocationAccess(RC_SHADOW_TEMPLE_MQ_STALFOS_ROOM_CHEST,          {[]{return (logic->CanUse(RG_KOKIRI_SWORD) || logic->CanUse(RG_MASTER_SWORD) || logic->CanUse(RG_BIGGORON_SWORD)) && logic->HoverBoots && logic->SmallKeys(RR_SHADOW_TEMPLE, 3) && logic->Hookshot && ((randoCtx->GetTrickOption(RT_LENS_SHADOW_MQ) &&
+                  LocationAccess(RC_SHADOW_TEMPLE_MQ_FALLING_SPIKES_UPPER_CHEST,  {[]{return (randoCtx->GetTrickOption(RT_SHADOW_UMBRELLA) && logic->CanUse(RG_HOVER_BOOTS)) || logic->GoronBracelet;}}),
+                  LocationAccess(RC_SHADOW_TEMPLE_MQ_FALLING_SPIKES_SWITCH_CHEST, {[]{return (randoCtx->GetTrickOption(RT_SHADOW_UMBRELLA) && logic->CanUse(RG_HOVER_BOOTS)) || logic->GoronBracelet;}}),
+                  LocationAccess(RC_SHADOW_TEMPLE_MQ_INVISIBLE_SPIKES_CHEST,      {[]{return logic->CanJumpslash && logic->CanUse(RG_HOVER_BOOTS) && logic->SmallKeys(RR_SHADOW_TEMPLE, 3) && ((randoCtx->GetTrickOption(RT_LENS_SHADOW_MQ) && randoCtx->GetTrickOption(RT_LENS_SHADOW_MQ_PLATFORM)) || logic->CanUse(RG_LENS_OF_TRUTH));}}),
+                  LocationAccess(RC_SHADOW_TEMPLE_MQ_STALFOS_ROOM_CHEST,          {[]{return (logic->CanUse(RG_KOKIRI_SWORD) || logic->CanUse(RG_MASTER_SWORD) || logic->CanUse(RG_BIGGORON_SWORD)) && logic->CanUse(RG_HOVER_BOOTS) && logic->SmallKeys(RR_SHADOW_TEMPLE, 3) && logic->Hookshot && ((randoCtx->GetTrickOption(RT_LENS_SHADOW_MQ) &&
                    randoCtx->GetTrickOption(RT_LENS_SHADOW_MQ_INVISIBLE_BLADES) && randoCtx->GetTrickOption(RT_LENS_SHADOW_MQ_PLATFORM)) || logic->CanUse(RG_LENS_OF_TRUTH));}}),
-                  LocationAccess(RC_SHADOW_TEMPLE_MQ_GS_FALLING_SPIKES_ROOM,      {[]{return logic->Hookshot || (randoCtx->GetTrickOption(RT_SHADOW_UMBRELLA_GS) && logic->HoverBoots);}}),
+                  LocationAccess(RC_SHADOW_TEMPLE_MQ_GS_FALLING_SPIKES_ROOM,      {[]{return logic->Hookshot || (randoCtx->GetTrickOption(RT_SHADOW_UMBRELLA_GS) && logic->CanUse(RG_HOVER_BOOTS));}}),
   }, {
                   //Exits
-                  Entrance(RR_SHADOW_TEMPLE_MQ_WIND_TUNNEL, {[]{return logic->HoverBoots && ((randoCtx->GetTrickOption(RT_LENS_SHADOW_MQ) && randoCtx->GetTrickOption(RT_LENS_SHADOW_MQ_PLATFORM)) || logic->CanUse(RG_LENS_OF_TRUTH)) && logic->Hookshot && logic->SmallKeys(RR_SHADOW_TEMPLE, 4);}}),
+                  Entrance(RR_SHADOW_TEMPLE_MQ_WIND_TUNNEL, {[]{return logic->CanUse(RG_HOVER_BOOTS) && ((randoCtx->GetTrickOption(RT_LENS_SHADOW_MQ) && randoCtx->GetTrickOption(RT_LENS_SHADOW_MQ_PLATFORM)) || logic->CanUse(RG_LENS_OF_TRUTH)) && logic->Hookshot && logic->SmallKeys(RR_SHADOW_TEMPLE, 4);}}),
   });
 
   areaTable[RR_SHADOW_TEMPLE_MQ_WIND_TUNNEL] = Area("Shadow Temple MQ Wind Tunnel", "Shadow Temple", RA_SHADOW_TEMPLE, NO_DAY_NIGHT_CYCLE, {

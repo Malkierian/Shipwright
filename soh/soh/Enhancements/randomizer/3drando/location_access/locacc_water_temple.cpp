@@ -293,10 +293,10 @@ void AreaTable_Init_WaterTemple() {
 
   areaTable[RR_WATER_TEMPLE_MQ_BASEMENT_GATED_AREAS] = Area("Water Temple MQ Basement Gated Areas", "Water Temple", RA_WATER_TEMPLE, NO_DAY_NIGHT_CYCLE, {}, {
                   //Locations
-                  LocationAccess(RC_WATER_TEMPLE_MQ_FREESTANDING_KEY,         {[]{return logic->HoverBoots || logic->CanUse(RG_SCARECROW) || randoCtx->GetTrickOption(RT_WATER_NORTH_BASEMENT_LEDGE_JUMP);}}),
-                  LocationAccess(RC_WATER_TEMPLE_MQ_GS_TRIPLE_WALL_TORCH,     {[]{return logic->CanUse(RG_FIRE_ARROWS) && (logic->HoverBoots || logic->CanUse(RG_SCARECROW));}}),
-                  LocationAccess(RC_WATER_TEMPLE_MQ_GS_FREESTANDING_KEY_AREA, {[]{return randoCtx->GetTrickOption(RT_WATER_MQ_LOCKED_GS) || (logic->SmallKeys(RR_WATER_TEMPLE, 2) && (logic->HoverBoots || logic->CanUse(RG_SCARECROW) || randoCtx->GetTrickOption(RT_WATER_NORTH_BASEMENT_LEDGE_JUMP)) && logic->CanJumpslash);}}),
-                    //Trick: LogicWaterMQLockedGS || (logic->SmallKeys(RR_WATER_TEMPLE, 2) && (logic->HoverBoots || logic->CanUse(RG_SCARECROW) || LogicWaterNorthBasementLedgeJump))
+                  LocationAccess(RC_WATER_TEMPLE_MQ_FREESTANDING_KEY,         {[]{return logic->CanUse(RG_HOVER_BOOTS) || logic->CanUse(RG_SCARECROW) || randoCtx->GetTrickOption(RT_WATER_NORTH_BASEMENT_LEDGE_JUMP);}}),
+                  LocationAccess(RC_WATER_TEMPLE_MQ_GS_TRIPLE_WALL_TORCH,     {[]{return logic->CanUse(RG_FIRE_ARROWS) && (logic->CanUse(RG_HOVER_BOOTS) || logic->CanUse(RG_SCARECROW));}}),
+                  LocationAccess(RC_WATER_TEMPLE_MQ_GS_FREESTANDING_KEY_AREA, {[]{return randoCtx->GetTrickOption(RT_WATER_MQ_LOCKED_GS) || (logic->SmallKeys(RR_WATER_TEMPLE, 2) && (logic->CanUse(RG_HOVER_BOOTS) || logic->CanUse(RG_SCARECROW) || randoCtx->GetTrickOption(RT_WATER_NORTH_BASEMENT_LEDGE_JUMP)) && logic->CanJumpslash);}}),
+                    //Trick: LogicWaterMQLockedGS || (logic->SmallKeys(RR_WATER_TEMPLE, 2) && (logic->CanUse(RG_HOVER_BOOTS) || logic->CanUse(RG_SCARECROW) || LogicWaterNorthBasementLedgeJump))
   }, {});
   }
 

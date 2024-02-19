@@ -140,7 +140,7 @@ void AreaTable_Init_ZorasDomain() {
                 }, {
                   //Locations
                   LocationAccess(RC_ZF_ICEBERC_FREESTANDING_POH, {[]{return logic->IsAdult;}}),
-                  LocationAccess(RC_ZF_BOTTOM_FREESTANDING_POH,  {[]{return logic->IsAdult && logic->IronBoots && logic->WaterTimer >= 24;}}),
+                  LocationAccess(RC_ZF_BOTTOM_FREESTANDING_POH,  {[]{return logic->IsAdult && logic->CanUse(RG_IRON_BOOTS) && logic->WaterTimer >= 24;}}),
                   LocationAccess(RC_ZF_GS_TREE,                  {[]{return logic->IsChild;}}),
                   LocationAccess(RC_ZF_GS_ABOVE_THE_LOG,         {[]{return logic->IsChild && logic->HookshotOrBoomerang && logic->AtNight && logic->CanGetNightTimeGS;}}),
                   LocationAccess(RC_ZF_GS_HIDDEN_CAVE,           {[]{return logic->CanUse(RG_SILVER_GAUNTLETS) && logic->CanBlastOrSmash && logic->HookshotOrBoomerang && logic->IsAdult && logic->AtNight && logic->CanGetNightTimeGS;}}),

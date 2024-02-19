@@ -95,20 +95,20 @@ void AreaTable_Init_GerudoValley() {
   areaTable[RR_GERUDO_FORTRESS] = Area("Gerudo Fortress", "Gerudo Fortress", RA_GERUDO_FORTRESS, NO_DAY_NIGHT_CYCLE, {
                   //Events
                   EventAccess(&logic->CarpenterRescue, {[]{return logic->CanFinishGerudoFortress;}}),
-                  EventAccess(&logic->GF_GateOpen,     {[]{return logic->IsAdult && logic->GerudoToken;}}),
-                  EventAccess(&logic->GtG_GateOpen,    {[]{return logic->GtG_GateOpen || (logic->IsAdult && logic->GerudoToken);}}),
+                  EventAccess(&logic->GF_GateOpen,     {[]{return logic->IsAdult && logic->HasItem(RG_GERUDO_MEMBERSHIP_CARD);}}),
+                  EventAccess(&logic->GtG_GateOpen,    {[]{return logic->GtG_GateOpen || (logic->IsAdult && logic->HasItem(RG_GERUDO_MEMBERSHIP_CARD));}}),
                 }, {
                   //Locations
                   LocationAccess(RC_GF_CHEST,              {[]{return logic->CanUse(RG_HOVER_BOOTS) || (logic->IsAdult && logic->CanUse(RG_SCARECROW)) || logic->CanUse(RG_LONGSHOT);}}),
-                  LocationAccess(RC_GF_HBA_1000_POINTS,    {[]{return logic->GerudoToken && logic->CanRideEpona && logic->Bow && logic->AtDay;}}),
-                  LocationAccess(RC_GF_HBA_1500_POINTS,    {[]{return logic->GerudoToken && logic->CanRideEpona && logic->Bow && logic->AtDay;}}),
+                  LocationAccess(RC_GF_HBA_1000_POINTS,    {[]{return logic->HasItem(RG_GERUDO_MEMBERSHIP_CARD) && logic->CanRideEpona && logic->Bow && logic->AtDay;}}),
+                  LocationAccess(RC_GF_HBA_1500_POINTS,    {[]{return logic->HasItem(RG_GERUDO_MEMBERSHIP_CARD) && logic->CanRideEpona && logic->Bow && logic->AtDay;}}),
                   LocationAccess(RC_GF_NORTH_F1_CARPENTER, {[]{return  logic->CanUse(RG_KOKIRI_SWORD) || logic->CanUse(RG_MASTER_SWORD) || logic->CanUse(RG_BIGGORON_SWORD);}}),
-                  LocationAccess(RC_GF_NORTH_F2_CARPENTER, {[]{return (logic->CanUse(RG_KOKIRI_SWORD) || logic->CanUse(RG_MASTER_SWORD) || logic->CanUse(RG_BIGGORON_SWORD)) && (logic->GerudoToken || logic->CanUse(RG_FAIRY_BOW) || logic->CanUse(RG_HOOKSHOT) || logic->CanUse(RG_HOVER_BOOTS) || randoCtx->GetTrickOption(RT_GF_KITCHEN));}}),
+                  LocationAccess(RC_GF_NORTH_F2_CARPENTER, {[]{return (logic->CanUse(RG_KOKIRI_SWORD) || logic->CanUse(RG_MASTER_SWORD) || logic->CanUse(RG_BIGGORON_SWORD)) && (logic->HasItem(RG_GERUDO_MEMBERSHIP_CARD) || logic->CanUse(RG_FAIRY_BOW) || logic->CanUse(RG_HOOKSHOT) || logic->CanUse(RG_HOVER_BOOTS) || randoCtx->GetTrickOption(RT_GF_KITCHEN));}}),
                   LocationAccess(RC_GF_SOUTH_F1_CARPENTER, {[]{return  logic->CanUse(RG_KOKIRI_SWORD) || logic->CanUse(RG_MASTER_SWORD) || logic->CanUse(RG_BIGGORON_SWORD);}}),
                   LocationAccess(RC_GF_SOUTH_F2_CARPENTER, {[]{return  logic->CanUse(RG_KOKIRI_SWORD) || logic->CanUse(RG_MASTER_SWORD) || logic->CanUse(RG_BIGGORON_SWORD);}}),
                   LocationAccess(RC_GF_GERUDO_MEMBERSHIP_CARD,       {[]{return logic->CanFinishGerudoFortress;}}),
-                  LocationAccess(RC_GF_GS_ARCHERY_RANGE,   {[]{return logic->IsAdult && logic->HookshotOrBoomerang && logic->GerudoToken && logic->AtNight && logic->CanGetNightTimeGS;}}),
-                  LocationAccess(RC_GF_GS_TOP_FLOOR,       {[]{return logic->IsAdult && logic->AtNight && (logic->CanJumpslash || logic->CanUse(RG_FAIRY_SLINGSHOT) || logic->CanUse(RG_BOOMERANG) || logic->HasExplosives || logic->CanUse(RG_FAIRY_BOW) || logic->CanUse(RG_HOOKSHOT) || logic->CanUse(RG_DINS_FIRE)) && (logic->GerudoToken || logic->CanUse(RG_FAIRY_BOW) || logic->CanUse(RG_HOOKSHOT) || logic->CanUse(RG_HOVER_BOOTS) || randoCtx->GetTrickOption(RT_GF_KITCHEN) || randoCtx->GetTrickOption(RT_GF_JUMP)) && logic->CanGetNightTimeGS;}}),
+                  LocationAccess(RC_GF_GS_ARCHERY_RANGE,   {[]{return logic->IsAdult && logic->HookshotOrBoomerang && logic->HasItem(RG_GERUDO_MEMBERSHIP_CARD) && logic->AtNight && logic->CanGetNightTimeGS;}}),
+                  LocationAccess(RC_GF_GS_TOP_FLOOR,       {[]{return logic->IsAdult && logic->AtNight && (logic->CanJumpslash || logic->CanUse(RG_FAIRY_SLINGSHOT) || logic->CanUse(RG_BOOMERANG) || logic->HasExplosives || logic->CanUse(RG_FAIRY_BOW) || logic->CanUse(RG_HOOKSHOT) || logic->CanUse(RG_DINS_FIRE)) && (logic->HasItem(RG_GERUDO_MEMBERSHIP_CARD) || logic->CanUse(RG_FAIRY_BOW) || logic->CanUse(RG_HOOKSHOT) || logic->CanUse(RG_HOVER_BOOTS) || randoCtx->GetTrickOption(RT_GF_KITCHEN) || randoCtx->GetTrickOption(RT_GF_JUMP)) && logic->CanGetNightTimeGS;}}),
                 }, {
                   //Exits
                   Entrance(RR_GV_FORTRESS_SIDE,                 {[]{return true;}}),
@@ -119,7 +119,7 @@ void AreaTable_Init_GerudoValley() {
 
   areaTable[RR_GF_OUTSIDE_GATE] = Area("GF Outside Gate", "Gerudo Fortress", RA_GERUDO_FORTRESS, NO_DAY_NIGHT_CYCLE, {
                   //Events
-                  EventAccess(&logic->GF_GateOpen, {[]{return logic->IsAdult && logic->GerudoToken && (randoCtx->GetOption(RSK_SHUFFLE_GERUDO_MEMBERSHIP_CARD) || randoCtx->GetOption(RSK_SHUFFLE_OVERWORLD_ENTRANCES) /*|| ShuffleSpecialIndoorEntrances*/);}}),
+                  EventAccess(&logic->GF_GateOpen, {[]{return logic->IsAdult && logic->HasItem(RG_GERUDO_MEMBERSHIP_CARD) && (randoCtx->GetOption(RSK_SHUFFLE_GERUDO_MEMBERSHIP_CARD) || randoCtx->GetOption(RSK_SHUFFLE_OVERWORLD_ENTRANCES) /*|| ShuffleSpecialIndoorEntrances*/);}}),
                 }, {}, {
                   //Exits
                   Entrance(RR_GERUDO_FORTRESS,         {[]{return (logic->IsAdult && (logic->Hookshot || !randoCtx->GetOption(RSK_SHUFFLE_OVERWORLD_ENTRANCES))) || logic->GF_GateOpen;}}),

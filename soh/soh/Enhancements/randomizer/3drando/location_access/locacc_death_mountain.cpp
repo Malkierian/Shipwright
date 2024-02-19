@@ -19,7 +19,7 @@ void AreaTable_Init_DeathMountain() {
                   //Exits
                   Entrance(RR_KAK_BEHIND_GATE,          {[]{return true;}}),
                   Entrance(RR_GORON_CITY,               {[]{return true;}}),
-                  Entrance(RR_DEATH_MOUNTAIN_SUMMIT,    {[]{return Here(RR_DEATH_MOUNTAIN_TRAIL, []{return logic->CanBlastOrSmash;}) || (logic->IsAdult && ((CanPlantBean(RR_DEATH_MOUNTAIN_TRAIL) && logic->GoronBracelet) || (logic->HoverBoots && randoCtx->GetTrickOption(RT_DMT_CLIMB_HOVERS))));}}),
+                  Entrance(RR_DEATH_MOUNTAIN_SUMMIT,    {[]{return Here(RR_DEATH_MOUNTAIN_TRAIL, []{return logic->CanBlastOrSmash;}) || (logic->IsAdult && ((CanPlantBean(RR_DEATH_MOUNTAIN_TRAIL) && logic->GoronBracelet) || (logic->CanUse(RG_HOVER_BOOTS) && randoCtx->GetTrickOption(RT_DMT_CLIMB_HOVERS))));}}),
                   Entrance(RR_DODONGOS_CAVERN_ENTRYWAY, {[]{return logic->HasExplosives || logic->GoronBracelet || logic->IsAdult;}}),
                   Entrance(RR_DMT_STORMS_GROTTO,        {[]{return logic->CanOpenStormGrotto;}}),
   });
@@ -209,7 +209,7 @@ void AreaTable_Init_DeathMountain() {
 
   areaTable[RR_DMC_CENTRAL_NEARBY] = Area("DMC Central Nearby", "Death Mountain Crater", RA_DEATH_MOUNTAIN_CRATER, NO_DAY_NIGHT_CYCLE, {}, {
                   //Locations
-                  LocationAccess(RC_DMC_VOLCANO_FREESTANDING_POH, {[]{return logic->IsAdult && logic->Hearts >= 3 && (CanPlantBean(RR_DMC_CENTRAL_LOCAL) || (randoCtx->GetTrickOption(RT_DMC_HOVER_BEAN_POH) && logic->HoverBoots));}}),
+                  LocationAccess(RC_DMC_VOLCANO_FREESTANDING_POH, {[]{return logic->IsAdult && logic->Hearts >= 3 && (CanPlantBean(RR_DMC_CENTRAL_LOCAL) || (randoCtx->GetTrickOption(RT_DMC_HOVER_BEAN_POH) && logic->CanUse(RG_HOVER_BOOTS)));}}),
                   LocationAccess(RC_SHEIK_IN_CRATER,              {[]{return logic->IsAdult && (logic->FireTimer >= 8 || logic->Hearts >= 3);}}),
                 }, {
                   //Exits

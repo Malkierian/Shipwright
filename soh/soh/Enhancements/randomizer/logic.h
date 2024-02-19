@@ -45,20 +45,8 @@ class Logic {
     bool MaskOfTruth = false; //EventAccess
 
     // Adult logic
-    bool Hammer = false;
-    bool IronBoots = false;
-    bool HoverBoots = false;
-    bool MirrorShield = false;
-    bool GoronTunic = false;
-    bool ZoraTunic = false;
     bool Epona = false;
     bool BigPoe = false;
-    bool GerudoToken = false;
-    bool FireArrows = false;
-    bool IceArrows = false;
-    bool LightArrows = false;
-    bool MasterSword = false;
-    bool BiggoronSword = false;
 
     // Trade Quest
     bool PocketEgg = false;
@@ -385,6 +373,7 @@ class Logic {
     Logic();
     void UpdateHelpers();
     bool CanUse(RandomizerGet itemName);
+    bool HasItem(RandomizerGet itemName);
     bool HasProjectile(HasProjectileAge age);
     bool HasBossSoul(RandomizerGet itemName);
     bool SmallKeys(RandomizerRegion dungeon, uint8_t requiredAmount);
@@ -396,6 +385,5 @@ class Logic {
   private:
     static bool IsMagicItem(RandomizerGet item);
     static bool IsMagicArrow(RandomizerGet item);
-    bool HasItem(RandomizerGet itemName);
 }; // class Logic
 } // namespace Rando

@@ -207,10 +207,10 @@ void AreaTable_Init_SpiritTemple() {
   areaTable[RR_SPIRIT_TEMPLE_MQ_LOWER_ADULT] = Area("Spirit Temple MQ Lower Adult", "Spirit Temple", RA_SPIRIT_TEMPLE, NO_DAY_NIGHT_CYCLE, {}, {
                   //Locations
                   LocationAccess(RC_SPIRIT_TEMPLE_MQ_LEEVER_ROOM_CHEST,          {[]{return true;}}),
-                  LocationAccess(RC_SPIRIT_TEMPLE_MQ_SYMPHONY_ROOM_CHEST,        {[]{return logic->SmallKeys(RR_SPIRIT_TEMPLE, 7) && logic->CanUse(RG_MEGATON_HAMMER) && logic->Ocarina && logic->SongOfTime && logic->EponasSong && logic->SunsSong && logic->SongOfStorms && logic->ZeldasLullaby;}}),
+                  LocationAccess(RC_SPIRIT_TEMPLE_MQ_SYMPHONY_ROOM_CHEST,        {[]{return logic->SmallKeys(RR_SPIRIT_TEMPLE, 7) && logic->CanUse(RG_MEGATON_HAMMER) && logic->Ocarina && logic->CanUse(RG_SONG_OF_TIME) && logic->CanUse(RG_EPONAS_SONG) && logic->CanUse(RG_SUNS_SONG) && logic->CanUse(RG_SONG_OF_STORMS) && logic->CanUse(RG_ZELDAS_LULLABY);}}),
                   LocationAccess(RC_SPIRIT_TEMPLE_MQ_ENTRANCE_FRONT_RIGHT_CHEST, {[]{return logic->CanUse(RG_MEGATON_HAMMER);}}),
                   LocationAccess(RC_SPIRIT_TEMPLE_MQ_GS_LEEVER_ROOM,             {[]{return true;}}),
-                  LocationAccess(RC_SPIRIT_TEMPLE_MQ_GS_SYMPHONY_ROOM,           {[]{return logic->SmallKeys(RR_SPIRIT_TEMPLE, 7) && logic->CanUse(RG_MEGATON_HAMMER) && logic->Ocarina && logic->SongOfTime && logic->EponasSong && logic->SunsSong && logic->SongOfStorms && logic->ZeldasLullaby;}}),
+                  LocationAccess(RC_SPIRIT_TEMPLE_MQ_GS_SYMPHONY_ROOM,           {[]{return logic->SmallKeys(RR_SPIRIT_TEMPLE, 7) && logic->CanUse(RG_MEGATON_HAMMER) && logic->Ocarina && logic->CanUse(RG_SONG_OF_TIME) && logic->CanUse(RG_EPONAS_SONG) && logic->CanUse(RG_SUNS_SONG) && logic->CanUse(RG_SONG_OF_STORMS) && logic->CanUse(RG_ZELDAS_LULLABY);}}),
   }, {});
 
   areaTable[RR_SPIRIT_TEMPLE_MQ_BOSS_AREA] = Area("Spirit Temple MQ Boss Area", "Spirit Temple", RA_SPIRIT_TEMPLE, NO_DAY_NIGHT_CYCLE, {}, {

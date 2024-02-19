@@ -239,12 +239,6 @@ class Logic {
     bool Fairy = false;
     bool BottleWithBigPoe = false;
 
-    bool OcarinaAButton      = false;
-    bool OcarinaCLeftButton  = false;
-    bool OcarinaCRightButton = false;
-    bool OcarinaCUpButton    = false;
-    bool OcarinaCDownButton  = false;
-
     bool FoundBombchus = false;
     bool CanPlayBowling = false;
     bool HasBombchus = false;
@@ -318,16 +312,6 @@ class Logic {
     uint8_t Age = 0;
     bool CanCompleteTriforce = false;
 
-    bool CanSummonGohma = false;
-    bool CanSummonKingDodongo = false;
-    bool CanSummonBarinade = false;
-    bool CanSummonPhantomGanon = false;
-    bool CanSummonVolvagia = false;
-    bool CanSummonMorpha = false;
-    bool CanSummonBongoBongo = false;
-    bool CanSummonTwinrova = false;
-    bool CanSummonGanon = false;
-
     // Events
     bool ShowedMidoSwordAndShield = false;
     bool CarpenterRescue = false;
@@ -375,7 +359,6 @@ class Logic {
     bool CanUse(RandomizerGet itemName);
     bool HasItem(RandomizerGet itemName);
     bool HasProjectile(HasProjectileAge age);
-    bool HasBossSoul(RandomizerGet itemName);
     bool SmallKeys(RandomizerRegion dungeon, uint8_t requiredAmount);
     bool SmallKeys(RandomizerRegion dungeon, uint8_t requiredAmountGlitchless, uint8_t requiredAmountGlitched);
     bool CanDoGlitch(GlitchType glitch);

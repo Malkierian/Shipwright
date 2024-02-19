@@ -193,7 +193,7 @@ void AreaTable_Init_ShadowTemple() {
              {
                  // Events
                  EventAccess(&logic->ShadowTempleClear, { [] {
-                     return logic->ShadowTempleClear || (logic->HasBossSoul(RG_BONGO_BONGO_SOUL) &&
+                     return logic->ShadowTempleClear || (logic->HasItem(RG_BONGO_BONGO_SOUL) &&
                             ((logic->CanUse(RG_LENS_OF_TRUTH) || randoCtx->GetTrickOption(RT_LENS_BONGO)) &&
                              (logic->CanUse(RG_KOKIRI_SWORD) || logic->CanUse(RG_MASTER_SWORD) || logic->CanUse(RG_BIGGORON_SWORD)) &&
                              (logic->CanUse(RG_HOOKSHOT) || logic->CanUse(RG_FAIRY_BOW) || logic->CanUse(RG_FAIRY_SLINGSHOT) || randoCtx->GetTrickOption(RT_SHADOW_BONGO))));

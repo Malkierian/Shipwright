@@ -408,7 +408,7 @@ void AreaTable_Init_FireTemple() {
              {
                  // Events
                  EventAccess(&logic->FireTempleClear,
-                             { [] { return logic->FireTempleClear || (logic->HasBossSoul(RG_VOLVAGIA_SOUL) && (logic->FireTimer >= 64 && logic->CanUse(RG_MEGATON_HAMMER))); }}),
+                             { [] { return logic->FireTempleClear || (logic->HasItem(RG_VOLVAGIA_SOUL) && (logic->FireTimer >= 64 && logic->CanUse(RG_MEGATON_HAMMER))); }}),
              },
              {
                  // Locations

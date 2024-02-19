@@ -419,7 +419,7 @@ void AreaTable_Init_ForestTemple() {
         {
             // Events
             EventAccess(&logic->ForestTempleClear, { [] {
-                return logic->ForestTempleClear || (logic->HasBossSoul(RG_PHANTOM_GANON_SOUL) && ((logic->CanUse(RG_KOKIRI_SWORD) || logic->CanUse(RG_MASTER_SWORD) || logic->CanUse(RG_BIGGORON_SWORD)) &&
+                return logic->ForestTempleClear || (logic->HasItem(RG_PHANTOM_GANON_SOUL) && ((logic->CanUse(RG_KOKIRI_SWORD) || logic->CanUse(RG_MASTER_SWORD) || logic->CanUse(RG_BIGGORON_SWORD)) &&
                                              (logic->CanUse(RG_HOOKSHOT) || logic->CanUse(RG_FAIRY_BOW) || logic->CanUse(RG_FAIRY_SLINGSHOT))));
             } }),
         },

@@ -257,7 +257,7 @@ void AreaTable_Init_SpiritTemple() {
         {
             // Events
             EventAccess(&logic->SpiritTempleClear, { [] {
-                return logic->SpiritTempleClear || (logic->HasBossSoul(RG_TWINROVA_SOUL) && (logic->CanUse(RG_MIRROR_SHIELD) &&
+                return logic->SpiritTempleClear || (logic->HasItem(RG_TWINROVA_SOUL) && (logic->CanUse(RG_MIRROR_SHIELD) &&
                                              (logic->CanUse(RG_KOKIRI_SWORD) || logic->CanUse(RG_MASTER_SWORD) || logic->CanUse(RG_BIGGORON_SWORD))));
             } }),
         },

@@ -53,11 +53,6 @@ namespace Rando {
                 (itemName == RG_FIRE_ARROWS            && ctx->CheckInventory(ITEM_ARROW_FIRE))          ||
                 (itemName == RG_ICE_ARROWS             && ctx->CheckInventory(ITEM_ARROW_ICE))           ||
                 (itemName == RG_LIGHT_ARROWS           && ctx->CheckInventory(ITEM_ARROW_LIGHT))         ||
-                (itemName == RG_OCARINA_A_BUTTON       && ctx->CheckRandoInf(RAND_INF_HAS_OCARINA_A))      ||
-                (itemName == RG_OCARINA_C_LEFT_BUTTON  && ctx->CheckRandoInf(RAND_INF_HAS_OCARINA_C_LEFT))  ||
-                (itemName == RG_OCARINA_C_RIGHT_BUTTON && ctx->CheckRandoInf(RAND_INF_HAS_OCARINA_C_RIGHT)) ||
-                (itemName == RG_OCARINA_C_DOWN_BUTTON  && ctx->CheckRandoInf(RAND_INF_HAS_OCARINA_C_DOWN))  ||
-                (itemName == RG_OCARINA_C_UP_BUTTON    && ctx->CheckRandoInf(RAND_INF_HAS_OCARINA_C_UP))    ||
                 (itemName == RG_ZELDAS_LULLABY         && ctx->CheckQuestItem(QUEST_SONG_LULLABY))       ||
                 (itemName == RG_EPONAS_SONG            && ctx->CheckQuestItem(QUEST_SONG_EPONA))          ||
                 (itemName == RG_SARIAS_SONG            && ctx->CheckQuestItem(QUEST_SONG_SARIA))          ||
@@ -73,7 +68,23 @@ namespace Rando {
                 (itemName == RG_ZELDAS_LETTER          && ctx->CheckRandoInf(RAND_INF_ZELDAS_LETTER))     ||
                 (itemName == RG_RUTOS_LETTER           && ctx->CheckEventChkInf(EVENTCHKINF_OBTAINED_RUTOS_LETTER))     ||
                 (itemName == RG_WEIRD_EGG              && ctx->CheckRandoInf(RAND_INF_WEIRD_EGG))                   ||
-                (itemName == RG_STONE_OF_AGONY         && ctx->CheckQuestItem(QUEST_STONE_OF_AGONY));
+                (itemName == RG_STONE_OF_AGONY         && ctx->CheckQuestItem(QUEST_STONE_OF_AGONY))    ||
+                // Ocarina Buttons
+                (itemName == RG_OCARINA_A_BUTTON       && ctx->CheckRandoInf(RAND_INF_HAS_OCARINA_A))      ||
+                (itemName == RG_OCARINA_C_LEFT_BUTTON  && ctx->CheckRandoInf(RAND_INF_HAS_OCARINA_C_LEFT))  ||
+                (itemName == RG_OCARINA_C_RIGHT_BUTTON && ctx->CheckRandoInf(RAND_INF_HAS_OCARINA_C_RIGHT)) ||
+                (itemName == RG_OCARINA_C_DOWN_BUTTON  && ctx->CheckRandoInf(RAND_INF_HAS_OCARINA_C_DOWN))  ||
+                (itemName == RG_OCARINA_C_UP_BUTTON    && ctx->CheckRandoInf(RAND_INF_HAS_OCARINA_C_UP))  ||
+                // Boss Souls
+                (itemName == RG_GOHMA_SOUL             && ctx->CheckRandoInf(RAND_INF_GOHMA_SOUL))  ||
+                (itemName == RG_KING_DODONGO_SOUL      && ctx->CheckRandoInf(RAND_INF_KING_DODONGO_SOUL))  ||
+                (itemName == RG_BARINADE_SOUL          && ctx->CheckRandoInf(RAND_INF_GOHMA_SOUL))  ||
+                (itemName == RG_PHANTOM_GANON_SOUL     && ctx->CheckRandoInf(RAND_INF_PHANTOM_GANON_SOUL))  ||
+                (itemName == RG_VOLVAGIA_SOUL          && ctx->CheckRandoInf(RAND_INF_VOLVAGIA_SOUL))  ||
+                (itemName == RG_MORPHA_SOUL            && ctx->CheckRandoInf(RAND_INF_MORPHA_SOUL))  ||
+                (itemName == RG_BONGO_BONGO_SOUL       && ctx->CheckRandoInf(RAND_INF_BONGO_BONGO_SOUL))  ||
+                (itemName == RG_TWINROVA_SOUL          && ctx->CheckRandoInf(RAND_INF_TWINROVA_SOUL))  ||
+                (itemName == RG_GANON_SOUL             && (ctx->GetOption(RSK_SHUFFLE_BOSS_SOULS).Is(RO_BOSS_SOULS_ON_PLUS_GANON) ? HasItem(RG_GANON_SOUL) : true));
     }
 
     //Can the passed in item be used?
@@ -137,33 +148,37 @@ namespace Rando {
 
             // Songs
             case RG_ZELDAS_LULLABY:
-                return Ocarina && OcarinaCLeftButton && OcarinaCRightButton && OcarinaCUpButton;
+                return Ocarina && HasItem(RG_OCARINA_C_LEFT_BUTTON) && HasItem(RG_OCARINA_C_RIGHT_BUTTON) && HasItem(RG_OCARINA_C_UP_BUTTON);
             case RG_EPONAS_SONG:
-                return Ocarina && OcarinaCLeftButton && OcarinaCRightButton && OcarinaCUpButton;
+                return Ocarina && HasItem(RG_OCARINA_C_LEFT_BUTTON) && HasItem(RG_OCARINA_C_RIGHT_BUTTON) && HasItem(RG_OCARINA_C_UP_BUTTON);
             case RG_SARIAS_SONG:
-                return Ocarina && OcarinaCLeftButton && OcarinaCRightButton && OcarinaCDownButton;
+                return Ocarina && HasItem(RG_OCARINA_C_LEFT_BUTTON) && HasItem(RG_OCARINA_C_RIGHT_BUTTON) && HasItem(RG_OCARINA_C_DOWN_BUTTON);
             case RG_SUNS_SONG:
-                return Ocarina && OcarinaCRightButton && OcarinaCUpButton && OcarinaCDownButton;
+                return Ocarina && HasItem(RG_OCARINA_C_RIGHT_BUTTON) && HasItem(RG_OCARINA_C_UP_BUTTON) && HasItem(RG_OCARINA_C_DOWN_BUTTON);
             case RG_SONG_OF_TIME:
-                return Ocarina && OcarinaAButton && OcarinaCRightButton && OcarinaCDownButton;
+                return Ocarina && HasItem(RG_OCARINA_A_BUTTON) && HasItem(RG_OCARINA_C_RIGHT_BUTTON) && HasItem(RG_OCARINA_C_DOWN_BUTTON);
             case RG_SONG_OF_STORMS:
-                return Ocarina && OcarinaAButton && OcarinaCUpButton && OcarinaCDownButton;
+                return Ocarina && HasItem(RG_OCARINA_A_BUTTON) && HasItem(RG_OCARINA_C_UP_BUTTON) && HasItem(RG_OCARINA_C_DOWN_BUTTON);
             case RG_MINUET_OF_FOREST:
-                return Ocarina && OcarinaAButton && OcarinaCLeftButton && OcarinaCRightButton && OcarinaCUpButton;
+                return Ocarina && HasItem(RG_OCARINA_A_BUTTON) && HasItem(RG_OCARINA_C_LEFT_BUTTON) && HasItem(RG_OCARINA_C_RIGHT_BUTTON) && HasItem(RG_OCARINA_C_UP_BUTTON);
             case RG_BOLERO_OF_FIRE:
-                return Ocarina && OcarinaAButton && OcarinaCRightButton && OcarinaCDownButton;
+                return Ocarina && HasItem(RG_OCARINA_A_BUTTON) && HasItem(RG_OCARINA_C_RIGHT_BUTTON) && HasItem(RG_OCARINA_C_DOWN_BUTTON);
             case RG_SERENADE_OF_WATER:
-                return Ocarina && OcarinaAButton && OcarinaCLeftButton && OcarinaCRightButton && OcarinaCDownButton;
+                return Ocarina && HasItem(RG_OCARINA_A_BUTTON) && HasItem(RG_OCARINA_C_LEFT_BUTTON) && HasItem(RG_OCARINA_C_RIGHT_BUTTON) && HasItem(RG_OCARINA_C_DOWN_BUTTON);
             case RG_REQUIEM_OF_SPIRIT:
-                return Ocarina && OcarinaAButton && OcarinaCRightButton && OcarinaCDownButton;
+                return Ocarina && HasItem(RG_OCARINA_A_BUTTON) && HasItem(RG_OCARINA_C_RIGHT_BUTTON) && HasItem(RG_OCARINA_C_DOWN_BUTTON);
             case RG_NOCTURNE_OF_SHADOW:
-                return Ocarina && OcarinaAButton && OcarinaCLeftButton && OcarinaCRightButton && OcarinaCDownButton;
+                return Ocarina && HasItem(RG_OCARINA_A_BUTTON) && HasItem(RG_OCARINA_C_LEFT_BUTTON) && HasItem(RG_OCARINA_C_RIGHT_BUTTON) && HasItem(RG_OCARINA_C_DOWN_BUTTON);
             case RG_PRELUDE_OF_LIGHT:
-                return Ocarina && OcarinaCLeftButton && OcarinaCRightButton && OcarinaCUpButton;
+                return Ocarina && HasItem(RG_OCARINA_C_LEFT_BUTTON) && HasItem(RG_OCARINA_C_RIGHT_BUTTON) && HasItem(RG_OCARINA_C_UP_BUTTON);
 
             // Magic items
             default:
-                return MagicMeter && (IsMagicItem(itemName) || (IsMagicArrow(itemName) && CanUse(RG_FAIRY_BOW)));
+                if (IsMagicItem(itemName) || (IsMagicArrow(itemName) && CanUse(RG_FAIRY_BOW))) {
+                    return MagicMeter;
+                } else {
+                    return true;
+                }
         }
     }
 
@@ -173,35 +188,6 @@ namespace Rando {
                (age == HasProjectileAge::Adult  && (Hookshot  || Bow      )) ||
                (age == HasProjectileAge::Both   && (Slingshot || CanUse(RG_BOOMERANG))  && (Hookshot || Bow)) ||
                (age == HasProjectileAge::Either && (Slingshot || CanUse(RG_BOOMERANG)   ||  Hookshot || Bow));
-    }
-
-    bool Logic::HasBossSoul(RandomizerGet itemName) {
-        auto ctx = Rando::Context::GetInstance();
-        if (!ctx->GetOption(RSK_SHUFFLE_BOSS_SOULS)) {
-            return true;
-        }
-        switch(itemName) {
-            case RG_GOHMA_SOUL:
-                return CanSummonGohma;
-            case RG_KING_DODONGO_SOUL:
-                return CanSummonKingDodongo;
-            case RG_BARINADE_SOUL:
-                return CanSummonBarinade;
-            case RG_PHANTOM_GANON_SOUL:
-                return CanSummonPhantomGanon;
-            case RG_VOLVAGIA_SOUL:
-                return CanSummonVolvagia;
-            case RG_MORPHA_SOUL:
-                return CanSummonMorpha;
-            case RG_BONGO_BONGO_SOUL:
-                return CanSummonBongoBongo;
-            case RG_TWINROVA_SOUL:
-                return CanSummonTwinrova;
-            case RG_GANON_SOUL:
-                return ctx->GetOption(RSK_SHUFFLE_BOSS_SOULS).Is(RO_BOSS_SOULS_ON_PLUS_GANON) ? CanSummonGanon : true;
-            default:
-                break;
-        }
     }
 
     uint8_t GetDifficultyValueFromString(Rando::Option& glitchOption) {
@@ -242,11 +228,11 @@ namespace Rando {
     // Updates all logic helpers. Should be called whenever a non-helper is changed
     void Logic::UpdateHelpers() {
         auto ctx = Rando::Context::GetInstance();
-        OcarinaButtons  =  (OcarinaAButton ? 1 : 0) +
-                           (OcarinaCLeftButton ? 1 : 0) +
-                           (OcarinaCRightButton ? 1 : 0) +
-                           (OcarinaCUpButton ? 1 : 0) +
-                           (OcarinaCDownButton ? 1 : 0);
+        OcarinaButtons  =  (HasItem(RG_OCARINA_A_BUTTON) ? 1 : 0) +
+                           (HasItem(RG_OCARINA_C_LEFT_BUTTON) ? 1 : 0) +
+                           (HasItem(RG_OCARINA_C_RIGHT_BUTTON) ? 1 : 0) +
+                           (HasItem(RG_OCARINA_C_UP_BUTTON) ? 1 : 0) +
+                           (HasItem(RG_OCARINA_C_DOWN_BUTTON) ? 1 : 0);
         NumBottles      = ctx->CheckInventory(ITEM_BOTTLE) ? (Bottles + (ctx->CheckEventChkInf(EVENTCHKINF_KING_ZORA_MOVED ? 1 : 0))) : 0;
         HasBottle       = NumBottles >= 1;
         Slingshot       = (ProgressiveBulletBag >= 1) && (BuySeed || AmmoCanDrop);
@@ -557,13 +543,6 @@ namespace Rando {
         GregInBridgeLogic = false;
         GregInLacsLogic = false;
 
-        //Ocarina C Buttons
-        OcarinaAButton = ctx->GetOption(RSK_SHUFFLE_OCARINA_BUTTONS).Is(true) ? 0 : 1;
-        OcarinaCLeftButton = ctx->GetOption(RSK_SHUFFLE_OCARINA_BUTTONS).Is(true) ? 0 : 1;
-        OcarinaCRightButton = ctx->GetOption(RSK_SHUFFLE_OCARINA_BUTTONS).Is(true) ? 0 : 1;
-        OcarinaCUpButton = ctx->GetOption(RSK_SHUFFLE_OCARINA_BUTTONS).Is(true) ? 0 : 1;
-        OcarinaCDownButton = ctx->GetOption(RSK_SHUFFLE_OCARINA_BUTTONS).Is(true) ? 0 : 1;
-
         //Progressive Items
         ProgressiveBulletBag  = 0;
         ProgressiveBombBag    = 0;
@@ -607,17 +586,6 @@ namespace Rando {
 
         //Triforce Pieces
         TriforcePieces = 0;
-
-        //Boss Souls
-        CanSummonGohma        = false;
-        CanSummonKingDodongo  = false;
-        CanSummonBarinade     = false;
-        CanSummonPhantomGanon = false;
-        CanSummonVolvagia     = false;
-        CanSummonMorpha       = false;
-        CanSummonBongoBongo   = false;
-        CanSummonTwinrova     = false;
-        CanSummonGanon        = false;
 
         //Drops and Bottle Contents Access
         DekuNutDrop      = false;

@@ -252,7 +252,7 @@ void AreaTable_Init_DekuTree() {
              {
                  // Events
                  EventAccess(&logic->DekuTreeClear, { [] {
-                                                  return logic->DekuTreeClear || (logic->HasBossSoul(RG_GOHMA_SOUL) && 
+                                                  return logic->DekuTreeClear || (logic->HasItem(RG_GOHMA_SOUL) && 
                                                          (logic->CanJumpslash && (logic->Nuts || logic->CanUse(RG_FAIRY_SLINGSHOT) || logic->CanUse(RG_FAIRY_BOW) ||
                                                                            logic->HookshotOrBoomerang)));
                                               }}),

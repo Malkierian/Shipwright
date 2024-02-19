@@ -292,7 +292,7 @@ void AreaTable_Init_DodongosCavern() {
                  // Events
                  EventAccess(&logic->DodongosCavernClear,
                              { [] {
-                                  return logic->DodongosCavernClear || (logic->HasBossSoul(RG_KING_DODONGO_SOUL) &&
+                                  return logic->DodongosCavernClear || (logic->HasItem(RG_KING_DODONGO_SOUL) &&
                                          (Here(RR_DODONGOS_CAVERN_BOSS_ROOM,
                                                [] { return logic->HasExplosives || (logic->CanUse(RG_MEGATON_HAMMER) && randoCtx->GetTrickOption(RT_DC_HAMMER_FLOOR)); }) &&
                                           (logic->Bombs || logic->GoronBracelet) && logic->CanJumpslash)); /*todo add chu kill to tricks*/

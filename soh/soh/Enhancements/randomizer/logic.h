@@ -72,17 +72,6 @@ class Logic {
     bool EyedropsAccess = false;
     bool DisableTradeRevert = false;
 
-    // Stones and Meddallions
-    bool ForestMedallion = false;
-    bool FireMedallion = false;
-    bool WaterMedallion = false;
-    bool SpiritMedallion = false;
-    bool ShadowMedallion = false;
-    bool LightMedallion = false;
-    bool KokiriEmerald = false;
-    bool GoronRuby = false;
-    bool ZoraSapphire = false;
-
     // Dungeon Clears
     bool DekuTreeClear = false;
     bool DodongosCavernClear = false;

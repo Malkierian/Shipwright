@@ -11,7 +11,7 @@ void AreaTable_Init_Kakariko() {
                   EventAccess(&logic->KakarikoVillageGateOpen, {[]{return logic->KakarikoVillageGateOpen || (logic->IsChild && (logic->CanUse(RG_ZELDAS_LETTER) || randoCtx->GetOption(RSK_KAK_GATE).Is(RO_KAK_GATE_OPEN)));}}),
                 }, {
                   //Locations
-                  LocationAccess(RC_SHEIK_IN_KAKARIKO,               {[]{return logic->IsAdult && logic->ForestMedallion && logic->FireMedallion && logic->WaterMedallion;}}),
+                  LocationAccess(RC_SHEIK_IN_KAKARIKO,               {[]{return logic->IsAdult && logic->HasItem(RG_FOREST_MEDALLION) && logic->HasItem(RG_FIRE_MEDALLION) && logic->HasItem(RG_WATER_MEDALLION);}}),
                   LocationAccess(RC_KAK_ANJU_AS_CHILD,               {[]{return logic->IsChild && logic->AtDay;}}),
                   LocationAccess(RC_KAK_ANJU_AS_ADULT,               {[]{return logic->IsAdult && logic->AtDay;}}),
                   LocationAccess(RC_KAK_TRADE_POCKET_CUCCO,          {[]{return logic->IsAdult && logic->AtDay && logic->PocketEgg && logic->WakeUpAdultTalon;}}),

@@ -962,6 +962,20 @@ bool Context::CheckQuestItem(uint32_t item) {
     return ((1 << item) & mSaveContext->inventory.questItems) != 0;
 }
 
+bool Context::HasAdultTrade(uint32_t itemID) {
+    int tradeIndex = itemID - ITEM_POCKET_EGG;
+    return mSaveContext->adultTradeItems & (1 << tradeIndex);
+}
+
+void Context::SetAdultTrade(uint32_t itemID, bool remove) {
+    int tradeIndex = itemID - ITEM_POCKET_EGG;
+    if (remove) {
+        mSaveContext->adultTradeItems &= ~(1 << tradeIndex);
+    } else {
+        mSaveContext->adultTradeItems |= (1 << tradeIndex);
+    }
+}
+
 void Context::SetQuestItem(uint32_t item, bool remove) {
     if (remove) {
         mSaveContext->inventory.questItems &= ~(1 << item);

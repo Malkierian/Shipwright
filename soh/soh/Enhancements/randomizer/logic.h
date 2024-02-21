@@ -32,15 +32,9 @@ class Logic {
 
     // Child item logic
     bool HasBottle = false;
-    bool Bombchus = false;
     bool Bombchus5 = false;
     bool Bombchus10 = false;
     bool Bombchus20 = false;
-    bool MagicBean = false;
-    bool MagicBeanPack = false;
-    bool DinsFire = false;
-    bool FaroresWind = false;
-    bool NayrusLove = false;
     bool SkullMask = false; //EventAccess
     bool MaskOfTruth = false; //EventAccess
 

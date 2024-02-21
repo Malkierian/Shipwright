@@ -224,7 +224,7 @@ namespace Rando {
             case GlitchType::EquipSwap: // todo: add bunny hood to adult item equippable list and child trade item to child item equippable list
                 return ((IsAdult && (HasItem(RG_DINS_FIRE) || HasItem(RG_FARORES_WIND) || HasItem(RG_NAYRUS_LOVE))) || (IsChild && (HasItem(RG_STICKS) || 
                     HasItem(RG_FAIRY_SLINGSHOT) || HasItem(RG_BOOMERANG) || HasBottle || Nuts || Ocarina || HasItem(RG_LENS_OF_TRUTH) || HasExplosives ||
-                    (MagicBean || MagicBeanPack) || HasItem(RG_DINS_FIRE) || HasItem(RG_FARORES_WIND) || HasItem(RG_NAYRUS_LOVE)))) && false; //GlitchEquipSwap;
+                    (HasItem(RG_MAGIC_BEAN)) || HasItem(RG_DINS_FIRE) || HasItem(RG_FARORES_WIND) || HasItem(RG_NAYRUS_LOVE)))) && false; //GlitchEquipSwap;
         }
 
         //Shouldn't be reached
@@ -278,7 +278,7 @@ namespace Rando {
         Fish         = HasBottle && FishAccess;
         Fairy        = HasBottle && FairyAccess;
 
-        FoundBombchus   = (BombchuDrop || Bombchus || Bombchus5 || Bombchus10 || Bombchus20);
+        FoundBombchus   = HasItem(RG_PROGRESSIVE_BOMBCHUS);
         CanPlayBowling  = (ctx->GetOption(RSK_BOMBCHUS_IN_LOGIC) && FoundBombchus) || (!ctx->GetOption(RSK_BOMBCHUS_IN_LOGIC) && BombBag);
         // TODO: Implement Ammo Drop Setting in place of bombchu drops
         HasBombchus = (BuyBombchus || (ctx->GetOption(RSK_ENABLE_BOMBCHU_DROPS).Is(RO_AMMO_DROPS_ON/*_PLUS_BOMBCHU*/) && FoundBombchus));
@@ -465,15 +465,9 @@ namespace Rando {
 
         //Child item logic
         HasBottle     = false;
-        Bombchus      = false;
         Bombchus5     = false;
         Bombchus10    = false;
         Bombchus20    = false;
-        MagicBean     = false;
-        MagicBeanPack = false;
-        DinsFire      = false;
-        FaroresWind   = false;
-        NayrusLove    = false;
         SkullMask     = false;
         MaskOfTruth   = false;
 

@@ -122,7 +122,7 @@ void AreaTable_Init_GerudoValley() {
                   EventAccess(&logic->GF_GateOpen, {[]{return logic->IsAdult && logic->HasItem(RG_GERUDO_MEMBERSHIP_CARD) && (randoCtx->GetOption(RSK_SHUFFLE_GERUDO_MEMBERSHIP_CARD) || randoCtx->GetOption(RSK_SHUFFLE_OVERWORLD_ENTRANCES) /*|| ShuffleSpecialIndoorEntrances*/);}}),
                 }, {}, {
                   //Exits
-                  Entrance(RR_GERUDO_FORTRESS,         {[]{return (logic->IsAdult && (logic->Hookshot || !randoCtx->GetOption(RSK_SHUFFLE_OVERWORLD_ENTRANCES))) || logic->GF_GateOpen;}}),
+                  Entrance(RR_GERUDO_FORTRESS,         {[]{return (logic->IsAdult && (logic->CanUse(RG_HOOKSHOT) || !randoCtx->GetOption(RSK_SHUFFLE_OVERWORLD_ENTRANCES))) || logic->GF_GateOpen;}}),
                   Entrance(RR_WASTELAND_NEAR_FORTRESS, {[]{return true;}}),
   });
 

@@ -302,7 +302,7 @@ void AreaTable_Init_ForestTemple() {
                   Entrance(RR_FOREST_TEMPLE_MQ_AFTER_BLOCK_PUZZLE, {[]{return logic->IsAdult && (logic->GoronBracelet || (randoCtx->GetTrickOption(RT_FOREST_MQ_BLOCK_PUZZLE) && logic->HasBombchus && logic->IsAdult && logic->CanUse(RG_HOOKSHOT)));}}),
                     //Trick: logic->IsAdult && (logic->GoronBracelet || (LogicForestMQBlockPuzzle && logic->HasBombchus && logic->IsAdult && logic->CanUse(RG_HOOKSHOT)))
                   Entrance(RR_FOREST_TEMPLE_MQ_OUTDOOR_LEDGE,      {[]{return (randoCtx->GetTrickOption(RT_FOREST_MQ_JS_HALLWAY_SWITCH) && logic->IsAdult && logic->CanUse(RG_HOVER_BOOTS)) || (randoCtx->GetTrickOption(RT_FOREST_MQ_RANG_HALLWAY_SWITCH) && logic->CanUse(RG_BOOMERANG)) || (randoCtx->GetTrickOption(RT_FOREST_MQ_HOOKSHOT_HALLWAY_SWITCH) && logic->IsAdult && logic->CanUse(RG_HOOKSHOT));}}),
-                    //Trick (logic->Hookshot trick not added to either n64 or oot3d rando as of yet, to enable in SoH needs uncommenting in randomizer_tricks.cpp): (LogicForestMQHallwaySwitchJS && logic->IsAdult && logic->CanUse(RG_HOVER_BOOTS)) || (LogicForestMQHallwaySwitchHookshot && logic->IsAdult && logic->CanUse(RG_HOOKSHOT)) 
+                    //Trick (logic->CanUse(RG_HOOKSHOT) trick not added to either n64 or oot3d rando as of yet, to enable in SoH needs uncommenting in randomizer_tricks.cpp): (LogicForestMQHallwaySwitchJS && logic->IsAdult && logic->CanUse(RG_HOVER_BOOTS)) || (LogicForestMQHallwaySwitchHookshot && logic->IsAdult && logic->CanUse(RG_HOOKSHOT)) 
                   Entrance(RR_FOREST_TEMPLE_MQ_BOSS_REGION,        {[]{return logic->ForestTempleJoAndBeth && logic->ForestTempleAmyAndMeg;}}),
   });
 

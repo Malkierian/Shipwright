@@ -94,7 +94,6 @@ class Logic {
     uint8_t ProgressiveBombBag = 0;
     uint8_t ProgressiveMagic = 0;
     uint8_t ProgressiveScale = 0;
-    uint8_t ProgressiveHookshot = 0;
     uint8_t ProgressiveBow = 0;
     uint8_t ProgressiveWallet = 0;
     uint8_t ProgressiveStrength = 0;
@@ -181,8 +180,6 @@ class Logic {
     bool OcarinaOfTime = false;
     bool BombBag = false;
     bool MagicMeter = false;
-    bool Hookshot = false;
-    bool Longshot = false;
     bool Bow = false;
     bool GoronBracelet = false;
     bool SilverGauntlets = false;

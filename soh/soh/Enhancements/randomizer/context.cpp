@@ -947,11 +947,6 @@ void Context::SetUpgrade(uint32_t upgrade, uint8_t level) {
 }
 
 bool Context::CheckInventory(uint32_t item) {
-    if (item == ITEM_HOOKSHOT) {
-        return logic->ProgressiveHookshot > 0;
-    } else if (item == ITEM_LONGSHOT) {
-        return logic->ProgressiveHookshot > 1;
-    }
     return mSaveContext->inventory.items[InventorySlot(item)] != ITEM_NONE;
 }
 

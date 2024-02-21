@@ -33,7 +33,7 @@ namespace Rando {
                 (itemName == RG_MEGATON_HAMMER         && ctx->CheckInventory(ITEM_HAMMER))              ||
                 (itemName == RG_IRON_BOOTS             && ctx->CheckEquipment(EQUIP_FLAG_BOOTS_IRON))           ||
                 (itemName == RG_HOVER_BOOTS            && ctx->CheckEquipment(EQUIP_FLAG_BOOTS_HOVER))          ||
-                (itemName == RG_HOOKSHOT               && ctx->CheckInventory(ITEM_HOOKSHOT))            ||
+                (itemName == RG_HOOKSHOT               && ctx->CheckInventory(ITEM_HOOKSHOT) || ctx->CheckInventory(ITEM_LONGSHOT))            ||
                 (itemName == RG_LONGSHOT               && ctx->CheckInventory(ITEM_LONGSHOT))            ||
                 (itemName == RG_SILVER_GAUNTLETS       && ctx->CurrentUpgrade(UPG_STRENGTH) >= 2) || 
                 (itemName == RG_GOLDEN_GAUNTLETS       && ctx->CurrentUpgrade(UPG_STRENGTH) == 3)     ||
@@ -195,9 +195,9 @@ namespace Rando {
     bool Logic::HasProjectile(HasProjectileAge age) {
         return HasExplosives ||
                (age == HasProjectileAge::Child  && (Slingshot || CanUse(RG_BOOMERANG))) ||
-               (age == HasProjectileAge::Adult  && (Hookshot  || Bow      )) ||
-               (age == HasProjectileAge::Both   && (Slingshot || CanUse(RG_BOOMERANG))  && (Hookshot || Bow)) ||
-               (age == HasProjectileAge::Either && (Slingshot || CanUse(RG_BOOMERANG)   ||  Hookshot || Bow));
+               (age == HasProjectileAge::Adult  && (CanUse(RG_HOOKSHOT)  || Bow      )) ||
+               (age == HasProjectileAge::Both   && (Slingshot || CanUse(RG_BOOMERANG))  && (CanUse(RG_HOOKSHOT) || Bow)) ||
+               (age == HasProjectileAge::Either && (Slingshot || CanUse(RG_BOOMERANG)   ||  CanUse(RG_HOOKSHOT) || Bow));
     }
 
     uint8_t GetDifficultyValueFromString(Rando::Option& glitchOption) {
@@ -250,8 +250,6 @@ namespace Rando {
         OcarinaOfTime   = ProgressiveOcarina    >= 2;
         MagicMeter      = (ProgressiveMagic     >= 1) && (AmmoCanDrop || (HasBottle && BuyMagicPotion));
         BombBag         = (ProgressiveBombBag   >= 1) && (BuyBomb || AmmoCanDrop);
-        Hookshot        = ProgressiveHookshot   >= 1;
-        Longshot        = ProgressiveHookshot   >= 2;
         Bow             = (ProgressiveBow       >= 1) && (BuyArrow || AmmoCanDrop);
         GoronBracelet   = ProgressiveStrength   >= 1;
         SilverGauntlets = ProgressiveStrength   >= 2;
@@ -304,7 +302,7 @@ namespace Rando {
         CanBlastOrSmash = HasExplosives || CanUse(RG_MEGATON_HAMMER);
         CanChildAttack  = IsChild && (Slingshot || CanUse(RG_BOOMERANG) || Sticks || CanUse(RG_KOKIRI_SWORD) || HasExplosives || CanUse(RG_DINS_FIRE) || CanUse(RG_MASTER_SWORD) || CanUse(RG_MEGATON_HAMMER) || CanUse(RG_BIGGORON_SWORD));
         CanChildDamage  = IsChild && (Slingshot ||              Sticks || CanUse(RG_KOKIRI_SWORD) || HasExplosives || CanUse(RG_DINS_FIRE) || CanUse(RG_MASTER_SWORD) || CanUse(RG_MEGATON_HAMMER) || CanUse(RG_BIGGORON_SWORD));
-        CanAdultAttack  = IsAdult && (CanUse(RG_FAIRY_BOW) || CanUse(RG_BOOMERANG)       || CanUse(RG_STICKS) || CanUse(RG_KOKIRI_SWORD) || HasExplosives || CanUse(RG_DINS_FIRE) || CanUse(RG_MASTER_SWORD) || CanUse(RG_MEGATON_HAMMER) || CanUse(RG_BIGGORON_SWORD) || Hookshot);
+        CanAdultAttack  = IsAdult && (CanUse(RG_FAIRY_BOW) || CanUse(RG_BOOMERANG)       || CanUse(RG_STICKS) || CanUse(RG_KOKIRI_SWORD) || HasExplosives || CanUse(RG_DINS_FIRE) || CanUse(RG_MASTER_SWORD) || CanUse(RG_MEGATON_HAMMER) || CanUse(RG_BIGGORON_SWORD) || CanUse(RG_HOOKSHOT));
         CanAdultDamage  = IsAdult && (CanUse(RG_FAIRY_BOW) || CanUse(RG_STICKS)          || CanUse(RG_KOKIRI_SWORD) || HasExplosives || CanUse(RG_DINS_FIRE) || CanUse(RG_MASTER_SWORD) || CanUse(RG_MEGATON_HAMMER) || CanUse(RG_BIGGORON_SWORD));
         CanStunDeku     = CanAdultAttack || CanChildAttack || Nuts || HasShield;
         CanCutShrubs    = CanUse(RG_KOKIRI_SWORD) || CanUse(RG_BOOMERANG) || HasExplosives || CanUse(RG_MASTER_SWORD) || CanUse(RG_MEGATON_HAMMER) || CanUse(RG_BIGGORON_SWORD);
@@ -527,7 +525,6 @@ namespace Rando {
         ProgressiveBombBag    = 0;
         ProgressiveMagic      = 0;
         ProgressiveScale      = 0;
-        ProgressiveHookshot   = 0;
         ProgressiveBow        = 0;
         ProgressiveWallet     = 0;
         ProgressiveStrength   = 0;
@@ -611,8 +608,6 @@ namespace Rando {
         OcarinaOfTime    = false;
         BombBag          = false;
         MagicMeter       = false;
-        Hookshot         = false;
-        Longshot         = false;
         Bow              = false;
         GoronBracelet    = false;
         SilverGauntlets  = false;

@@ -799,6 +799,7 @@ void Context::ApplyItemEffect(Item item, bool remove) {
                             break;
                         case RG_TRIFORCE_PIECE:
                             mSaveContext->triforcePiecesCollected += (remove ? -1 : 1);
+                            break;
                     }
                 } // junk items don't have variables, so we can skip them
             }
@@ -860,7 +861,7 @@ void Context::ApplyItemEffect(Item item, bool remove) {
             }
             break;
         case ITEMTYPE_TOKEN:
-            mSaveContext->inventory.gsTokens += remove ? -1 : 1;
+            mSaveContext->inventory.gsTokens += (remove ? -1 : 1);
             break;
             // currently noVariable pointers in Logic, so nothing to do here
         case ITEMTYPE_EVENT:
@@ -1026,6 +1027,10 @@ void Context::SetEventChkInf(int32_t flag, bool disable) {
     } else {
         mSaveContext->eventChkInf[flag >> 4] |= (1 << (flag & 0xF));
     }
+}
+
+uint8_t Context::GetGSCount() {
+    return mSaveContext->inventory.gsTokens;
 }
 
 uint8_t Context::GetAmmo(uint32_t item) {

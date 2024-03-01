@@ -67,14 +67,14 @@ class Logic {
     bool DisableTradeRevert = false;
 
     // Dungeon Clears
-    bool DekuTreeClear = false;
-    bool DodongosCavernClear = false;
-    bool JabuJabusBellyClear = false;
-    bool ForestTempleClear = false;
-    bool FireTempleClear = false;
-    bool WaterTempleClear = false;
-    bool SpiritTempleClear = false;
-    bool ShadowTempleClear = false;
+    bool DekuTreeClear = false; // sceneFlags.clear & 1<<2
+    bool DodongosCavernClear = false; // sceneFlags.clear & 1<<2
+    bool JabuJabusBellyClear = false; // sceneFlags.clear & 1<<2
+    bool ForestTempleClear = false; // sceneFlags.clear & 1<<2
+    bool FireTempleClear = false; // sceneFlags.clear & 1<<2
+    bool WaterTempleClear = false; // sceneFlags.clear & 1<<2
+    bool SpiritTempleClear = false; // sceneFlags.clear & 1<<4
+    bool ShadowTempleClear = false; // sceneFlags.clear & 1<<2
 
     // Trial Clears
     bool ForestTrialClear = false;
@@ -85,7 +85,6 @@ class Logic {
     bool LightTrialClear = false;
 
     // Greg
-    bool Greg = false;
     bool GregInBridgeLogic = false;
     bool GregInLacsLogic = false;
 
@@ -193,6 +192,7 @@ class Logic {
     bool ScarecrowSong();
     bool Scarecrow();
     bool DistantScarecrow();
+    uint8_t GetGSCount();
 
     bool Bombs = false;
     bool DekuShield = false;

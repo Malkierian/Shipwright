@@ -109,6 +109,7 @@ class Context {
     bool CheckRandoInf(uint32_t flag);
     void SetRandoInf(uint32_t flag, bool disable);
     bool CheckEventChkInf(int32_t flag);
+    uint8_t GetGSCount();
     void SetEventChkInf(int32_t flag, bool disable);
     uint8_t GetAmmo(uint32_t item);
     void SetAmmo(uint32_t item, uint8_t count);

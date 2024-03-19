@@ -116,7 +116,7 @@ static void ValidateWorldChecks(SearchMode& mode, bool checkPoeCollectorAccess, 
       std::vector<RandomizerGet> itemsToPlace =
           FilterFromPool(ItemPool, [](const auto i) { return Rando::StaticData::RetrieveItem(i).IsAdvancement(); });
     for (RandomizerGet unplacedItem : itemsToPlace) {
-       Rando::StaticData::RetrieveItem(unplacedItem).ApplyEffect();
+       ctx->ApplyItemEffect(Rando::StaticData::RetrieveItem(unplacedItem), false);
     }
     // Reset access as the non-starting age
     if (ctx->GetSettings()->ResolvedStartingAge() == RO_AGE_CHILD) {
@@ -324,7 +324,12 @@ std::vector<RandomizerCheck> GetAccessibleLocations(const std::vector<Randomizer
         }
 
         // Add shuffled entrances to the entrance playthrough
-        if (mode == SearchMode::GeneratePlaythrough && exit.IsShuffled() && !exit.IsAddedToPool() && !ctx->GetEntranceShuffler()->HasNoRandomEntrances()) {
+        // Include bluewarps when unshuffled but dungeon or boss shuffle is on
+        if (mode == SearchMode::GeneratePlaythrough &&
+            (exit.IsShuffled() ||
+             (exit.GetType() == Rando::EntranceType::BlueWarp &&
+              (ctx->GetOption(RSK_SHUFFLE_DUNGEON_ENTRANCES) || ctx->GetOption(RSK_SHUFFLE_BOSS_ENTRANCES)))) &&
+            !exit.IsAddedToPool() && !ctx->GetEntranceShuffler()->HasNoRandomEntrances()) {
           entranceSphere.push_back(&exit);
           exit.AddToPool();
           // Don't list a two-way coupled entrance from both directions
@@ -681,10 +686,10 @@ static void AssumedFill(const std::vector<RandomizerGet>& items, const std::vect
             // assume we have all unplaced items
             logic->Reset();
             for (RandomizerGet unplacedItem : itemsToPlace) {
-                Rando::StaticData::RetrieveItem(unplacedItem).ApplyEffect();
+                ctx->ApplyItemEffect(Rando::StaticData::RetrieveItem(unplacedItem), false);
             }
             for (RandomizerGet unplacedItem : itemsToNotPlace) {
-                Rando::StaticData::RetrieveItem(unplacedItem).ApplyEffect();
+                ctx->ApplyItemEffect(Rando::StaticData::RetrieveItem(unplacedItem), false);
             }
 
             // get all accessible locations that are allowed

@@ -6,6 +6,7 @@
 #include "item_override.h"
 #include "3drando/text.hpp"
 #include "hint.h"
+#include "fishsanity.h"
 
 #include <memory>
 #include <array>
@@ -63,10 +64,11 @@ class Context {
     void SetSpoilerLoaded(bool spoilerLoaded = true);
     bool IsPlandoLoaded() const;
     void SetPlandoLoaded(bool plandoLoaded = true);
-    void ApplyItemEffect(Item item, bool remove);
+    void ApplyItemEffect(Item& item, bool remove);
     std::shared_ptr<Settings> GetSettings();
     std::shared_ptr<EntranceShuffler> GetEntranceShuffler();
     std::shared_ptr<Dungeons> GetDungeons();
+    std::shared_ptr<Fishsanity> GetFishsanity();
     DungeonInfo* GetDungeon(size_t key) const;
     std::shared_ptr<Logic> GetLogic();
     std::shared_ptr<SaveContext> GetSaveContext();
@@ -136,6 +138,7 @@ class Context {
     std::shared_ptr<Logic> mLogic;
     std::shared_ptr<SaveContext> mSaveContext;
     std::shared_ptr<Trials> mTrials;
+    std::shared_ptr<Fishsanity> mFishsanity;
     bool mSeedGenerated = false;
     bool mSpoilerLoaded = false;
     bool mPlandoLoaded = false;

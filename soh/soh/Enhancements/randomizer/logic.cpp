@@ -54,6 +54,7 @@ namespace Rando {
                 (itemName == RG_FIRE_ARROWS            && ctx->CheckInventory(ITEM_ARROW_FIRE, true))          ||
                 (itemName == RG_ICE_ARROWS             && ctx->CheckInventory(ITEM_ARROW_ICE, true))           ||
                 (itemName == RG_LIGHT_ARROWS           && ctx->CheckInventory(ITEM_ARROW_LIGHT, true))         ||
+                (itemName == RG_FISHING_POLE           && FishingPole)         ||
                 (itemName == RG_ZELDAS_LULLABY         && ctx->CheckQuestItem(QUEST_SONG_LULLABY))       ||
                 (itemName == RG_EPONAS_SONG            && ctx->CheckQuestItem(QUEST_SONG_EPONA))          ||
                 (itemName == RG_SARIAS_SONG            && ctx->CheckQuestItem(QUEST_SONG_SARIA))          ||
@@ -192,6 +193,11 @@ namespace Rando {
             case RG_PRELUDE_OF_LIGHT:
                 return HasItem(RG_FAIRY_OCARINA) && HasItem(RG_OCARINA_C_LEFT_BUTTON) && HasItem(RG_OCARINA_C_RIGHT_BUTTON) && HasItem(RG_OCARINA_C_UP_BUTTON);
 
+            // Misc. Items
+            // TODO: Once child wallet shuffle is added, this will need to be updated to account for the fishing pond entry fee.
+            case RG_FISHING_POLE:
+                return true; // as long as you have enough rubies
+
             // Magic items
             default:
                 if (IsMagicItem(itemName) || (IsMagicArrow(itemName) && CanUse(RG_FAIRY_BOW))) {
@@ -241,6 +247,26 @@ namespace Rando {
         return false;
     }
 
+    bool Logic::CanKillEnemy(std::string enemy) {
+        //switch(enemy) {} RANDOTODO implement enemies enum
+        if (enemy == "Big Skulltula"){
+            return CanUse(RG_FAIRY_BOW) || CanUse(RG_FAIRY_SLINGSHOT) || CanJumpslash || CanUse(RG_MEGATON_HAMMER) || CanUse(RG_HOOKSHOT) || CanUse(RG_DINS_FIRE) || HasExplosives;
+        }
+        //Shouldn't be reached
+        return false;
+    }
+
+    bool Logic::CanPassEnemy(std::string enemy) {
+        //switch(enemy) {} RANDOTODO implement enemies enum
+        if (CanKillEnemy(enemy)){
+            return true;
+        }
+        if (enemy == "Big Skulltula"){
+            return Nuts || CanUse(RG_BOOMERANG);
+        }
+        return false;
+    }
+
     Logic::Logic() {
         
     }
@@ -263,9 +289,11 @@ namespace Rando {
         MagicMeter      = (ctx->GetSaveContext()->magicLevel > 0) && (AmmoCanDrop || (HasBottle && BuyMagicPotion));
         BombBag         = HasItem(RG_BOMB_BAG) && (BuyBomb || AmmoCanDrop);
         Bow             = CanUse(RG_FAIRY_BOW) && (BuyArrow || AmmoCanDrop);
-        SilverScale     = ProgressiveScale      >= 1;
-        GoldScale       = ProgressiveScale      >= 2;
-        AdultsWallet    = ProgressiveWallet     >= 1;
+        Swim            = ProgressiveScale      >= 1;
+        SilverScale     = ProgressiveScale      >= 2;
+        GoldScale       = ProgressiveScale      >= 3;
+        ChildsWallet    = ProgressiveWallet     >= 1;
+        AdultsWallet    = ProgressiveWallet     >= 2;
         //BiggoronSword   = CanUse(RG_BIGGORON_SWORD) || ProgressiveGiantKnife >= 2;
 
         //Drop Access
@@ -284,9 +312,9 @@ namespace Rando {
         BlueFire     = (HasBottle && BlueFireAccess) || (ctx->GetOption(RSK_BLUE_FIRE_ARROWS) && CanUse(RG_ICE_ARROWS));
         Fish         = HasBottle && FishAccess;
         Fairy        = HasBottle && FairyAccess;
-
-        FoundBombchus   = HasItem(RG_PROGRESSIVE_BOMBCHUS);
-        CanPlayBowling  = (ctx->GetOption(RSK_BOMBCHUS_IN_LOGIC) && FoundBombchus) || (!ctx->GetOption(RSK_BOMBCHUS_IN_LOGIC) && BombBag);
+        
+        FoundBombchus   = (BombchuDrop || HasItem(RG_PROGRESSIVE_BOMBCHUS) || Bombchus5 || Bombchus10 || Bombchus20) && (BombBag || ctx->GetOption(RSK_BOMBCHUS_IN_LOGIC));
+        CanPlayBowling  = ChildsWallet && ((ctx->GetOption(RSK_BOMBCHUS_IN_LOGIC) && FoundBombchus) || (!ctx->GetOption(RSK_BOMBCHUS_IN_LOGIC) && BombBag));
         // TODO: Implement Ammo Drop Setting in place of bombchu drops
         HasBombchus = (BuyBombchus || (ctx->GetOption(RSK_ENABLE_BOMBCHU_DROPS).Is(RO_AMMO_DROPS_ON/*_PLUS_BOMBCHU*/) && FoundBombchus));
 
@@ -315,7 +343,7 @@ namespace Rando {
         CanAdultDamage  = IsAdult && (CanUse(RG_FAIRY_BOW) || CanUse(RG_STICKS)          || CanUse(RG_KOKIRI_SWORD) || HasExplosives || CanUse(RG_DINS_FIRE) || CanUse(RG_MASTER_SWORD) || CanUse(RG_MEGATON_HAMMER) || CanUse(RG_BIGGORON_SWORD));
         CanStunDeku     = CanAdultAttack || CanChildAttack || Nuts || HasShield;
         CanCutShrubs    = CanUse(RG_KOKIRI_SWORD) || CanUse(RG_BOOMERANG) || HasExplosives || CanUse(RG_MASTER_SWORD) || CanUse(RG_MEGATON_HAMMER) || CanUse(RG_BIGGORON_SWORD);
-        CanDive         = ProgressiveScale >= 1;
+        CanDive         = ProgressiveScale >= 2;
         CanLeaveForest  = ctx->GetOption(RSK_FOREST).IsNot(RO_FOREST_CLOSED) || IsAdult || DekuTreeClear || ctx->GetOption(RSK_SHUFFLE_INTERIOR_ENTRANCES) || ctx->GetOption(RSK_SHUFFLE_OVERWORLD_ENTRANCES);
         CanPlantBugs    = IsChild && Bugs;
         CanRideEpona    = IsAdult && Epona && CanUse(RG_EPONAS_SONG);
@@ -334,6 +362,11 @@ namespace Rando {
         CanOpenStormGrotto  = CanUse(RG_SONG_OF_STORMS) && (HasItem(RG_STONE_OF_AGONY) || ctx->GetTrickOption(RT_GROTTOS_WITHOUT_AGONY));
         HookshotOrBoomerang = CanUse(RG_HOOKSHOT) || CanUse(RG_BOOMERANG);
         CanGetNightTimeGS   = (CanUse(RG_SUNS_SONG) || !ctx->GetOption(RSK_SKULLS_SUNS_SONG));
+        CanBreakUpperBeehives = HookshotOrBoomerang || (ctx->GetTrickOption(RT_BOMBCHU_BEEHIVES) && HasBombchus);
+        CanBreakLowerBeehives = CanBreakUpperBeehives || Bombs;
+        CanFish = ChildsWallet && (CanUse(RG_FISHING_POLE) || !ctx->GetOption(RSK_SHUFFLE_FISHING_POLE));
+        CanGetChildFish = CanFish && (IsChild || (IsAdult && !ctx->GetOption(RSK_FISHSANITY_AGE_SPLIT)));
+        CanGetAdultFish = CanFish && IsAdult && ctx->GetOption(RSK_FISHSANITY_AGE_SPLIT);
 
         GuaranteeTradePath     = ctx->GetOption(RSK_SHUFFLE_INTERIOR_ENTRANCES) || ctx->GetOption(RSK_SHUFFLE_OVERWORLD_ENTRANCES) || ctx->GetTrickOption(RT_DMT_BOLERO_BIGGORON) || CanBlastOrSmash || StopGCRollingGoronAsAdult;
         //GuaranteeHint          = (hints == "Mask" && MaskofTruth) || (hints == "Agony") || (hints != "Mask" && hints != "Agony");
@@ -528,9 +561,20 @@ namespace Rando {
         GregInBridgeLogic = false;
         GregInLacsLogic = false;
 
+        //Ocarina C Buttons TODO: defaults for no shuffle?
+        if (ctx->GetOption(RSK_SHUFFLE_OCARINA_BUTTONS).Is(false)) {
+            ctx->SetRandoInf(RAND_INF_HAS_OCARINA_A, false);
+            ctx->SetRandoInf(RAND_INF_HAS_OCARINA_C_UP, false);
+            ctx->SetRandoInf(RAND_INF_HAS_OCARINA_C_DOWN, false);
+            ctx->SetRandoInf(RAND_INF_HAS_OCARINA_C_LEFT, false);
+            ctx->SetRandoInf(RAND_INF_HAS_OCARINA_C_RIGHT, false);
+        }
+        
         //Progressive Items
-        ProgressiveScale      = 0;
-        ProgressiveWallet     = 0;
+        //If we're not shuffling swim, we start with it (scale 1)
+        ProgressiveScale      = ctx->GetOption(RSK_SHUFFLE_SWIM).Is(true) ? 0 : 1;
+        //If we're not shuffling child's wallet, we start with it (wallet 1)
+        ProgressiveWallet     = ctx->GetOption(RSK_SHUFFLE_CHILD_WALLET).Is(true) ? 0 : 1;
         ProgressiveGiantKnife = 0;
 
         //Keys
@@ -600,8 +644,10 @@ namespace Rando {
         BombBag          = false;
         MagicMeter       = false;
         Bow              = false;
+        Swim             = false;
         SilverScale      = false;
         GoldScale        = false;
+        ChildsWallet     = false;
         AdultsWallet     = false;
 
         ChildScarecrow   = false;
@@ -638,10 +684,16 @@ namespace Rando {
         CanSummonGossipFairy = false;
         CanSummonGossipFairyWithoutSuns = false;
         //CanPlantBean        = false;
-        CanOpenBombGrotto   = false;
-        CanOpenStormGrotto  = false;
-        BigPoeKill          = false;
-        HookshotOrBoomerang = false;
+        CanOpenBombGrotto     = false;
+        CanOpenStormGrotto    = false;
+        BigPoeKill            = false;
+        HookshotOrBoomerang   = false;
+        CanBreakUpperBeehives = false;
+        CanBreakLowerBeehives = false;
+        CanGetChildFish       = false;
+        CanGetAdultFish       = false;
+        FishingPole           = false;
+        CanFish               = false;
 
         BaseHearts      = ctx->GetOption(RSK_STARTING_HEARTS).Value<uint8_t>() + 1;
         Hearts          = 0;

@@ -9,6 +9,7 @@
 #include "entrance.h"
 #include "settings.h"
 #include "rando_hash.h"
+#include "fishsanity.h"
 
 #include <fstream>
 #include <spdlog/spdlog.h>
@@ -91,6 +92,7 @@ Context::Context() {
     mLogic = std::make_shared<Logic>();
     mTrials = std::make_shared<Trials>();
     mSettings = std::make_shared<Settings>();
+    mFishsanity = std::make_shared<Fishsanity>();
     for (auto& location : StaticData::GetLocationTable()) {
         mSpoilerfileCheckNameToEnum[location.GetName()] = location.GetRandomizerCheck();
     }
@@ -160,7 +162,7 @@ void Context::PlaceItemInLocation(const RandomizerCheck locKey, const Randomizer
     SPDLOG_DEBUG("\n\n");
 
     if (applyEffectImmediately || mSettings->GetOption(RSK_LOGIC_RULES).Is(RO_LOGIC_GLITCHLESS) || mSettings->GetOption(RSK_LOGIC_RULES).Is(RO_LOGIC_VANILLA)) {
-        StaticData::RetrieveItem(item).ApplyEffect();
+        ApplyItemEffect(StaticData::RetrieveItem(item), false);
     }
 
     // TODO? Show Progress
@@ -203,6 +205,10 @@ void Context::GenerateLocationPool() {
         AddLocation(RC_TRIFORCE_COMPLETED);
     }
     AddLocations(StaticData::overworldLocations);
+
+    if (mSettings->GetOption(RSK_FISHSANITY).IsNot(RO_FISHSANITY_OFF)) {
+        AddLocations(mFishsanity->GetFishsanityLocations().first);
+    }
 
     for (const auto dungeon : mDungeons->GetDungeonList()) {
         AddLocations(dungeon->GetDungeonLocations());
@@ -477,6 +483,14 @@ void Context::ParseHintJson(nlohmann::json spoilerFileJson) {
         AddHint(RH_SARIA, Text(sariaText), sariaHintLoc, HINT_TYPE_STATIC, "Static", mSpoilerfileAreaNameToEnum[sariaRegion]);
     }
 
+    // Fishing Pole Hint
+    if(spoilerFileJson.contains("fishingPoleText")) {
+        std::string fishingPoleText = spoilerFileJson["fishingPoleText"].get<std::string>();
+        std::string fishingPoleRegion = spoilerFileJson["fishingPoleRegion"].get<std::string>();
+        RandomizerCheck fishingPoleHintLoc = mSpoilerfileCheckNameToEnum[spoilerFileJson["fishingPoleHintLoc"].get<std::string>()];
+        AddHint(RH_FISHING_POLE, Text(fishingPoleText), fishingPoleHintLoc, HINT_TYPE_STATIC, "Static", mSpoilerfileAreaNameToEnum[fishingPoleRegion]);
+    }
+
     // Warp Songs
     if (spoilerFileJson.contains("warpMinuetText")) {
         std::string warpMinuetText = spoilerFileJson["warpMinuetText"].get<std::string>(); //RANDOTODO fall back for if location is used
@@ -621,7 +635,7 @@ std::map<uint32_t, uint32_t> RandoGetToQuestItem = {
 uint32_t HookshotLookup[3] = { ITEM_NONE, ITEM_HOOKSHOT, ITEM_LONGSHOT };
 uint32_t OcarinaLookup[3] = { ITEM_NONE, ITEM_OCARINA_FAIRY, ITEM_OCARINA_TIME };
 
-void Context::ApplyItemEffect(Item item, bool remove) {
+void Context::ApplyItemEffect(Item& item, bool remove) {
     switch (item.GetItemType()) {
         case ITEMTYPE_ITEM:
             {
@@ -901,6 +915,7 @@ void Context::ApplyItemEffect(Item item, bool remove) {
         case ITEMTYPE_SHOP:
             break;
     }
+    mLogic->UpdateHelpers();
 }
 
 std::shared_ptr<Settings> Context::GetSettings() {
@@ -913,6 +928,10 @@ std::shared_ptr<EntranceShuffler> Context::GetEntranceShuffler() {
 
 std::shared_ptr<Dungeons> Context::GetDungeons() {
     return mDungeons;
+}
+
+std::shared_ptr<Fishsanity> Context::GetFishsanity() {
+    return mFishsanity;
 }
 
 DungeonInfo* Context::GetDungeon(size_t key) const {

@@ -45,18 +45,20 @@ bool LocationAccess::ConditionsMet() const {
 
 bool LocationAccess::CanBuy() const {
   auto ctx = Rando::Context::GetInstance();
-  //Not a shop location, don't need to check if buyable
-  if (!(Rando::StaticData::GetLocation(location)->IsCategory(Category::cShop))) {
+  //Not a shop or scrub location, don't need to check if buyable
+  if (!(Rando::StaticData::GetLocation(location)->IsCategory(Category::cShop)) && !(Rando::StaticData::GetLocation(location)->IsCategory(Category::cDekuScrub))) {
     return true;
   }
 
   //Check if wallet is large enough to buy item
   bool SufficientWallet = true;
   if (ctx->GetItemLocation(location)->GetPrice() > 500) {
-    SufficientWallet = logic->ProgressiveWallet >= 3;
+    SufficientWallet = logic->ProgressiveWallet >= 4;
   } else if (ctx->GetItemLocation(location)->GetPrice() > 200) {
-    SufficientWallet = logic->ProgressiveWallet >= 2;
+    SufficientWallet = logic->ProgressiveWallet >= 3;
   } else if (ctx->GetItemLocation(location)->GetPrice() > 99) {
+    SufficientWallet = logic->ProgressiveWallet >= 2;
+  } else if (ctx->GetItemLocation(location)->GetPrice() > 0) {
     SufficientWallet = logic->ProgressiveWallet >= 1;
   }
 
@@ -499,12 +501,25 @@ Area* AreaTable(const RandomizerRegion areaKey) {
 //Retrieve all the shuffable entrances of a specific type
 std::vector<Rando::Entrance*> GetShuffleableEntrances(Rando::EntranceType type, bool onlyPrimary /*= true*/) {
   std::vector<Rando::Entrance*> entrancesToShuffle = {};
-    for (RandomizerRegion area : Areas::GetAllAreas()) {
-    for (auto& exit: AreaTable(area)->exits) {
+  for (RandomizerRegion area : Areas::GetAllAreas()) {
+    for (auto& exit : AreaTable(area)->exits) {
       if ((exit.GetType() == type || type == Rando::EntranceType::All) && (exit.IsPrimary() || !onlyPrimary) && exit.GetType() != Rando::EntranceType::None) {
         entrancesToShuffle.push_back(&exit);
       }
     }
   }
   return entrancesToShuffle;
+}
+
+// Get the specific entrance by name
+Rando::Entrance* GetEntrance(const std::string name) {
+  for (RandomizerRegion area : Areas::GetAllAreas()) {
+    for (auto& exit : AreaTable(area)->exits) {
+      if (exit.GetName() == name) {
+        return &exit;
+      }
+    }
+  }
+
+  return nullptr;
 }

@@ -115,8 +115,12 @@ void WriteIngameSpoilerLog() {
         // if (loc->IsExcluded()) {
         //     continue;
         // }
+        // Beehives
+        if (!ctx->GetOption(RSK_SHUFFLE_BEEHIVES) && loc->IsCategory(Category::cBeehive)) {
+            continue;
+        }
         // Cows
-        if (!ctx->GetOption(RSK_SHUFFLE_COWS) && loc->IsCategory(Category::cCow)) {
+        else if (!ctx->GetOption(RSK_SHUFFLE_COWS) && loc->IsCategory(Category::cCow)) {
             continue;
         }
         // Merchants
@@ -312,35 +316,36 @@ static void WriteLocation(
 static void WriteShuffledEntrance(std::string sphereString, Entrance* entrance) {
   int16_t originalIndex = entrance->GetIndex();
   int16_t destinationIndex = -1;
-  int16_t originalBlueWarp = entrance->GetBlueWarp();
-  int16_t replacementBlueWarp = -1;
   int16_t replacementIndex = entrance->GetReplacement()->GetIndex();
   int16_t replacementDestinationIndex = -1;
   std::string name = entrance->GetName();
   std::string text = entrance->GetConnectedRegion()->regionName + " from " + entrance->GetReplacement()->GetParentRegion()->regionName;
 
-  if (entrance->GetReverse() != nullptr && !entrance->IsDecoupled()) {
+  // Track the reverse destination, useful for savewarp handling
+  if (entrance->GetReverse() != nullptr) {
     destinationIndex = entrance->GetReverse()->GetIndex();
-    replacementDestinationIndex = entrance->GetReplacement()->GetReverse()->GetIndex();
-    replacementBlueWarp = entrance->GetReplacement()->GetReverse()->GetBlueWarp();
+    // When decouple is off we track the replacement's reverse destination, useful for recording visited entrances
+    if (!entrance->IsDecoupled()) {
+      replacementDestinationIndex = entrance->GetReplacement()->GetReverse()->GetIndex();
+    }
   }
 
   json entranceJson = json::object({
+    {"type", entrance->GetType()},
     {"index", originalIndex},
     {"destination", destinationIndex},
-    {"blueWarp", originalBlueWarp},
     {"override", replacementIndex},
     {"overrideDestination", replacementDestinationIndex},
   });
 
   jsonData["entrances"].push_back(entranceJson);
 
-  // When decoupled entrances is off, handle saving reverse entrances with blue warps
+  // When decoupled entrances is off, handle saving reverse entrances
   if (entrance->GetReverse() != nullptr && !entrance->IsDecoupled()) {
     json reverseEntranceJson = json::object({
+      {"type", entrance->GetReverse()->GetType()},
       {"index", replacementDestinationIndex},
       {"destination", replacementIndex},
-      {"blueWarp", replacementBlueWarp},
       {"override", destinationIndex},
       {"overrideDestination", originalIndex},
     });
@@ -621,6 +626,11 @@ static void WriteHints() {
       jsonData["sariaText"] = ctx->GetHint(RH_SARIA)->GetText().GetForLanguage(language);
       jsonData["sariaHintLoc"] = Rando::StaticData::GetLocation(ctx->GetHint(RH_SARIA)->GetHintedLocation())->GetName();
       jsonData["sariaRegion"] = ::Hint(ctx->GetHint(RH_SARIA)->GetHintedArea()).GetText().GetEnglish();
+    }
+    if (ctx->GetOption(RSK_FISHING_POLE_HINT)) {
+      jsonData["fishingPoleText"] = ctx->GetHint(RH_FISHING_POLE)->GetText().GetForLanguage(language);
+      jsonData["fishingPoleHintLoc"] = Rando::StaticData::GetLocation(ctx->GetHint(RH_FISHING_POLE)->GetHintedLocation())->GetName();
+      jsonData["fishingPoleRegion"] = ::Hint(ctx->GetHint(RH_FISHING_POLE)->GetHintedArea()).GetText().GetEnglish();
     }
 
     if (ctx->GetOption(RSK_GOSSIP_STONE_HINTS).Is(RO_GOSSIP_STONES_NONE)) {

@@ -457,7 +457,7 @@ u32 Actor_HasParent(Actor* actor, PlayState* play);
 // TODO: Rename the follwing 3 functions using whatever scheme we use when we rename func_8002F434 and func_8002F554.
 s32 GiveItemEntryWithoutActor(PlayState* play, GetItemEntry getItemEntry);
 s32 GiveItemEntryFromActor(Actor* actor, PlayState* play, GetItemEntry getItemEntry, f32 xzRange, f32 yRange);
-void GiveItemEntryFromActorWithFixedRange(Actor* actor, PlayState* play, GetItemEntry getItemEntry);
+s32 GiveItemEntryFromActorWithFixedRange(Actor* actor, PlayState* play, GetItemEntry getItemEntry);
 s32 func_8002F434(Actor* actor, PlayState* play, s32 getItemId, f32 xzRange, f32 yRange);
 void func_8002F554(Actor* actor, PlayState* play, s32 getItemId);
 void func_8002F580(Actor* actor, PlayState* play);
@@ -2210,6 +2210,14 @@ s8 PadUtils_GetRelYImpl(Input* input);
 s8 PadUtils_GetRelX(Input* input);
 s8 PadUtils_GetRelY(Input* input);
 void PadUtils_UpdateRelXY(Input* input);
+s8 PadUtils_GetCurRX(Input* input);
+s8 PadUtils_GetCurRY(Input* input);
+void PadUtils_SetRelRXY(Input* input, s32 x, s32 y);
+s8 PadUtils_GetRelRXImpl(Input* input);
+s8 PadUtils_GetRelRYImpl(Input* input);
+s8 PadUtils_GetRelRX(Input* input);
+s8 PadUtils_GetRelRY(Input* input);
+void PadUtils_UpdateRelRXY(Input* input);
 s32 PadSetup_Init(OSMesgQueue* mq, u8* outMask, OSContStatus* status);
 f32 Math_FTanF(f32 x);
 f32 Math_FFloorF(f32 x);
@@ -2458,6 +2466,10 @@ void Message_DrawText(PlayState* play, Gfx** gfxP);
 
 void Interface_CreateQuadVertexGroup(Vtx* vtxList, s32 xStart, s32 yStart, s32 width, s32 height, u8 flippedH);
 void Interface_RandoRestoreSwordless(void);
+
+//Pause Warp
+void PauseWarp_HandleSelection();
+void PauseWarp_Execute();
 
 // #endregion
 

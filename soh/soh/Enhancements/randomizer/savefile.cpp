@@ -207,6 +207,9 @@ extern "C" void Randomizer_InitSaveFile() {
         gSaveContext.randomizerInf[i] = 0;
     }
 
+    // Reset triforce pieces collected
+    gSaveContext.triforcePiecesCollected = 0;
+
     gSaveContext.cutsceneIndex = 0; // no intro cutscene
     // Starts pending ice traps out at 0 before potentially incrementing them down the line.
     gSaveContext.pendingIceTrapCount = 0;
@@ -299,6 +302,14 @@ extern "C" void Randomizer_InitSaveFile() {
         Flags_SetRandomizerInf(RAND_INF_HAS_OCARINA_C_RIGHT);
         Flags_SetRandomizerInf(RAND_INF_HAS_OCARINA_C_UP);
         Flags_SetRandomizerInf(RAND_INF_HAS_OCARINA_C_DOWN);
+    }
+
+    if (Randomizer_GetSettingValue(RSK_SHUFFLE_SWIM) == RO_GENERIC_OFF) {
+        Flags_SetRandomizerInf(RAND_INF_CAN_SWIM);
+    }
+
+    if (Randomizer_GetSettingValue(RSK_SHUFFLE_CHILD_WALLET) == RO_GENERIC_OFF) {
+        Flags_SetRandomizerInf(RAND_INF_HAS_WALLET);
     }
 
     // Give Link's pocket item
@@ -449,9 +460,6 @@ extern "C" void Randomizer_InitSaveFile() {
         gSaveContext.itemGetInf[3] |= 0x800;  // bunny hood related
         gSaveContext.itemGetInf[3] |= 0x8000; // Obtained Mask of Truth
     }
-
-    // Reset triforce pieces collected
-    gSaveContext.triforcePiecesCollected = 0;
 
     SetStartingItems();
 }

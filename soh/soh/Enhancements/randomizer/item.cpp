@@ -7,6 +7,7 @@
 #include "z64item.h"
 #include "variables.h"
 #include "macros.h"
+#include "functions.h"
 #include "../../OTRGlobals.h"
 
 namespace Rando {
@@ -57,16 +58,18 @@ Item::Item(const RandomizerGet randomizerGet_, Text name_, const ItemType type_,
     Item::~Item() = default;
 
 void Item::ApplyEffect() const {
-    // If this is a key ring, logically add as many keys as we could need
-    if (RHT_FOREST_TEMPLE_KEY_RING <= hintKey && hintKey <= RHT_GANONS_CASTLE_KEY_RING) {
-        *std::get<uint8_t*>(logicVar) += 10;
-    } else {
-        if (std::holds_alternative<bool*>(logicVar)) {
-            *std::get<bool*>(logicVar) = true;
-        } else {
-            *std::get<uint8_t*>(logicVar) += 1;
-        }
-    }
+    //// If this is a key ring, logically add as many keys as we could need
+    //if (RHT_FOREST_TEMPLE_KEY_RING <= hintKey && hintKey <= RHT_GANONS_CASTLE_KEY_RING) {
+    //    *std::get<uint8_t*>(logicVar) += 10;
+    //} else {
+    //    if (std::holds_alternative<bool*>(logicVar)) {
+    //        *std::get<bool*>(logicVar) = true;
+    //    } else {
+    //        *std::get<uint8_t*>(logicVar) += 1;
+    //    }
+    //}
+    //Rando::Context::GetInstance()->ApplyItemEffect(this, false);
+
     Rando::Context::GetInstance()->GetLogic()->UpdateHelpers();
 }
 
@@ -116,8 +119,8 @@ std::shared_ptr<GetItemEntry> Item::GetGIEntry() const { // NOLINT(*-no-recursio
         return giEntry;
     }
     RandomizerGet actual = RG_NONE;
-    const u8 numWallets =
-        OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_SHOPSANITY) > RO_SHOPSANITY_ZERO_ITEMS ? 3 : 2;
+    const bool tycoonWallet =
+        OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_SHOPSANITY) > RO_SHOPSANITY_ZERO_ITEMS;
     switch (randomizerGet) {
         case RG_PROGRESSIVE_STICK_UPGRADE:
             switch (CUR_UPG_VALUE(UPG_STICKS)) {
@@ -238,6 +241,10 @@ std::shared_ptr<GetItemEntry> Item::GetGIEntry() const { // NOLINT(*-no-recursio
             }
             break;
         case RG_PROGRESSIVE_WALLET:
+            if (!Flags_GetRandomizerInf(RAND_INF_HAS_WALLET)) {
+                actual = RG_CHILD_WALLET;
+                break;
+            }
             switch (CUR_UPG_VALUE(UPG_WALLET)) {
                 case 0:
                     actual = RG_ADULT_WALLET;
@@ -247,13 +254,17 @@ std::shared_ptr<GetItemEntry> Item::GetGIEntry() const { // NOLINT(*-no-recursio
                     break;
                 case 2:
                 case 3:
-                    actual = numWallets == 3 ? RG_TYCOON_WALLET : RG_GIANT_WALLET;
+                    actual = tycoonWallet ? RG_TYCOON_WALLET : RG_GIANT_WALLET;
                     break;
                 default:
                     break;
             }
             break;
         case RG_PROGRESSIVE_SCALE:
+            if (!Flags_GetRandomizerInf(RAND_INF_CAN_SWIM)) {
+                actual = RG_BRONZE_SCALE;
+                break;
+            }
             switch (CUR_UPG_VALUE(UPG_SCALE)) {
                 case 0:
                     actual = RG_SILVER_SCALE;

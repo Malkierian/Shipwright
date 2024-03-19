@@ -30,6 +30,8 @@ void DrawBottle(ItemTrackerItem item);
 void DrawQuest(ItemTrackerItem item);
 void DrawSong(ItemTrackerItem item);
 
+int itemTrackerSectionId;
+
 bool shouldUpdateVectors = true;
 
 std::vector<ItemTrackerItem> mainWindowItems = {};
@@ -106,6 +108,10 @@ std::vector<ItemTrackerItem> ocarinaButtonItems = {
     ITEM_TRACKER_ITEM_CUSTOM(RG_OCARINA_C_DOWN_BUTTON, ITEM_OCARINA_TIME, ITEM_OCARINA_TIME, 0, DrawItem ),
     ITEM_TRACKER_ITEM_CUSTOM(RG_OCARINA_C_LEFT_BUTTON, ITEM_OCARINA_TIME, ITEM_OCARINA_TIME, 0, DrawItem ),
     ITEM_TRACKER_ITEM_CUSTOM(RG_OCARINA_C_RIGHT_BUTTON, ITEM_OCARINA_TIME, ITEM_OCARINA_TIME, 0, DrawItem ),
+};
+
+std::vector<ItemTrackerItem> fishingPoleItems = {
+    ITEM_TRACKER_ITEM(ITEM_FISHING_POLE, 0, DrawItem)
 };
 
 std::vector<ItemTrackerDungeon> itemTrackerDungeonsWithMapsHorizontal = {
@@ -326,11 +332,6 @@ void ItemTrackerOnFrame() {
     }
 }
 
-void SaveNotes(uint32_t fileNum) {
-    CVarSetString(("gItemTrackerNotes" + std::to_string(fileNum)).c_str(), std::string(std::begin(itemTrackerNotes), std::end(itemTrackerNotes)).c_str());
-    LUS::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesOnNextTick();
-}
-
 bool IsValidSaveFile() {
     bool validSave = gSaveContext.fileNum >= 0 && gSaveContext.fileNum <= 2;
     return validSave;
@@ -382,7 +383,7 @@ ItemTrackerNumbers GetItemCurrentAndMax(ItemTrackerItem item) {
             break;
         case ITEM_WALLET_ADULT:
         case ITEM_WALLET_GIANT:
-            result.currentCapacity = CUR_CAPACITY(UPG_WALLET);
+            result.currentCapacity = IS_RANDO && !Flags_GetRandomizerInf(RAND_INF_HAS_WALLET) ? 0 : CUR_CAPACITY(UPG_WALLET);
             result.maxCapacity = OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_SHOPSANITY) > RO_SHOPSANITY_ZERO_ITEMS ? 999 : 500;
             result.currentAmmo = gSaveContext.rupees;
             break;
@@ -456,10 +457,31 @@ ItemTrackerNumbers GetItemCurrentAndMax(ItemTrackerItem item) {
 
 void DrawItemCount(ItemTrackerItem item) {
     int iconSize = CVarGetInteger("gItemTrackerIconSize", 36);
+    int textSize = CVarGetInteger("gTrackers.ItemTracker.ItemTrackerTextSize", 13);
     ItemTrackerNumbers currentAndMax = GetItemCurrentAndMax(item);
     ImVec2 p = ImGui::GetCursorScreenPos();
     int32_t trackerNumberDisplayMode = CVarGetInteger("gItemTrackerCapacityTrack", ITEM_TRACKER_NUMBER_CURRENT_CAPACITY_ONLY);
     int32_t trackerKeyNumberDisplayMode = CVarGetInteger("gItemTrackerKeyTrack", KEYS_COLLECTED_MAX);
+    float textScalingFactor = static_cast<float>(iconSize) / 36.0f;
+    uint32_t actualItemId = INV_CONTENT(item.id);
+    bool hasItem = actualItemId != ITEM_NONE;
+
+    if (CVarGetInteger("gTrackers.ItemTracker.HookshotIdentifier", 0)) {
+        if ((actualItemId == ITEM_HOOKSHOT || actualItemId == ITEM_LONGSHOT) && hasItem) {
+
+            // Calculate the scaled position for the text
+            ImVec2 textPos = ImVec2(p.x + (iconSize / 2) - (ImGui::CalcTextSize(item.id == ITEM_HOOKSHOT ? "H" : "L").x * 
+            textScalingFactor / 2) + 8 * textScalingFactor, p.y - 22 * textScalingFactor);
+
+            ImGui::SetCursorScreenPos(textPos);
+            ImGui::SetWindowFontScale(textScalingFactor);
+
+            ImGui::Text(item.id == ITEM_HOOKSHOT ? "H" : "L");
+            ImGui::SetWindowFontScale(1.0f); // Reset font scale to the original state
+        }
+    }
+
+    ImGui::SetWindowFontScale(textSize / 13.0f);
 
     if (item.id == ITEM_KEY_SMALL && IsValidSaveFile()) {
         std::string currentString = "";
@@ -631,7 +653,7 @@ void DrawItem(ItemTrackerItem item) {
         case ITEM_WALLET_ADULT:
         case ITEM_WALLET_GIANT:
             actualItemId = CUR_UPG_VALUE(UPG_WALLET) == 2 ? ITEM_WALLET_GIANT : ITEM_WALLET_ADULT;
-            hasItem = true;
+            hasItem = !IS_RANDO || Flags_GetRandomizerInf(RAND_INF_HAS_WALLET);
             break;
         case ITEM_BRACELET:
         case ITEM_GAUNTLETS_SILVER:
@@ -726,6 +748,11 @@ void DrawItem(ItemTrackerItem item) {
             hasItem = Flags_GetRandomizerInf(RAND_INF_HAS_OCARINA_C_RIGHT);
             itemName = "Ocarina C Right Button";
             break;
+        case ITEM_FISHING_POLE:
+            actualItemId = item.id;
+            hasItem = IS_RANDO && Flags_GetRandomizerInf(RAND_INF_FISHING_POLE_FOUND);
+            itemName = "Fishing Pole";
+            break;
     }
 
     if (GameInteractor::IsSaveLoaded() && (hasItem && item.id != actualItemId && actualItemTrackerItemMap.find(actualItemId) != actualItemTrackerItemMap.end())) {
@@ -807,7 +834,7 @@ void DrawDungeonItem(ItemTrackerItem item) {
 
         ImVec2 p = ImGui::GetCursorScreenPos();
         std::string dungeonName = itemTrackerDungeonShortNames[item.data];
-        ImGui::SetCursorScreenPos(ImVec2(p.x + (iconSize / 2) - (ImGui::CalcTextSize(dungeonName.c_str()).x / 2), p.y - (iconSize + 16)));
+        ImGui::SetCursorScreenPos(ImVec2(p.x + (iconSize / 2) - (ImGui::CalcTextSize(dungeonName.c_str()).x / 2), p.y - (iconSize + CVarGetInteger("gTrackers.ItemTracker.ItemTrackerTextSize", 13) + 3)));
         ImGui::PushStyleColor(ImGuiCol_Text, dungeonColor);
         ImGui::Text("%s", dungeonName.c_str());
         ImGui::PopStyleColor();
@@ -870,7 +897,7 @@ void DrawNotes(bool resizeable = false) {
     }
     if ((ImGui::IsItemDeactivatedAfterEdit() || (notesNeedSave && notesIdleFrames > notesMaxIdleFrames)) && IsValidSaveFile()) {
         notesNeedSave = false;
-        SaveNotes(gSaveContext.fileNum);
+        SaveManager::Instance->SaveSection(gSaveContext.fileNum, itemTrackerSectionId, true);
     }
     ImGui::EndGroup();
 }
@@ -936,7 +963,7 @@ void DrawItemsInACircle(std::vector<ItemTrackerItem> items) {
         float angle = (float)i / items.size() * 2.0f * M_PI;
         float x = (radius / 2.0f) * cos(angle) + max.x / 2.0f;
         float y = (radius / 2.0f) * sin(angle) + max.y / 2.0f;
-        ImGui::SetCursorPos(ImVec2(x - 14, y + 4));
+        ImGui::SetCursorPos(ImVec2(x - (CVarGetInteger("gItemTrackerIconSize", 36) - 8) / 2.0f, y + 4));
         items[i].drawFunc(items[i]);
     }
 }
@@ -1054,25 +1081,22 @@ void UpdateVectors() {
     // and misc isn't on the main window,
     // and it doesn't already have greg, add him
     if (CVarGetInteger("gItemTrackerGregDisplayType", SECTION_DISPLAY_EXTENDED_HIDDEN) == SECTION_DISPLAY_EXTENDED_MISC_WINDOW &&
-        CVarGetInteger("gItemTrackerMiscItemsDisplayType", SECTION_DISPLAY_MAIN_WINDOW) != SECTION_DISPLAY_MAIN_WINDOW &&
-        std::none_of(miscItems.begin(), miscItems.end(), [](ItemTrackerItem item){return item.id == ITEM_RUPEE_GREEN;})) {
-
-        miscItems.insert(miscItems.end(), gregItems.begin(), gregItems.end());
+        CVarGetInteger("gItemTrackerMiscItemsDisplayType", SECTION_DISPLAY_MAIN_WINDOW) != SECTION_DISPLAY_MAIN_WINDOW) {
+        if (std::none_of(miscItems.begin(), miscItems.end(), [](ItemTrackerItem item) { return item.id == ITEM_RUPEE_GREEN; }))
+            miscItems.insert(miscItems.end(), gregItems.begin(), gregItems.end());
     } else {
-        for (auto it = miscItems.begin(); it != miscItems.end();) {
-            if (it->id == ITEM_RUPEE_GREEN) {
-                miscItems.erase(it);
-            } else {
-                it++;
-            }
-        }
+        miscItems.erase(std::remove_if(miscItems.begin(), miscItems.end(), [](ItemTrackerItem i) { return i.id == ITEM_RUPEE_GREEN; }), miscItems.end());
     }
 
+    bool newRowAdded = false;
     // if we're adding greg to the main window
     if (CVarGetInteger("gItemTrackerGregDisplayType", SECTION_DISPLAY_EXTENDED_HIDDEN) == SECTION_DISPLAY_EXTENDED_MAIN_WINDOW) {
-        // insert empty items until we're on a new row for greg
-        while (mainWindowItems.size() % 6) {
-            mainWindowItems.push_back(ITEM_TRACKER_ITEM(ITEM_NONE, 0, DrawItem));
+        if (!newRowAdded) {
+            // insert empty items until we're on a new row for greg
+            while (mainWindowItems.size() % 6) {
+                mainWindowItems.push_back(ITEM_TRACKER_ITEM(ITEM_NONE, 0, DrawItem));
+            }
+            newRowAdded = true;
         }
 
         // add greg
@@ -1082,14 +1106,35 @@ void UpdateVectors() {
     // If we're adding triforce pieces to the main window
     if (CVarGetInteger("gItemTrackerTriforcePiecesDisplayType", SECTION_DISPLAY_HIDDEN) == SECTION_DISPLAY_MAIN_WINDOW) {
         // If Greg isn't on the main window, add empty items to place the triforce pieces on a new row.
-        if (CVarGetInteger("gItemTrackerGregDisplayType", SECTION_DISPLAY_EXTENDED_HIDDEN) != SECTION_DISPLAY_EXTENDED_MAIN_WINDOW) {
+        if (!newRowAdded) {
             while (mainWindowItems.size() % 6) {
                 mainWindowItems.push_back(ITEM_TRACKER_ITEM(ITEM_NONE, 0, DrawItem));
             }
+            newRowAdded = true;
         }
 
         // Add triforce pieces
         mainWindowItems.insert(mainWindowItems.end(), triforcePieces.begin(), triforcePieces.end());
+    }
+
+    // if misc is separate and fishing pole isn't added, add fishing pole to misc
+    if (CVarGetInteger("gItemTrackerFishingPoleDisplayType", SECTION_DISPLAY_EXTENDED_HIDDEN) == SECTION_DISPLAY_EXTENDED_MISC_WINDOW &&
+        CVarGetInteger("gItemTrackerMiscItemsDisplayType", SECTION_DISPLAY_MAIN_WINDOW) != SECTION_DISPLAY_MAIN_WINDOW) {
+        if (std::none_of(miscItems.begin(), miscItems.end(), [](ItemTrackerItem item) { return item.id == ITEM_FISHING_POLE; }))
+            miscItems.insert(miscItems.end(), fishingPoleItems.begin(), fishingPoleItems.end());
+    } else {
+        miscItems.erase(std::remove_if(miscItems.begin(), miscItems.end(), [](ItemTrackerItem i) { return i.id == ITEM_FISHING_POLE; }), miscItems.end());
+    }
+    // add fishing pole to main window
+    if (CVarGetInteger("gItemTrackerFishingPoleDisplayType", SECTION_DISPLAY_EXTENDED_HIDDEN) == SECTION_DISPLAY_EXTENDED_MAIN_WINDOW) {
+        if (!newRowAdded) {
+            while (mainWindowItems.size() % 6) {
+                mainWindowItems.push_back(ITEM_TRACKER_ITEM(ITEM_NONE, 0, DrawItem));
+            }
+            newRowAdded = true;
+        }
+
+        mainWindowItems.insert(mainWindowItems.end(), fishingPoleItems.begin(), fishingPoleItems.end());
     }
 
     //If we're adding boss souls to the main window...
@@ -1117,6 +1162,26 @@ void UpdateVectors() {
     shouldUpdateVectors = false;
 }
 
+void ItemTrackerInitFile(bool isDebug) {
+    itemTrackerNotes.clear();
+    itemTrackerNotes.push_back(0);
+}
+
+void ItemTrackerSaveFile(SaveContext* saveContext, int sectionID, bool fullSave) {
+    SaveManager::Instance->SaveData("personalNotes", std::string(std::begin(itemTrackerNotes), std::end(itemTrackerNotes)).c_str());
+}
+
+void ItemTrackerLoadFile() {
+    std::string initialTrackerNotes = "";
+    SaveManager::Instance->LoadData("personalNotes", initialTrackerNotes);
+    itemTrackerNotes.resize(initialTrackerNotes.length() + 1);
+    if (initialTrackerNotes != "") {
+        SohUtils::CopyStringToCharArray(itemTrackerNotes.Data, initialTrackerNotes.c_str(), itemTrackerNotes.size());
+    } else {
+        itemTrackerNotes.push_back(0);
+    }
+}
+
 void ItemTrackerWindow::DrawElement() {
     UpdateVectors();
 
@@ -1138,6 +1203,7 @@ void ItemTrackerWindow::DrawElement() {
             (CVarGetInteger("gItemTrackerDungeonItemsDisplayType", SECTION_DISPLAY_HIDDEN) == SECTION_DISPLAY_MAIN_WINDOW) ||
             (CVarGetInteger("gItemTrackerGregDisplayType", SECTION_DISPLAY_EXTENDED_HIDDEN) == SECTION_DISPLAY_EXTENDED_MAIN_WINDOW) ||
             (CVarGetInteger("gItemTrackerTriforcePiecesDisplayType", SECTION_DISPLAY_HIDDEN) == SECTION_DISPLAY_MAIN_WINDOW) ||
+            (CVarGetInteger("gItemTrackerFishingPoleDisplayType", SECTION_DISPLAY_EXTENDED_HIDDEN) == SECTION_DISPLAY_EXTENDED_MAIN_WINDOW) ||
             (CVarGetInteger("gItemTrackerNotesDisplayType", SECTION_DISPLAY_HIDDEN) == SECTION_DISPLAY_MAIN_WINDOW)
         ) {
             BeginFloatingWindows("Item Tracker##main window");
@@ -1226,6 +1292,12 @@ void ItemTrackerWindow::DrawElement() {
             EndFloatingWindows();
         }
 
+        if (CVarGetInteger("gItemTrackerFishingPoleDisplayType", SECTION_DISPLAY_EXTENDED_HIDDEN) == SECTION_DISPLAY_EXTENDED_SEPARATE) {
+            BeginFloatingWindows("Fishing Pole Tracker");
+            DrawItemsInRows(fishingPoleItems);
+            EndFloatingWindows();
+        }
+
         if (CVarGetInteger("gItemTrackerNotesDisplayType", SECTION_DISPLAY_HIDDEN) == SECTION_DISPLAY_SEPARATE && CVarGetInteger("gItemTrackerDisplayType", TRACKER_DISPLAY_ALWAYS) == TRACKER_DISPLAY_ALWAYS) {
             ImGui::SetNextWindowSize(ImVec2(400,300), ImGuiCond_FirstUseEver);
             BeginFloatingWindows("Personal Notes", ImGuiWindowFlags_NoFocusOnAppearing);
@@ -1297,6 +1369,7 @@ void ItemTrackerSettingsWindow::DrawElement() {
     UIWidgets::PaddedSeparator();
     UIWidgets::EnhancementSliderInt("Icon size : %dpx", "##ITEMTRACKERICONSIZE", "gItemTrackerIconSize", 25, 128, "", 36);
     UIWidgets::EnhancementSliderInt("Icon margins : %dpx", "##ITEMTRACKERSPACING", "gItemTrackerIconSpacing", -5, 50, "", 12);
+    UIWidgets::EnhancementSliderInt("Text size : %dpx", "##ITEMTRACKERTEXTSIZE", "gTrackers.ItemTracker.ItemTrackerTextSize", 1, 30, "", 13);
     
     UIWidgets::Spacer(0);
 
@@ -1337,7 +1410,7 @@ void ItemTrackerSettingsWindow::DrawElement() {
         shouldUpdateVectors = true;
     }
     if (CVarGetInteger("gItemTrackerDungeonRewardsDisplayType", SECTION_DISPLAY_MAIN_WINDOW) == SECTION_DISPLAY_SEPARATE) {
-        if (UIWidgets::PaddedEnhancementCheckbox("Circle display", "gItemTrackerDungeonRewardsCircle", true, true, false, "", UIWidgets::CheckboxGraphics::Cross, true)) {
+        if (UIWidgets::PaddedEnhancementCheckbox("Circle display", "gItemTrackerDungeonRewardsCircle", true, true, false, "", UIWidgets::CheckboxGraphics::Cross, false)) {
             shouldUpdateVectors = true;
         }
     }
@@ -1373,11 +1446,19 @@ void ItemTrackerSettingsWindow::DrawElement() {
         shouldUpdateVectors = true;
     }
 
+    if (UIWidgets::LabeledRightAlignedEnhancementCombobox("Fishing Pole", "gItemTrackerFishingPoleDisplayType", extendedDisplayTypes, SECTION_DISPLAY_EXTENDED_HIDDEN)) {
+        shouldUpdateVectors = true;
+    }
+
     if (CVarGetInteger("gItemTrackerDisplayType", TRACKER_DISPLAY_ALWAYS) == TRACKER_DISPLAY_ALWAYS) {
         if (UIWidgets::LabeledRightAlignedEnhancementCombobox("Personal notes", "gItemTrackerNotesDisplayType", displayTypes, SECTION_DISPLAY_HIDDEN)) {
             shouldUpdateVectors = true;
         }
     }
+    UIWidgets::EnhancementCheckbox("Show Hookshot Identifiers", "gTrackers.ItemTracker.HookshotIdentifier");
+    UIWidgets::InsertHelpHoverText("Shows an 'H' or an 'L' to more easiely distinguish between Hookshot and Longshot.");
+
+    UIWidgets::Spacer(0);
 
     ImGui::PopStyleVar(1);
     ImGui::EndTable();
@@ -1401,14 +1482,9 @@ void ItemTrackerWindow::InitElement() {
         itemTrackerNotes.push_back(0);
     }
 
-    GameInteractor::Instance->RegisterGameHook<GameInteractor::OnLoadFile>([](uint32_t fileNum) {
-        const char* initialTrackerNotes = CVarGetString(("gItemTrackerNotes" + std::to_string(fileNum)).c_str(), "");
-        itemTrackerNotes.resize(strlen(initialTrackerNotes) + 1);
-        strcpy(itemTrackerNotes.Data, initialTrackerNotes);
-    });
-    GameInteractor::Instance->RegisterGameHook<GameInteractor::OnDeleteFile>([](uint32_t fileNum) {
-        CVarSetString(("gItemTrackerNotes" + std::to_string(fileNum)).c_str(), "");
-        LUS::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesOnNextTick();
-    });
+    SaveManager::Instance->AddInitFunction(ItemTrackerInitFile);
+    itemTrackerSectionId = SaveManager::Instance->AddSaveFunction("itemTrackerData", 1, ItemTrackerSaveFile, true, -1);
+    SaveManager::Instance->AddLoadFunction("itemTrackerData", 1, ItemTrackerLoadFile);
+
     GameInteractor::Instance->RegisterGameHook<GameInteractor::OnGameFrameUpdate>(ItemTrackerOnFrame);
 }

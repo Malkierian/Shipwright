@@ -10,8 +10,8 @@ void AreaTable_Init_WaterTemple() {
   ---------------------------*/
   areaTable[RR_WATER_TEMPLE_ENTRYWAY] = Area("Water Temple Entryway", "Water Temple", RA_WATER_TEMPLE, NO_DAY_NIGHT_CYCLE, {}, {}, {
                   //Exits
-                  Entrance(RR_WATER_TEMPLE_LOBBY,    {[]{return randoCtx->GetDungeon(WATER_TEMPLE)->IsVanilla();}}),
-                  Entrance(RR_WATER_TEMPLE_MQ_LOBBY, {[]{return randoCtx->GetDungeon(WATER_TEMPLE)->IsMQ();}}),
+                  Entrance(RR_WATER_TEMPLE_LOBBY,    {[]{return logic->Swim && randoCtx->GetDungeon(WATER_TEMPLE)->IsVanilla();}}),
+                  Entrance(RR_WATER_TEMPLE_MQ_LOBBY, {[]{return logic->Swim && randoCtx->GetDungeon(WATER_TEMPLE)->IsMQ();}}),
                   Entrance(RR_LAKE_HYLIA,            {[]{return true;}}),
   });
 
@@ -329,5 +329,6 @@ void AreaTable_Init_WaterTemple() {
         {
             // Exits
             Entrance(RR_WATER_TEMPLE_BOSS_ENTRYWAY, { [] { return false; } }),
+            Entrance(RR_LAKE_HYLIA, { [] { return logic->WaterTempleClear; } }),
         });
 }

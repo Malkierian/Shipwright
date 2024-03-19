@@ -24,6 +24,7 @@ int Playthrough_Init(uint32_t seed, std::set<RandomizerCheck> excludedLocations,
     ctx->ItemReset();
     ctx->HintReset();
     ctx->GetLogic()->Reset();
+    ctx->SetSaveContext(new SaveContext());
     Areas::AccessReset();
 
     ctx->GetSettings()->FinalizeSettings(excludedLocations, enabledTricks);

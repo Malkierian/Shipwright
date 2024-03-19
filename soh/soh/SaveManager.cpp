@@ -210,9 +210,9 @@ void SaveManager::LoadRandomizerVersion2() {
     auto entranceCtx = randoContext->GetEntranceShuffler();
     SaveManager::Instance->LoadArray("entrances", ARRAY_COUNT(entranceCtx->entranceOverrides), [&](size_t i) {
         SaveManager::Instance->LoadStruct("", [&]() {
+            SaveManager::Instance->LoadData("type", entranceCtx->entranceOverrides[i].type);
             SaveManager::Instance->LoadData("index", entranceCtx->entranceOverrides[i].index);
             SaveManager::Instance->LoadData("destination", entranceCtx->entranceOverrides[i].destination);
-            SaveManager::Instance->LoadData("blueWarp", entranceCtx->entranceOverrides[i].blueWarp);
             SaveManager::Instance->LoadData("override", entranceCtx->entranceOverrides[i].override);
             SaveManager::Instance->LoadData("overrideDestination", entranceCtx->entranceOverrides[i].overrideDestination);
         });
@@ -272,6 +272,9 @@ void SaveManager::LoadRandomizerVersion2() {
     std::string sariaText;
     SaveManager::Instance->LoadData("sariaText", sariaText);
     randoContext->AddHint(RH_SARIA, Text(sariaText), RC_UNKNOWN_CHECK, HINT_TYPE_STATIC, "Static");
+    std::string fishingPoleText;
+    SaveManager::Instance->LoadData("fishingPoleText", fishingPoleText);
+    randoContext->AddHint(RH_FISHING_POLE, Text(fishingPoleText), RC_UNKNOWN_CHECK, HINT_TYPE_STATIC, "Static");
     std::string warpMinuetText;
     SaveManager::Instance->LoadData("warpMinuetText", warpMinuetText);
     randoContext->AddHint(RH_MINUET_WARP_LOC, Text(warpMinuetText), RC_UNKNOWN_CHECK, HINT_TYPE_STATIC, "Static", randoContext->GetAreaFromString(warpMinuetText));
@@ -354,9 +357,9 @@ void SaveManager::LoadRandomizerVersion3() {
     auto entranceCtx = randoContext->GetEntranceShuffler();
     SaveManager::Instance->LoadArray("entrances", ARRAY_COUNT(entranceCtx->entranceOverrides), [&](size_t i) {
         SaveManager::Instance->LoadStruct("", [&]() {
+            SaveManager::Instance->LoadData("type", entranceCtx->entranceOverrides[i].type);
             SaveManager::Instance->LoadData("index", entranceCtx->entranceOverrides[i].index);
             SaveManager::Instance->LoadData("destination", entranceCtx->entranceOverrides[i].destination);
-            SaveManager::Instance->LoadData("blueWarp", entranceCtx->entranceOverrides[i].blueWarp);
             SaveManager::Instance->LoadData("override", entranceCtx->entranceOverrides[i].override);
             SaveManager::Instance->LoadData("overrideDestination",
                                             entranceCtx->entranceOverrides[i].overrideDestination);
@@ -452,9 +455,9 @@ void SaveManager::SaveRandomizer(SaveContext* saveContext, int sectionID, bool f
     auto entranceCtx = randoContext->GetEntranceShuffler();
     SaveManager::Instance->SaveArray("entrances", ARRAY_COUNT(entranceCtx->entranceOverrides), [&](size_t i) {
         SaveManager::Instance->SaveStruct("", [&]() {
+            SaveManager::Instance->SaveData("type", entranceCtx->entranceOverrides[i].type);
             SaveManager::Instance->SaveData("index", entranceCtx->entranceOverrides[i].index);
             SaveManager::Instance->SaveData("destination", entranceCtx->entranceOverrides[i].destination);
-            SaveManager::Instance->SaveData("blueWarp", entranceCtx->entranceOverrides[i].blueWarp);
             SaveManager::Instance->SaveData("override", entranceCtx->entranceOverrides[i].override);
             SaveManager::Instance->SaveData("overrideDestination", entranceCtx->entranceOverrides[i].overrideDestination);
         });
@@ -588,6 +591,7 @@ void SaveManager::InitMeta(int fileNum) {
     fileMetaInfo[fileNum].gsTokens = gSaveContext.inventory.gsTokens;
     fileMetaInfo[fileNum].isDoubleDefenseAcquired = gSaveContext.isDoubleDefenseAcquired;
     fileMetaInfo[fileNum].gregFound = Flags_GetRandomizerInf(RAND_INF_GREG_FOUND);
+    fileMetaInfo[fileNum].hasWallet = Flags_GetRandomizerInf(RAND_INF_HAS_WALLET);
     fileMetaInfo[fileNum].defense = gSaveContext.inventory.defenseHearts;
     fileMetaInfo[fileNum].health = gSaveContext.health;
     auto randoContext = Rando::Context::GetInstance();

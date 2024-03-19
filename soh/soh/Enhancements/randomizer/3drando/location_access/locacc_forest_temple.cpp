@@ -164,13 +164,13 @@ void AreaTable_Init_ForestTemple() {
 
   areaTable[RR_FOREST_TEMPLE_BLOCK_PUSH_ROOM] = Area("Forest Temple Block Push Room", "Forest Temple", RA_FOREST_TEMPLE, NO_DAY_NIGHT_CYCLE, {}, {
                   //Locations
-                  LocationAccess(RC_FOREST_TEMPLE_EYE_SWITCH_CHEST, {[]{return logic->GoronBracelet && (logic->CanUse(RG_FAIRY_BOW) || logic->CanUse(RG_FAIRY_SLINGSHOT));}}),
+                  LocationAccess(RC_FOREST_TEMPLE_EYE_SWITCH_CHEST, {[]{return logic->HasItem(RG_GORONS_BRACELET) && (logic->CanUse(RG_FAIRY_BOW) || logic->CanUse(RG_FAIRY_SLINGSHOT));}}),
                 }, {
                   //Exits
                   Entrance(RR_FOREST_TEMPLE_WEST_CORRIDOR,            {[]{return true;}}),
-                  Entrance(RR_FOREST_TEMPLE_NW_OUTDOORS_UPPER,        {[]{return logic->CanUse(RG_HOVER_BOOTS) || (randoCtx->GetTrickOption(RT_FOREST_OUTSIDE_BACKDOOR) && logic->CanJumpslash && logic->GoronBracelet);}}),
-                  Entrance(RR_FOREST_TEMPLE_NW_CORRIDOR_TWISTED,      {[]{return logic->IsAdult && logic->GoronBracelet && logic->SmallKeys(RR_FOREST_TEMPLE, 2);}}),
-                  Entrance(RR_FOREST_TEMPLE_NW_CORRIDOR_STRAIGHTENED, {[]{return (logic->CanUse(RG_FAIRY_BOW) || logic->CanUse(RG_FAIRY_SLINGSHOT)) && logic->GoronBracelet && logic->SmallKeys(RR_FOREST_TEMPLE, 2);}}),
+                  Entrance(RR_FOREST_TEMPLE_NW_OUTDOORS_UPPER,        {[]{return logic->CanUse(RG_HOVER_BOOTS) || (randoCtx->GetTrickOption(RT_FOREST_OUTSIDE_BACKDOOR) && logic->CanJumpslash && logic->HasItem(RG_GORONS_BRACELET));}}),
+                  Entrance(RR_FOREST_TEMPLE_NW_CORRIDOR_TWISTED,      {[]{return logic->IsAdult && logic->HasItem(RG_GORONS_BRACELET) && logic->SmallKeys(RR_FOREST_TEMPLE, 2);}}),
+                  Entrance(RR_FOREST_TEMPLE_NW_CORRIDOR_STRAIGHTENED, {[]{return (logic->CanUse(RG_FAIRY_BOW) || logic->CanUse(RG_FAIRY_SLINGSHOT)) && logic->HasItem(RG_GORONS_BRACELET) && logic->SmallKeys(RR_FOREST_TEMPLE, 2);}}),
   });
 
   areaTable[RR_FOREST_TEMPLE_NW_CORRIDOR_TWISTED] = Area("Forest Temple NW Corridor Twisted", "Forest Temple", RA_FOREST_TEMPLE, NO_DAY_NIGHT_CYCLE, {}, {}, {
@@ -299,8 +299,8 @@ void AreaTable_Init_ForestTemple() {
                   //Exits
                   Entrance(RR_FOREST_TEMPLE_MQ_NW_OUTDOORS,        {[]{return logic->CanUse(RG_FAIRY_BOW) || logic->CanUse(RG_FAIRY_SLINGSHOT);}}),
                   Entrance(RR_FOREST_TEMPLE_MQ_NE_OUTDOORS,        {[]{return logic->CanUse(RG_FAIRY_BOW) || logic->CanUse(RG_FAIRY_SLINGSHOT);}}), //This is as far as child can get
-                  Entrance(RR_FOREST_TEMPLE_MQ_AFTER_BLOCK_PUZZLE, {[]{return logic->IsAdult && (logic->GoronBracelet || (randoCtx->GetTrickOption(RT_FOREST_MQ_BLOCK_PUZZLE) && logic->HasBombchus && logic->IsAdult && logic->CanUse(RG_HOOKSHOT)));}}),
-                    //Trick: logic->IsAdult && (logic->GoronBracelet || (LogicForestMQBlockPuzzle && logic->HasBombchus && logic->IsAdult && logic->CanUse(RG_HOOKSHOT)))
+                  Entrance(RR_FOREST_TEMPLE_MQ_AFTER_BLOCK_PUZZLE, {[]{return logic->IsAdult && (logic->HasItem(RG_GORONS_BRACELET) || (randoCtx->GetTrickOption(RT_FOREST_MQ_BLOCK_PUZZLE) && logic->HasBombchus && logic->IsAdult && logic->CanUse(RG_HOOKSHOT)));}}),
+                    //Trick: logic->IsAdult && (logic->HasItem(RG_GORONS_BRACELET) || (LogicForestMQBlockPuzzle && logic->HasBombchus && logic->IsAdult && logic->CanUse(RG_HOOKSHOT)))
                   Entrance(RR_FOREST_TEMPLE_MQ_OUTDOOR_LEDGE,      {[]{return (randoCtx->GetTrickOption(RT_FOREST_MQ_JS_HALLWAY_SWITCH) && logic->IsAdult && logic->CanUse(RG_HOVER_BOOTS)) || (randoCtx->GetTrickOption(RT_FOREST_MQ_RANG_HALLWAY_SWITCH) && logic->CanUse(RG_BOOMERANG)) || (randoCtx->GetTrickOption(RT_FOREST_MQ_HOOKSHOT_HALLWAY_SWITCH) && logic->IsAdult && logic->CanUse(RG_HOOKSHOT));}}),
                     //Trick (logic->CanUse(RG_HOOKSHOT) trick not added to either n64 or oot3d rando as of yet, to enable in SoH needs uncommenting in randomizer_tricks.cpp): (LogicForestMQHallwaySwitchJS && logic->IsAdult && logic->CanUse(RG_HOVER_BOOTS)) || (LogicForestMQHallwaySwitchHookshot && logic->IsAdult && logic->CanUse(RG_HOOKSHOT)) 
                   Entrance(RR_FOREST_TEMPLE_MQ_BOSS_REGION,        {[]{return logic->ForestTempleJoAndBeth && logic->ForestTempleAmyAndMeg;}}),

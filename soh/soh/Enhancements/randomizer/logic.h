@@ -89,14 +89,8 @@ class Logic {
     bool GregInLacsLogic = false;
 
     // Progressive Items
-    uint8_t ProgressiveBulletBag = 0;
-    uint8_t ProgressiveBombBag = 0;
-    uint8_t ProgressiveMagic = 0;
     uint8_t ProgressiveScale = 0;
-    uint8_t ProgressiveBow = 0;
     uint8_t ProgressiveWallet = 0;
-    uint8_t ProgressiveStrength = 0;
-    uint8_t ProgressiveOcarina = 0;
     uint8_t ProgressiveGiantKnife = 0;
 
     // Logical keysanity
@@ -121,7 +115,6 @@ class Logic {
     uint8_t GoldSkulltulaTokens = 0;
 
     // Bottle Count
-    uint8_t Bottles = 0;
     uint8_t NumBottles = 0;
     bool NoBottles = false;
 
@@ -170,9 +163,6 @@ class Logic {
     bool BombBag = false;
     bool MagicMeter = false;
     bool Bow = false;
-    bool GoronBracelet = false;
-    bool SilverGauntlets = false;
-    bool GoldenGauntlets = false;
     bool SilverScale = false;
     bool GoldScale = false;
     bool AdultsWallet = false;

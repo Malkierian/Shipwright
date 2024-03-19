@@ -35,6 +35,7 @@ namespace Rando {
                 (itemName == RG_HOVER_BOOTS            && ctx->CheckEquipment(EQUIP_FLAG_BOOTS_HOVER))          ||
                 (itemName == RG_HOOKSHOT               && ctx->CheckInventory(ITEM_HOOKSHOT, false))            ||
                 (itemName == RG_LONGSHOT               && ctx->CheckInventory(ITEM_LONGSHOT, true))            ||
+                (itemName == RG_GORONS_BRACELET        && ctx->CurrentUpgrade(UPG_STRENGTH) >= 1) || 
                 (itemName == RG_SILVER_GAUNTLETS       && ctx->CurrentUpgrade(UPG_STRENGTH) >= 2) || 
                 (itemName == RG_GOLDEN_GAUNTLETS       && ctx->CurrentUpgrade(UPG_STRENGTH) == 3)     ||
                 (itemName == RG_GORON_TUNIC            && ctx->CheckEquipment(EQUIP_FLAG_TUNIC_GORON))          ||
@@ -258,13 +259,10 @@ namespace Rando {
                           (ctx->GetSaveContext()->inventory.items[SLOT_BOTTLE_4] != ITEM_NONE && ctx->GetSaveContext()->inventory.items[SLOT_BOTTLE_4] != ITEM_LETTER_RUTO ? 1 : 0) +
                           (ctx->CheckEventChkInf(EVENTCHKINF_KING_ZORA_MOVED) ? 1 : 0);
         HasBottle       = NumBottles >= 1;
-        Slingshot       = (ProgressiveBulletBag >= 1) && (BuySeed || AmmoCanDrop);
-        MagicMeter      = (ProgressiveMagic     >= 1) && (AmmoCanDrop || (HasBottle && BuyMagicPotion));
-        BombBag         = (ProgressiveBombBag   >= 1) && (BuyBomb || AmmoCanDrop);
-        Bow             = (ProgressiveBow       >= 1) && (BuyArrow || AmmoCanDrop);
-        GoronBracelet   = ProgressiveStrength   >= 1;
-        SilverGauntlets = ProgressiveStrength   >= 2;
-        GoldenGauntlets = ProgressiveStrength   >= 3;
+        Slingshot       = CanUse(RG_FAIRY_SLINGSHOT) && (BuySeed || AmmoCanDrop);
+        MagicMeter      = (ctx->GetSaveContext()->magicLevel > 0) && (AmmoCanDrop || (HasBottle && BuyMagicPotion));
+        BombBag         = HasItem(RG_BOMB_BAG) && (BuyBomb || AmmoCanDrop);
+        Bow             = CanUse(RG_FAIRY_BOW) && (BuyArrow || AmmoCanDrop);
         SilverScale     = ProgressiveScale      >= 1;
         GoldScale       = ProgressiveScale      >= 2;
         AdultsWallet    = ProgressiveWallet     >= 1;
@@ -531,14 +529,8 @@ namespace Rando {
         GregInLacsLogic = false;
 
         //Progressive Items
-        ProgressiveBulletBag  = 0;
-        ProgressiveBombBag    = 0;
-        ProgressiveMagic      = 0;
         ProgressiveScale      = 0;
-        ProgressiveBow        = 0;
         ProgressiveWallet     = 0;
-        ProgressiveStrength   = 0;
-        ProgressiveOcarina    = 0;
         ProgressiveGiantKnife = 0;
 
         //Keys
@@ -558,7 +550,6 @@ namespace Rando {
         GoldSkulltulaTokens = 0;
 
         //Bottle Count
-        Bottles    = 0;
         NumBottles = 0;
         NoBottles  = false;
 
@@ -609,9 +600,6 @@ namespace Rando {
         BombBag          = false;
         MagicMeter       = false;
         Bow              = false;
-        GoronBracelet    = false;
-        SilverGauntlets  = false;
-        GoldenGauntlets  = false;
         SilverScale      = false;
         GoldScale        = false;
         AdultsWallet     = false;

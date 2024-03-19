@@ -136,7 +136,7 @@ void AreaTable_Init_FireTemple() {
                   //Exits
                   Entrance(RR_FIRE_TEMPLE_FIRE_PILLAR_ROOM,   {[]{return logic->SmallKeys(RR_FIRE_TEMPLE, 4);}}),
                   Entrance(RR_FIRE_TEMPLE_SHORTCUT_CLIMB,     {[]{return Here(RR_FIRE_TEMPLE_SHORTCUT_CLIMB, []{return true;});}}),
-                  Entrance(RR_FIRE_TEMPLE_BOULDER_MAZE_LOWER, {[]{return logic->IsAdult && (logic->GoronBracelet || randoCtx->GetTrickOption(RT_FIRE_STRENGTH)) && (logic->HasExplosives || logic->CanUse(RG_FAIRY_BOW) || logic->CanUse(RG_HOOKSHOT) || logic->CanUse(RG_FAIRY_SLINGSHOT));}}),
+                  Entrance(RR_FIRE_TEMPLE_BOULDER_MAZE_LOWER, {[]{return logic->IsAdult && (logic->HasItem(RG_GORONS_BRACELET) || randoCtx->GetTrickOption(RT_FIRE_STRENGTH)) && (logic->HasExplosives || logic->CanUse(RG_FAIRY_BOW) || logic->CanUse(RG_HOOKSHOT) || logic->CanUse(RG_FAIRY_SLINGSHOT));}}),
   });
 
   areaTable[RR_FIRE_TEMPLE_SHORTCUT_CLIMB] = Area("Fire Temple Shortcut Climb", "Fire Temple", RA_FIRE_TEMPLE, NO_DAY_NIGHT_CYCLE, {}, {}, {

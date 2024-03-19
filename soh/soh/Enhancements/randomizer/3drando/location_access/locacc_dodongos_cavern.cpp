@@ -22,22 +22,22 @@ void AreaTable_Init_DodongosCavern() {
   areaTable[RR_DODONGOS_CAVERN_BEGINNING] = Area("Dodongos Cavern Beginning", "Dodongos Cavern", RA_DODONGOS_CAVERN, NO_DAY_NIGHT_CYCLE, {}, {}, {
                   //Exits
                   Entrance(RR_DODONGOS_CAVERN_ENTRYWAY, {[]{return true;}}),
-                  Entrance(RR_DODONGOS_CAVERN_LOBBY,    {[]{return Here(RR_DODONGOS_CAVERN_BEGINNING, []{return logic->CanBlastOrSmash || logic->GoronBracelet;});}}),
+                  Entrance(RR_DODONGOS_CAVERN_LOBBY,    {[]{return Here(RR_DODONGOS_CAVERN_BEGINNING, []{return logic->CanBlastOrSmash || logic->HasItem(RG_GORONS_BRACELET);});}}),
   });
 
   areaTable[RR_DODONGOS_CAVERN_LOBBY] = Area("Dodongos Cavern Lobby", "Dodongos Cavern", RA_DODONGOS_CAVERN, NO_DAY_NIGHT_CYCLE, {
                   //Events
-                  EventAccess(&logic->GossipStoneFairy, {[]{return logic->GossipStoneFairy || (logic->CanSummonGossipFairy && Here(RR_DODONGOS_CAVERN_LOBBY, []{return logic->CanBlastOrSmash || logic->GoronBracelet;}));}}),
+                  EventAccess(&logic->GossipStoneFairy, {[]{return logic->GossipStoneFairy || (logic->CanSummonGossipFairy && Here(RR_DODONGOS_CAVERN_LOBBY, []{return logic->CanBlastOrSmash || logic->HasItem(RG_GORONS_BRACELET);}));}}),
                 }, {
                   //Locations
-                  LocationAccess(RC_DODONGOS_CAVERN_MAP_CHEST,        {[]{return Here(RR_DODONGOS_CAVERN_LOBBY, []{return logic->CanBlastOrSmash || logic->GoronBracelet;});}}),
-                  LocationAccess(RC_DODONGOS_CAVERN_DEKU_SCRUB_LOBBY, {[]{return logic->CanStunDeku || logic->GoronBracelet;}}),
-                  LocationAccess(RC_DODONGOS_CAVERN_GOSSIP_STONE,     {[]{return Here(RR_DODONGOS_CAVERN_LOBBY, []{return logic->CanBlastOrSmash || logic->GoronBracelet;});}}),
+                  LocationAccess(RC_DODONGOS_CAVERN_MAP_CHEST,        {[]{return Here(RR_DODONGOS_CAVERN_LOBBY, []{return logic->CanBlastOrSmash || logic->HasItem(RG_GORONS_BRACELET);});}}),
+                  LocationAccess(RC_DODONGOS_CAVERN_DEKU_SCRUB_LOBBY, {[]{return logic->CanStunDeku || logic->HasItem(RG_GORONS_BRACELET);}}),
+                  LocationAccess(RC_DODONGOS_CAVERN_GOSSIP_STONE,     {[]{return Here(RR_DODONGOS_CAVERN_LOBBY, []{return logic->CanBlastOrSmash || logic->HasItem(RG_GORONS_BRACELET);});}}),
                 }, {
                   //Exits
                   Entrance(RR_DODONGOS_CAVERN_BEGINNING,    {[]{return true;}}),
                   Entrance(RR_DODONGOS_CAVERN_LOBBY_SWITCH, {[]{return logic->IsAdult;}}),
-                  Entrance(RR_DODONGOS_CAVERN_SE_CORRIDOR,  {[]{return Here(RR_DODONGOS_CAVERN_LOBBY, []{return logic->CanBlastOrSmash || logic->GoronBracelet;});}}),
+                  Entrance(RR_DODONGOS_CAVERN_SE_CORRIDOR,  {[]{return Here(RR_DODONGOS_CAVERN_LOBBY, []{return logic->CanBlastOrSmash || logic->HasItem(RG_GORONS_BRACELET);});}}),
                   Entrance(RR_DODONGOS_CAVERN_STAIRS_LOWER, {[]{return HasAccessTo(RR_DODONGOS_CAVERN_LOBBY_SWITCH);}}),
                   Entrance(RR_DODONGOS_CAVERN_FAR_BRIDGE,   {[]{return HasAccessTo(RR_DODONGOS_CAVERN_FAR_BRIDGE);}}),
                   Entrance(RR_DODONGOS_CAVERN_BOSS_AREA,    {[]{return Here(RR_DODONGOS_CAVERN_FAR_BRIDGE, []{return logic->HasExplosives;});}}),
@@ -86,7 +86,7 @@ void AreaTable_Init_DodongosCavern() {
                   //Exits
                   Entrance(RR_DODONGOS_CAVERN_LOBBY_SWITCH,      {[]{return logic->HasFireSourceWithTorch;}}),
                   Entrance(RR_DODONGOS_CAVERN_LOWER_LIZALFOS,    {[]{return true;}}),
-                  Entrance(RR_DODONGOS_CAVERN_NEAR_DODONGO_ROOM, {[]{return Here(RR_DODONGOS_CAVERN_DODONGO_ROOM, []{return logic->CanBlastOrSmash || logic->GoronBracelet;});}}),
+                  Entrance(RR_DODONGOS_CAVERN_NEAR_DODONGO_ROOM, {[]{return Here(RR_DODONGOS_CAVERN_DODONGO_ROOM, []{return logic->CanBlastOrSmash || logic->HasItem(RG_GORONS_BRACELET);});}}),
   });
 
   areaTable[RR_DODONGOS_CAVERN_NEAR_DODONGO_ROOM] = Area("Dodongos Cavern Near Dodongo Room", "Dodongos Cavern", RA_DODONGOS_CAVERN, NO_DAY_NIGHT_CYCLE, {}, {
@@ -100,8 +100,8 @@ void AreaTable_Init_DodongosCavern() {
   areaTable[RR_DODONGOS_CAVERN_STAIRS_LOWER] = Area("Dodongos Cavern Stairs Lower", "Dodongos Cavern", RA_DODONGOS_CAVERN, NO_DAY_NIGHT_CYCLE, {}, {}, {
                   //Exits
                   Entrance(RR_DODONGOS_CAVERN_LOBBY,        {[]{return true;}}),
-                  Entrance(RR_DODONGOS_CAVERN_STAIRS_UPPER, {[]{return logic->HasExplosives || logic->GoronBracelet || logic->CanUse(RG_DINS_FIRE) || (randoCtx->GetTrickOption(RT_DC_STAIRCASE) && logic->CanUse(RG_FAIRY_BOW));}}),
-                  Entrance(RR_DODONGOS_CAVERN_COMPASS_ROOM, {[]{return Here(RR_DODONGOS_CAVERN_STAIRS_LOWER, []{return logic->CanBlastOrSmash || logic->GoronBracelet;});}}),
+                  Entrance(RR_DODONGOS_CAVERN_STAIRS_UPPER, {[]{return logic->HasExplosives || logic->HasItem(RG_GORONS_BRACELET) || logic->CanUse(RG_DINS_FIRE) || (randoCtx->GetTrickOption(RT_DC_STAIRCASE) && logic->CanUse(RG_FAIRY_BOW));}}),
+                  Entrance(RR_DODONGOS_CAVERN_COMPASS_ROOM, {[]{return Here(RR_DODONGOS_CAVERN_STAIRS_LOWER, []{return logic->CanBlastOrSmash || logic->HasItem(RG_GORONS_BRACELET);});}}),
   });
 
   areaTable[RR_DODONGOS_CAVERN_STAIRS_UPPER] = Area("Dodongos Cavern Stairs Upper", "Dodongos Cavern", RA_DODONGOS_CAVERN, NO_DAY_NIGHT_CYCLE, {}, {
@@ -119,7 +119,7 @@ void AreaTable_Init_DodongosCavern() {
                   LocationAccess(RC_DODONGOS_CAVERN_COMPASS_CHEST, {[]{return true;}}),
                 }, {
                   //Exits
-                  Entrance(RR_DODONGOS_CAVERN_STAIRS_LOWER, {[]{return logic->CanUse(RG_MASTER_SWORD) || logic->CanUse(RG_BIGGORON_SWORD) || logic->CanUse(RG_MEGATON_HAMMER) || logic->HasExplosives || logic->GoronBracelet;}}),
+                  Entrance(RR_DODONGOS_CAVERN_STAIRS_LOWER, {[]{return logic->CanUse(RG_MASTER_SWORD) || logic->CanUse(RG_BIGGORON_SWORD) || logic->CanUse(RG_MEGATON_HAMMER) || logic->HasExplosives || logic->HasItem(RG_GORONS_BRACELET);}}),
   });
 
   areaTable[RR_DODONGOS_CAVERN_ARMOS_ROOM] = Area("Dodongos Cavern Armos Room", "Dodongos Cavern", RA_DODONGOS_CAVERN, NO_DAY_NIGHT_CYCLE, {}, {}, {
@@ -133,8 +133,8 @@ void AreaTable_Init_DodongosCavern() {
                   LocationAccess(RC_DODONGOS_CAVERN_BOMB_FLOWER_PLATFORM_CHEST, {[]{return true;}}),
                 }, {
                   //Exits
-                  Entrance(RR_DODONGOS_CAVERN_2F_SIDE_ROOM,         {[]{return Here(RR_DODONGOS_CAVERN_BOMB_ROOM_LOWER, []{return logic->CanBlastOrSmash || (randoCtx->GetTrickOption(RT_DC_SCRUB_ROOM) && logic->GoronBracelet);});}}),
-                  Entrance(RR_DODONGOS_CAVERN_FIRST_SLINGSHOT_ROOM, {[]{return Here(RR_DODONGOS_CAVERN_BOMB_ROOM_LOWER, []{return logic->CanBlastOrSmash || logic->GoronBracelet;});}}),
+                  Entrance(RR_DODONGOS_CAVERN_2F_SIDE_ROOM,         {[]{return Here(RR_DODONGOS_CAVERN_BOMB_ROOM_LOWER, []{return logic->CanBlastOrSmash || (randoCtx->GetTrickOption(RT_DC_SCRUB_ROOM) && logic->HasItem(RG_GORONS_BRACELET));});}}),
+                  Entrance(RR_DODONGOS_CAVERN_FIRST_SLINGSHOT_ROOM, {[]{return Here(RR_DODONGOS_CAVERN_BOMB_ROOM_LOWER, []{return logic->CanBlastOrSmash || logic->HasItem(RG_GORONS_BRACELET);});}}),
                   Entrance(RR_DODONGOS_CAVERN_BOMB_ROOM_UPPER,      {[]{return (logic->IsAdult && randoCtx->GetTrickOption(RT_DC_JUMP)) || logic->CanUse(RG_HOVER_BOOTS) || (logic->IsAdult && logic->CanUse(RG_LONGSHOT));}}),
   });
 
@@ -213,7 +213,7 @@ void AreaTable_Init_DodongosCavern() {
   areaTable[RR_DODONGOS_CAVERN_MQ_BEGINNING] = Area("Dodongos Cavern MQ Beginning", "Dodongos Cavern", RA_DODONGOS_CAVERN, NO_DAY_NIGHT_CYCLE, {}, {}, {
                   //Exits
                   Entrance(RR_DODONGOS_CAVERN_ENTRYWAY, {[]{return true;}}),
-                  Entrance(RR_DODONGOS_CAVERN_MQ_LOBBY, {[]{return Here(RR_DODONGOS_CAVERN_MQ_BEGINNING, []{return logic->CanBlastOrSmash || logic->GoronBracelet;});}}),
+                  Entrance(RR_DODONGOS_CAVERN_MQ_LOBBY, {[]{return Here(RR_DODONGOS_CAVERN_MQ_BEGINNING, []{return logic->CanBlastOrSmash || logic->HasItem(RG_GORONS_BRACELET);});}}),
   });
 
   areaTable[RR_DODONGOS_CAVERN_MQ_LOBBY] = Area("Dodongos Cavern MQ Lobby", "Dodongos Cavern", RA_DODONGOS_CAVERN, NO_DAY_NIGHT_CYCLE, {
@@ -238,8 +238,8 @@ void AreaTable_Init_DodongosCavern() {
                   Entrance(RR_DODONGOS_CAVERN_MQ_LOWER_RIGHT_SIDE,  {[]{return Here(RR_DODONGOS_CAVERN_MQ_LOBBY, []{return logic->CanBlastOrSmash || (((logic->IsChild && logic->CanUse(RG_STICKS)) || logic->CanUse(RG_DINS_FIRE)) && logic->CanTakeDamage);});}}),
                   Entrance(RR_DODONGOS_CAVERN_MQ_BOMB_BAG_AREA,     {[]{return logic->IsAdult || (Here(RR_DODONGOS_CAVERN_MQ_LOBBY, []{return logic->IsAdult;}) && logic->HasExplosives) || (randoCtx->GetTrickOption(RT_DC_MQ_CHILD_BOMBS) && logic->CanJumpslash && logic->CanTakeDamage);}}),
                     //Trick: logic->IsAdult || logic->HasExplosives || (LogicDCMQChildBombs && (logic->CanUse(RG_KOKIRI_SWORD) || logic->Sticks) && DamageMultiplier.IsNot(DAMAGEMULTIPLIER_OHKO))
-                  Entrance(RR_DODONGOS_CAVERN_MQ_BOSS_AREA,         {[]{return logic->HasExplosives || (logic->GoronBracelet && ((logic->IsAdult && randoCtx->GetTrickOption(RT_DC_MQ_ADULT_EYES)) || (logic->IsChild && randoCtx->GetTrickOption(RT_DC_MQ_CHILD_EYES))) && ((logic->IsChild && (logic->CanUse(RG_STICKS))) || logic->CanUse(RG_DINS_FIRE) || (logic->IsAdult && (randoCtx->GetTrickOption(RT_DC_JUMP) || logic->CanUse(RG_MEGATON_HAMMER) || logic->CanUse(RG_HOVER_BOOTS) || logic->CanUse(RG_HOOKSHOT)))));}}), 
-                    //Trick: logic->HasExplosives || (LogicDCMQEyes && logic->GoronBracelet && (logic->IsAdult || LogicDCMQChildBack) && ((logic->IsChild && logic->CanUse(RG_STICKS)) || logic->CanUse(RG_DINS_FIRE) || (logic->IsAdult && (LogicDCJump || logic->CanUse(RG_MEGATON_HAMMER) || logic->CanUse(RG_HOVER_BOOTS) || logic->CanUse(RG_HOOKSHOT)))))
+                  Entrance(RR_DODONGOS_CAVERN_MQ_BOSS_AREA,         {[]{return logic->HasExplosives || (logic->HasItem(RG_GORONS_BRACELET) && ((logic->IsAdult && randoCtx->GetTrickOption(RT_DC_MQ_ADULT_EYES)) || (logic->IsChild && randoCtx->GetTrickOption(RT_DC_MQ_CHILD_EYES))) && ((logic->IsChild && (logic->CanUse(RG_STICKS))) || logic->CanUse(RG_DINS_FIRE) || (logic->IsAdult && (randoCtx->GetTrickOption(RT_DC_JUMP) || logic->CanUse(RG_MEGATON_HAMMER) || logic->CanUse(RG_HOVER_BOOTS) || logic->CanUse(RG_HOOKSHOT)))));}}), 
+                    //Trick: logic->HasExplosives || (LogicDCMQEyes && logic->HasItem(RG_GORONS_BRACELET) && (logic->IsAdult || LogicDCMQChildBack) && ((logic->IsChild && logic->CanUse(RG_STICKS)) || logic->CanUse(RG_DINS_FIRE) || (logic->IsAdult && (LogicDCJump || logic->CanUse(RG_MEGATON_HAMMER) || logic->CanUse(RG_HOVER_BOOTS) || logic->CanUse(RG_HOOKSHOT)))))
   });
 
   areaTable[RR_DODONGOS_CAVERN_MQ_LOWER_RIGHT_SIDE] = Area("Dodongos Cavern MQ Lower Right Side", "Dodongos Cavern", RA_DODONGOS_CAVERN, NO_DAY_NIGHT_CYCLE, {}, {
@@ -247,7 +247,7 @@ void AreaTable_Init_DodongosCavern() {
                   LocationAccess(RC_DODONGOS_CAVERN_MQ_DEKU_SCRUB_SIDE_ROOM_NEAR_LOWER_LIZALFOS, {[]{return logic->CanStunDeku;}}),
   }, {
                   //Exits
-                  Entrance(RR_DODONGOS_CAVERN_MQ_BOMB_BAG_AREA, {[]{return (Here(RR_DODONGOS_CAVERN_MQ_LOWER_RIGHT_SIDE, []{return logic->IsAdult && logic->CanUse(RG_FAIRY_BOW);}) || logic->GoronBracelet ||
+                  Entrance(RR_DODONGOS_CAVERN_MQ_BOMB_BAG_AREA, {[]{return (Here(RR_DODONGOS_CAVERN_MQ_LOWER_RIGHT_SIDE, []{return logic->IsAdult && logic->CanUse(RG_FAIRY_BOW);}) || logic->HasItem(RG_GORONS_BRACELET) ||
                                                                                 logic->CanUse(RG_DINS_FIRE) || logic->HasExplosives) &&
                                                                                 logic->IsChild && logic->CanUse(RG_FAIRY_SLINGSHOT);}}),
   });
@@ -255,7 +255,7 @@ void AreaTable_Init_DodongosCavern() {
   areaTable[RR_DODONGOS_CAVERN_MQ_BOMB_BAG_AREA] = Area("Dodongos Cavern MQ Bomb Bag Area", "Dodongos Cavern", RA_DODONGOS_CAVERN, NO_DAY_NIGHT_CYCLE, {}, {
                   //Locations
                   LocationAccess(RC_DODONGOS_CAVERN_MQ_BOMB_BAG_CHEST, {[]{return true;}}),
-                  LocationAccess(RC_DODONGOS_CAVERN_MQ_GS_SCRUB_ROOM,  {[]{return (Here(RR_DODONGOS_CAVERN_MQ_BOMB_BAG_AREA, []{return logic->IsAdult && logic->CanUse(RG_FAIRY_BOW);}) ||  logic->GoronBracelet || logic->CanUse(RG_DINS_FIRE) || logic->HasExplosives) && logic->HookshotOrBoomerang;}}),
+                  LocationAccess(RC_DODONGOS_CAVERN_MQ_GS_SCRUB_ROOM,  {[]{return (Here(RR_DODONGOS_CAVERN_MQ_BOMB_BAG_AREA, []{return logic->IsAdult && logic->CanUse(RG_FAIRY_BOW);}) ||  logic->HasItem(RG_GORONS_BRACELET) || logic->CanUse(RG_DINS_FIRE) || logic->HasExplosives) && logic->HookshotOrBoomerang;}}),
   }, {
                   //Exits
                   Entrance(RR_DODONGOS_CAVERN_MQ_LOWER_RIGHT_SIDE, {[]{return true;}}),
@@ -295,7 +295,7 @@ void AreaTable_Init_DodongosCavern() {
                                   return logic->DodongosCavernClear || (logic->HasItem(RG_KING_DODONGO_SOUL) &&
                                          (Here(RR_DODONGOS_CAVERN_BOSS_ROOM,
                                                [] { return logic->HasExplosives || (logic->CanUse(RG_MEGATON_HAMMER) && randoCtx->GetTrickOption(RT_DC_HAMMER_FLOOR)); }) &&
-                                          (logic->Bombs || logic->GoronBracelet) && logic->CanJumpslash)); /*todo add chu kill to tricks*/
+                                          (logic->Bombs || logic->HasItem(RG_GORONS_BRACELET)) && logic->CanJumpslash)); /*todo add chu kill to tricks*/
                               }}),
              },
              {

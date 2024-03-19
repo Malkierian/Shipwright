@@ -497,6 +497,7 @@ namespace Rando {
 
     void Logic::Reset() {
         auto ctx = Rando::Context::GetInstance();
+        ctx->NewSaveContext();
         //Settings-dependent variables
         IsKeysanity = ctx->GetOption(RSK_KEYSANITY).Is(RO_DUNGEON_ITEM_LOC_ANYWHERE) || 
                     ctx->GetOption(RSK_KEYSANITY).Is(RO_DUNGEON_ITEM_LOC_ANYWHERE) || 

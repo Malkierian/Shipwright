@@ -10,6 +10,7 @@
 #include "settings.h"
 #include "rando_hash.h"
 #include "fishsanity.h"
+#include "macros.h"
 
 #include <fstream>
 #include <spdlog/spdlog.h>
@@ -947,7 +948,7 @@ std::shared_ptr<Logic> Context::GetLogic() {
 
 std::shared_ptr<SaveContext> Context::GetSaveContext() {
     if (mSaveContext.get() == nullptr) {
-        mSaveContext = std::make_shared<SaveContext>();
+        NewSaveContext();
     }
     return mSaveContext;
 }
@@ -956,8 +957,156 @@ void Context::SetSaveContext(SaveContext* context) {
     mSaveContext = std::shared_ptr<SaveContext>(context);
 }
 
-void Context::ResetLogic() {
+void Context::InitSaveContext() {
+    mSaveContext->totalDays = 0;
+    mSaveContext->bgsDayCount = 0;
+
+    mSaveContext->deaths = 0;
+    for (int i = 0; i < ARRAY_COUNT(mSaveContext->playerName); i++) {
+        mSaveContext->playerName[i] = 0x3E;
+    }
+    mSaveContext->n64ddFlag = 0;
+    mSaveContext->healthCapacity = 0x30;
+    mSaveContext->health = 0x30;
+    mSaveContext->magicLevel = 0;
+    mSaveContext->magic = 0x30;
+    mSaveContext->rupees = 0;
+    mSaveContext->swordHealth = 0;
+    mSaveContext->naviTimer = 0;
+    mSaveContext->isMagicAcquired = 0;
+    mSaveContext->isDoubleMagicAcquired = 0;
+    mSaveContext->isDoubleDefenseAcquired = 0;
+    mSaveContext->bgsFlag = 0;
+    mSaveContext->ocarinaGameRoundNum = 0;
+    for (int button = 0; button < ARRAY_COUNT(mSaveContext->childEquips.buttonItems); button++) {
+        mSaveContext->childEquips.buttonItems[button] = ITEM_NONE;
+    }
+    for (int button = 0; button < ARRAY_COUNT(mSaveContext->childEquips.cButtonSlots); button++) {
+        mSaveContext->childEquips.cButtonSlots[button] = SLOT_NONE;
+    }
+    mSaveContext->childEquips.equipment = 0;
+    for (int button = 0; button < ARRAY_COUNT(mSaveContext->adultEquips.buttonItems); button++) {
+        mSaveContext->adultEquips.buttonItems[button] = ITEM_NONE;
+    }
+    for (int button = 0; button < ARRAY_COUNT(mSaveContext->adultEquips.cButtonSlots); button++) {
+        mSaveContext->adultEquips.cButtonSlots[button] = SLOT_NONE;
+    }
+    mSaveContext->adultEquips.equipment = 0;
+    mSaveContext->unk_54 = 0;
+    mSaveContext->savedSceneNum = SCENE_LINKS_HOUSE;
+
+    // Equipment
+    for (int button = 0; button < ARRAY_COUNT(mSaveContext->equips.buttonItems); button++) {
+        mSaveContext->equips.buttonItems[button] = ITEM_NONE;
+    }
+    for (int button = 0; button < ARRAY_COUNT(mSaveContext->equips.cButtonSlots); button++) {
+        mSaveContext->equips.cButtonSlots[button] = SLOT_NONE;
+    }
+    mSaveContext->equips.equipment = 0x1100;
+
+    // Inventory
+    for (int item = 0; item < ARRAY_COUNT(mSaveContext->inventory.items); item++) {
+        mSaveContext->inventory.items[item] = ITEM_NONE;
+    }
+    for (int ammo = 0; ammo < ARRAY_COUNT(mSaveContext->inventory.ammo); ammo++) {
+        mSaveContext->inventory.ammo[ammo] = 0;
+    }
+    mSaveContext->inventory.equipment = 0x1100;
+    mSaveContext->inventory.upgrades = 0;
+    mSaveContext->inventory.questItems = 0;
+    for (int dungeon = 0; dungeon < ARRAY_COUNT(mSaveContext->inventory.dungeonItems); dungeon++) {
+        mSaveContext->inventory.dungeonItems[dungeon] = 0;
+    }
+    for (int dungeon = 0; dungeon < ARRAY_COUNT(mSaveContext->inventory.dungeonKeys); dungeon++) {
+        mSaveContext->inventory.dungeonKeys[dungeon] = 0xFF;
+    }
+    mSaveContext->inventory.defenseHearts = 0;
+    mSaveContext->inventory.gsTokens = 0;
+    for (int scene = 0; scene < ARRAY_COUNT(mSaveContext->sceneFlags); scene++) {
+        mSaveContext->sceneFlags[scene].chest = 0;
+        mSaveContext->sceneFlags[scene].swch = 0;
+        mSaveContext->sceneFlags[scene].clear = 0;
+        mSaveContext->sceneFlags[scene].collect = 0;
+        mSaveContext->sceneFlags[scene].unk = 0;
+        mSaveContext->sceneFlags[scene].rooms = 0;
+        mSaveContext->sceneFlags[scene].floors = 0;
+    }
+    mSaveContext->fw.pos.x = 0;
+    mSaveContext->fw.pos.y = 0;
+    mSaveContext->fw.pos.z = 0;
+    mSaveContext->fw.yaw = 0;
+    mSaveContext->fw.playerParams = 0;
+    mSaveContext->fw.entranceIndex = 0;
+    mSaveContext->fw.roomIndex = 0;
+    mSaveContext->fw.set = 0;
+    mSaveContext->fw.tempSwchFlags = 0;
+    mSaveContext->fw.tempCollectFlags = 0;
+    for (int flag = 0; flag < ARRAY_COUNT(mSaveContext->gsFlags); flag++) {
+        mSaveContext->gsFlags[flag] = 0;
+    }
+    for (int highscore = 0; highscore < ARRAY_COUNT(mSaveContext->highScores); highscore++) {
+        mSaveContext->highScores[highscore] = 0;
+    }
+    for (int flag = 0; flag < ARRAY_COUNT(mSaveContext->eventChkInf); flag++) {
+        mSaveContext->eventChkInf[flag] = 0;
+    }
+    for (int flag = 0; flag < ARRAY_COUNT(mSaveContext->itemGetInf); flag++) {
+        mSaveContext->itemGetInf[flag] = 0;
+    }
+    for (int flag = 0; flag < ARRAY_COUNT(mSaveContext->infTable); flag++) {
+        mSaveContext->infTable[flag] = 0;
+    }
+    mSaveContext->worldMapAreaData = 0;
+    mSaveContext->scarecrowLongSongSet = 0;
+    for (int i = 0; i < ARRAY_COUNT(mSaveContext->scarecrowLongSong); i++) {
+        mSaveContext->scarecrowLongSong[i].noteIdx = 0;
+        mSaveContext->scarecrowLongSong[i].unk_01 = 0;
+        mSaveContext->scarecrowLongSong[i].unk_02 = 0;
+        mSaveContext->scarecrowLongSong[i].volume = 0;
+        mSaveContext->scarecrowLongSong[i].vibrato = 0;
+        mSaveContext->scarecrowLongSong[i].tone = 0;
+        mSaveContext->scarecrowLongSong[i].semitone = 0;
+    }
+    mSaveContext->scarecrowSpawnSongSet = 0;
+    for (int i = 0; i < ARRAY_COUNT(mSaveContext->scarecrowSpawnSong); i++) {
+        mSaveContext->scarecrowSpawnSong[i].noteIdx = 0;
+        mSaveContext->scarecrowSpawnSong[i].unk_01 = 0;
+        mSaveContext->scarecrowSpawnSong[i].unk_02 = 0;
+        mSaveContext->scarecrowSpawnSong[i].volume = 0;
+        mSaveContext->scarecrowSpawnSong[i].vibrato = 0;
+        mSaveContext->scarecrowSpawnSong[i].tone = 0;
+        mSaveContext->scarecrowSpawnSong[i].semitone = 0;
+    }
+
+    mSaveContext->horseData.scene = SCENE_HYRULE_FIELD;
+    mSaveContext->horseData.pos.x = -1840;
+    mSaveContext->horseData.pos.y = 72;
+    mSaveContext->horseData.pos.z = 5497;
+    mSaveContext->horseData.angle = -0x6AD9;
+    mSaveContext->magicLevel = 0;
+    mSaveContext->infTable[29] = 1;
+    mSaveContext->sceneFlags[5].swch = 0x40000000;
+
+    // SoH specific
+    mSaveContext->backupFW = mSaveContext->fw;
+    mSaveContext->pendingSale = ITEM_NONE;
+    mSaveContext->pendingSaleMod = MOD_NONE;
+    mSaveContext->isBossRushPaused = 0;
+    mSaveContext->pendingIceTrapCount = 0;
+
+    // Init with normal quest unless only an MQ rom is provided
+    mSaveContext->questId = OTRGlobals::Instance->HasOriginal() ? QUEST_NORMAL : QUEST_MASTER;
+
+    //RANDOTODO (ADD ITEMLOCATIONS TO GSAVECONTEXT)
+}
+
+void Context::NewSaveContext() {
     mSaveContext = std::make_shared<SaveContext>();
+    InitSaveContext();
+}
+
+void Context::ResetLogic() {
+    NewSaveContext();
     mLogic->Reset();
 }
 

@@ -73,6 +73,8 @@ class Context {
     std::shared_ptr<Logic> GetLogic();
     std::shared_ptr<SaveContext> GetSaveContext();
     void SetSaveContext(SaveContext* context);
+    void InitSaveContext();
+    void NewSaveContext();
     void ResetLogic();
     std::shared_ptr<Trials> GetTrials();
     TrialInfo* GetTrial(size_t key) const;

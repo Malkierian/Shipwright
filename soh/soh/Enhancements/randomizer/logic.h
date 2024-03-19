@@ -35,8 +35,8 @@ class Logic {
     bool Bombchus5 = false;
     bool Bombchus10 = false;
     bool Bombchus20 = false;
-    bool SkullMask = false; //EventAccess
-    bool MaskOfTruth = false; //EventAccess
+    bool SkullMask = false;
+    bool MaskOfTruth = false;
 
     // Adult logic
     bool Epona = false;
@@ -67,14 +67,14 @@ class Logic {
     bool DisableTradeRevert = false;
 
     // Dungeon Clears
-    bool DekuTreeClear = false; // sceneFlags.clear & 1<<2
-    bool DodongosCavernClear = false; // sceneFlags.clear & 1<<2
-    bool JabuJabusBellyClear = false; // sceneFlags.clear & 1<<2
-    bool ForestTempleClear = false; // sceneFlags.clear & 1<<2
-    bool FireTempleClear = false; // sceneFlags.clear & 1<<2
-    bool WaterTempleClear = false; // sceneFlags.clear & 1<<2
-    bool SpiritTempleClear = false; // sceneFlags.clear & 1<<4
-    bool ShadowTempleClear = false; // sceneFlags.clear & 1<<2
+    bool DekuTreeClear = false;
+    bool DodongosCavernClear = false;
+    bool JabuJabusBellyClear = false;
+    bool ForestTempleClear = false;
+    bool FireTempleClear = false;
+    bool WaterTempleClear = false;
+    bool SpiritTempleClear = false;
+    bool ShadowTempleClear = false;
 
     // Trial Clears
     bool ForestTrialClear = false;
@@ -116,14 +116,6 @@ class Logic {
 
     // Triforce Pieces
     uint8_t TriforcePieces = 0;
-
-    // Boss Keys
-    bool BossKeyForestTemple = false;
-    bool BossKeyFireTemple = false;
-    bool BossKeyWaterTemple = false;
-    bool BossKeySpiritTemple = false;
-    bool BossKeyShadowTemple = false;
-    bool BossKeyGanonsCastle = false;
 
     // Gold Skulltula Count
     uint8_t GoldSkulltulaTokens = 0;
@@ -175,8 +167,6 @@ class Logic {
     /  every time a base value is updated.                       */
 
     bool Slingshot = false;
-    bool Ocarina = false;
-    bool OcarinaOfTime = false;
     bool BombBag = false;
     bool MagicMeter = false;
     bool Bow = false;

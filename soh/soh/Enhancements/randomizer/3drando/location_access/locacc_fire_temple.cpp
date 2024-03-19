@@ -38,7 +38,7 @@ void AreaTable_Init_FireTemple() {
                 }, {
                   //Exits
                   Entrance(RR_FIRE_TEMPLE_FIRST_ROOM, {[]{return true;}}),
-                  Entrance(RR_FIRE_TEMPLE_BOSS_ENTRYWAY, {[]{return logic->BossKeyFireTemple && ((logic->IsAdult && randoCtx->GetTrickOption(RT_FIRE_BOSS_DOOR_JUMP)) || logic->CanUse(RG_HOVER_BOOTS) || Here(RR_FIRE_TEMPLE_FIRE_MAZE_UPPER, []{return logic->CanUse(RG_MEGATON_HAMMER);}));}}),
+                  Entrance(RR_FIRE_TEMPLE_BOSS_ENTRYWAY, {[]{return logic->HasItem(RG_FIRE_TEMPLE_BOSS_KEY) && ((logic->IsAdult && randoCtx->GetTrickOption(RT_FIRE_BOSS_DOOR_JUMP)) || logic->CanUse(RG_HOVER_BOOTS) || Here(RR_FIRE_TEMPLE_FIRE_MAZE_UPPER, []{return logic->CanUse(RG_MEGATON_HAMMER);}));}}),
   });
 
   areaTable[RR_FIRE_TEMPLE_LOOP_ENEMIES] = Area("Fire Temple Loop Enemies", "Fire Temple", RA_FIRE_TEMPLE, NO_DAY_NIGHT_CYCLE, {}, {}, {
@@ -321,7 +321,7 @@ void AreaTable_Init_FireTemple() {
   }, {
                   //Exits
                   Entrance(RR_FIRE_TEMPLE_ENTRYWAY,             {[]{return true;}}),
-                  Entrance(RR_FIRE_TEMPLE_BOSS_ENTRYWAY,        {[]{return logic->IsAdult && logic->CanUse(RG_GORON_TUNIC) && logic->CanUse(RG_MEGATON_HAMMER) && logic->BossKeyFireTemple && ((logic->HasFireSource && (randoCtx->GetTrickOption(RT_FIRE_BOSS_DOOR_JUMP) || logic->CanUse(RG_HOVER_BOOTS))) || HasAccessTo(RR_FIRE_TEMPLE_MQ_UPPER));}}),
+                  Entrance(RR_FIRE_TEMPLE_BOSS_ENTRYWAY,        {[]{return logic->IsAdult && logic->CanUse(RG_GORON_TUNIC) && logic->CanUse(RG_MEGATON_HAMMER) && logic->HasItem(RG_FIRE_TEMPLE_BOSS_KEY) && ((logic->HasFireSource && (randoCtx->GetTrickOption(RT_FIRE_BOSS_DOOR_JUMP) || logic->CanUse(RG_HOVER_BOOTS))) || HasAccessTo(RR_FIRE_TEMPLE_MQ_UPPER));}}),
                   Entrance(RR_FIRE_TEMPLE_MQ_LOWER_LOCKED_DOOR, {[]{return logic->SmallKeys(RR_FIRE_TEMPLE, 5) && (logic->CanUse(RG_KOKIRI_SWORD) || logic->CanUse(RG_MASTER_SWORD) || logic->CanUse(RG_BIGGORON_SWORD));}}),
                   Entrance(RR_FIRE_TEMPLE_MQ_BIG_LAVA_ROOM,     {[]{return logic->IsAdult && logic->FireTimer >= 24 && logic->CanUse(RG_MEGATON_HAMMER);}}),
   });

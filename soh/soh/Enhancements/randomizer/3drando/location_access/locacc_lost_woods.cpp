@@ -128,7 +128,7 @@ void AreaTable_Init_LostWoods() {
                                                                                                 //3 buttons        => 3.75%
                                                                                                 //4 buttons        => 25.3125%
                                                                                                 //5 buttons        => 100%
-                  LocationAccess(RC_LW_OCARINA_MEMORY_GAME,       {[]{return logic->IsChild && logic->Ocarina && logic->OcarinaButtons >= 5;}}),
+                  LocationAccess(RC_LW_OCARINA_MEMORY_GAME,       {[]{return logic->IsChild && logic->HasItem(RG_FAIRY_OCARINA) && logic->OcarinaButtons >= 5;}}),
                   LocationAccess(RC_LW_TARGET_IN_WOODS,           {[]{return logic->IsChild && logic->CanUse(RG_FAIRY_SLINGSHOT);}}),
                   LocationAccess(RC_LW_DEKU_SCRUB_NEAR_BRIDGE,    {[]{return logic->IsChild && logic->CanStunDeku;}}),
                   LocationAccess(RC_LW_GS_BEAN_PATCH_NEAR_BRIDGE, {[]{return logic->CanPlantBugs && logic->CanChildAttack;}}),

@@ -618,7 +618,8 @@ std::map<uint32_t, uint32_t> RandoGetToQuestItem = {
     { RG_GERUDO_MEMBERSHIP_CARD, QUEST_GERUDO_CARD },
 };
 
-std::vector<uint32_t> HookshotLookup = { ITEM_NONE, ITEM_HOOKSHOT, ITEM_LONGSHOT };
+uint32_t HookshotLookup[3] = { ITEM_NONE, ITEM_HOOKSHOT, ITEM_LONGSHOT };
+uint32_t OcarinaLookup[3] = { ITEM_NONE, ITEM_OCARINA_FAIRY, ITEM_OCARINA_TIME };
 
 void Context::ApplyItemEffect(Item item, bool remove) {
     switch (item.GetItemType()) {
@@ -654,16 +655,19 @@ void Context::ApplyItemEffect(Item item, bool remove) {
                             break;
                         case RG_PROGRESSIVE_HOOKSHOT:
                         {
-                            auto it = std::find(HookshotLookup.begin(), HookshotLookup.end(), CheckInventory(ITEM_HOOKSHOT));
-                            if (it != HookshotLookup.end()) {
-                                auto newItem = it - HookshotLookup.begin() + (remove ? -1 : 1);
-                                if (newItem < 0) {
-                                    newItem = 0;
-                                } else if (newItem > 2) {
-                                    newItem = 2;
+                            uint8_t i;
+                            for (i = 0; i < 3; i++) {
+                                if (mSaveContext->inventory.items[SLOT_HOOKSHOT] == HookshotLookup[i]) {
+                                    break;
                                 }
-                                SetInventory(ITEM_HOOKSHOT, HookshotLookup[newItem]);
                             }
+                            auto newItem = i + (remove ? -1 : 1);
+                            if (newItem < 0) {
+                                newItem = 0;
+                            } else if (newItem > 2) {
+                                newItem = 2;
+                            }
+                            SetInventory(ITEM_HOOKSHOT, HookshotLookup[i]);
                         }   break;
                         case RG_PROGRESSIVE_STRENGTH:
                         {
@@ -734,6 +738,22 @@ void Context::ApplyItemEffect(Item item, bool remove) {
                         case RG_PROGRESSIVE_MAGIC_METER:
                             mSaveContext->magicLevel += remove ? -1 : 1;
                             break;
+                        case RG_PROGRESSIVE_OCARINA:
+                        {
+                            uint8_t i;
+                            for (i = 0; i < 3; i++) {
+                                if (mSaveContext->inventory.items[SLOT_OCARINA] == OcarinaLookup[i]) {
+                                    break;
+                                }
+                            }
+                            i += (remove ? -1 : 1);
+                            if (i < 0) {
+                                i = 0;
+                            } else if (i > 2) {
+                                i = 2;
+                            }
+                            SetInventory(ITEM_OCARINA_FAIRY, OcarinaLookup[i]);
+                        }   break;
                         case ITEM_HEART_CONTAINER:
                             mSaveContext->health += remove ? -4 : 4;
                             break;
@@ -776,8 +796,16 @@ void Context::ApplyItemEffect(Item item, bool remove) {
                         case RG_BOTTLE_WITH_BUGS:
                         case RG_BOTTLE_WITH_POE:
                         case RG_BOTTLE_WITH_BIG_POE:
-                            logic->Bottles += (remove ? -1 : 1);
-                            break;
+                        {
+                            uint8_t slot = SLOT_BOTTLE_1;
+                            while (slot != SLOT_BOTTLE_4) {
+                                if (mSaveContext->inventory.items[slot] == ITEM_NONE) {
+                                    break;
+                                }
+                                slot++;
+                            }
+                            mSaveContext->inventory.items[slot] = item.GetItemID();
+                        }   break;
                         case RG_RUTOS_LETTER:
                             SetEventChkInf(EVENTCHKINF_OBTAINED_RUTOS_LETTER, remove);
                             break;
@@ -947,8 +975,9 @@ void Context::SetUpgrade(uint32_t upgrade, uint8_t level) {
     mSaveContext->inventory.upgrades |= level << gUpgradeShifts[upgrade];
 }
 
-bool Context::CheckInventory(uint32_t item) {
-    return mSaveContext->inventory.items[InventorySlot(item)] != ITEM_NONE;
+bool Context::CheckInventory(uint32_t item, bool exact) {
+    auto current = mSaveContext->inventory.items[InventorySlot(item)];
+    return exact ? (current == item) : (current != ITEM_NONE);
 }
 
 void Context::SetInventory(uint32_t itemSlot, uint32_t item) {

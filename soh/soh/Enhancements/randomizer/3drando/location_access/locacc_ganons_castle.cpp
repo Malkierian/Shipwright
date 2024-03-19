@@ -114,8 +114,8 @@ void AreaTable_Init_GanonsCastle() {
   areaTable[RR_GANONS_CASTLE_TOWER] = Area("Ganon's Castle Tower", "Ganons Castle", RA_GANONS_CASTLE, NO_DAY_NIGHT_CYCLE, {}, {
                   //Locations
                   LocationAccess(RC_GANONS_TOWER_BOSS_KEY_CHEST, {[]{return logic->CanUse(RG_KOKIRI_SWORD) || logic->CanUse(RG_MASTER_SWORD) || logic->CanUse(RG_BIGGORON_SWORD);}}),
-                  LocationAccess(RC_GANONDORF_HINT,              {[]{return logic->BossKeyGanonsCastle && (logic->CanUse(RG_KOKIRI_SWORD) || logic->CanUse(RG_MASTER_SWORD) || logic->CanUse(RG_BIGGORON_SWORD));}}),
-                  LocationAccess(RC_GANON,                       {[]{return logic->HasItem(RG_GANON_SOUL) && logic->BossKeyGanonsCastle && logic->CanUse(RG_LIGHT_ARROWS) && logic->CanUse(RG_MASTER_SWORD);}}),
+                  LocationAccess(RC_GANONDORF_HINT,              {[]{return logic->HasItem(RG_GANONS_CASTLE_BOSS_KEY) && (logic->CanUse(RG_KOKIRI_SWORD) || logic->CanUse(RG_MASTER_SWORD) || logic->CanUse(RG_BIGGORON_SWORD));}}),
+                  LocationAccess(RC_GANON,                       {[]{return logic->HasItem(RG_GANON_SOUL) && logic->HasItem(RG_GANONS_CASTLE_BOSS_KEY) && logic->CanUse(RG_LIGHT_ARROWS) && logic->CanUse(RG_MASTER_SWORD);}}),
   }, {});
 
   /*---------------------------

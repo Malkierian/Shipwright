@@ -243,7 +243,7 @@ void AreaTable_Init_WaterTemple() {
                 }, {}, {
                   //Exits
                   Entrance(RR_WATER_TEMPLE_LOBBY,     {[]{return true;}}),
-                  Entrance(RR_WATER_TEMPLE_BOSS_ENTRYWAY, {[]{return logic->BossKeyWaterTemple;}}),
+                  Entrance(RR_WATER_TEMPLE_BOSS_ENTRYWAY, {[]{return logic->HasItem(RG_WATER_TEMPLE_BOSS_KEY);}}),
   });
   }
 
@@ -256,7 +256,7 @@ void AreaTable_Init_WaterTemple() {
                   Entrance(RR_WATER_TEMPLE_ENTRYWAY,            {[]{return true;}}),
                   Entrance(RR_WATER_TEMPLE_MQ_DIVE,             {[]{return logic->IsAdult && logic->WaterTimer >= 24 && logic->CanUse(RG_IRON_BOOTS);}}),
                   Entrance(RR_WATER_TEMPLE_MQ_DARK_LINK_REGION, {[]{return logic->SmallKeys(RR_WATER_TEMPLE, 1) && logic->IsAdult && logic->CanUse(RG_LONGSHOT) && logic->CanJumpslash && logic->Hearts > 0;}}),
-                  Entrance(RR_WATER_TEMPLE_BOSS_ENTRYWAY,       {[]{return logic->BossKeyWaterTemple && logic->IsAdult && logic->CanJumpslash && logic->CanUse(RG_LONGSHOT);}}),
+                  Entrance(RR_WATER_TEMPLE_BOSS_ENTRYWAY,       {[]{return logic->HasItem(RG_WATER_TEMPLE_BOSS_KEY) && logic->IsAdult && logic->CanJumpslash && logic->CanUse(RG_LONGSHOT);}}),
   });
 
   areaTable[RR_WATER_TEMPLE_MQ_DIVE] = Area("Water Temple MQ Dive", "Water Temple", RA_WATER_TEMPLE, NO_DAY_NIGHT_CYCLE, {}, {

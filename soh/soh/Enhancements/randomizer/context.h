@@ -95,7 +95,7 @@ class Context {
     uint8_t InventorySlot(uint32_t item);
     void SetUpgrade(uint32_t upgrade, uint8_t level);
     uint32_t CurrentUpgrade(uint32_t upgrade);
-    bool CheckInventory(uint32_t item);
+    bool CheckInventory(uint32_t item, bool exact);
     void SetInventory(uint32_t itemSlot, uint32_t item);
     bool CheckEquipment(uint32_t item);
     bool CheckQuestItem(uint32_t item);

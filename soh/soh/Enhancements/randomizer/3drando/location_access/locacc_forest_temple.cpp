@@ -270,7 +270,7 @@ void AreaTable_Init_ForestTemple() {
                 }, {
                   //Exits
                   Entrance(RR_FOREST_TEMPLE_LOBBY,     {[]{return true;}}),
-                  Entrance(RR_FOREST_TEMPLE_BOSS_ENTRYWAY, {[]{return logic->BossKeyForestTemple;}}),
+                  Entrance(RR_FOREST_TEMPLE_BOSS_ENTRYWAY, {[]{return logic->HasItem(RG_FOREST_TEMPLE_BOSS_KEY);}}),
   });
   }
 
@@ -398,7 +398,7 @@ void AreaTable_Init_ForestTemple() {
                   LocationAccess(RC_FOREST_TEMPLE_MQ_BASEMENT_CHEST,   {[]{return true;}}),
   }, {
                   //Exits
-                  Entrance(RR_FOREST_TEMPLE_BOSS_ENTRYWAY, {[]{return logic->BossKeyForestTemple;}}),
+                  Entrance(RR_FOREST_TEMPLE_BOSS_ENTRYWAY, {[]{return logic->HasItem(RG_FOREST_TEMPLE_BOSS_KEY);}}),
   });
   }
 

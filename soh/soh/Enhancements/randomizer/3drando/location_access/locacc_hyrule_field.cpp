@@ -105,8 +105,8 @@ void AreaTable_Init_HyruleField() {
                   EventAccess(&logic->BeanPlantFairy,   {[]{return logic->BeanPlantFairy   || (CanPlantBean(RR_LAKE_HYLIA) && logic->CanUse(RG_SONG_OF_STORMS));}}),
                   EventAccess(&logic->ButterflyFairy,   {[]{return logic->ButterflyFairy   || logic->CanUse(RG_STICKS);}}),
                   EventAccess(&logic->BugShrub,         {[]{return logic->BugShrub         || (logic->IsChild && logic->CanCutShrubs);}}),
-                  EventAccess(&logic->ChildScarecrow,   {[]{return logic->ChildScarecrow   || (logic->IsChild && logic->Ocarina && logic->OcarinaButtons >= 2);}}),
-                  EventAccess(&logic->AdultScarecrow,   {[]{return logic->AdultScarecrow   || (logic->IsAdult && logic->Ocarina && logic->OcarinaButtons >= 2);}}),
+                  EventAccess(&logic->ChildScarecrow,   {[]{return logic->ChildScarecrow   || (logic->IsChild && logic->HasItem(RG_FAIRY_OCARINA) && logic->OcarinaButtons >= 2);}}),
+                  EventAccess(&logic->AdultScarecrow,   {[]{return logic->AdultScarecrow   || (logic->IsAdult && logic->HasItem(RG_FAIRY_OCARINA) && logic->OcarinaButtons >= 2);}}),
                 }, {
                   //Locations
                   LocationAccess(RC_LH_UNDERWATER_ITEM,        {[]{return logic->IsChild && logic->CanDive;}}),
@@ -179,7 +179,7 @@ void AreaTable_Init_HyruleField() {
                   EventAccess(&logic->LinksCow, {[]{return logic->LinksCow || (logic->CanUse(RG_EPONAS_SONG) && logic->IsAdult && logic->AtDay);}}),
                 }, {
                   //Locations
-                  LocationAccess(RC_SONG_FROM_MALON,     {[]{return logic->IsChild && logic->CanUse(RG_ZELDAS_LETTER) && logic->Ocarina && logic->AtDay;}}),
+                  LocationAccess(RC_SONG_FROM_MALON,     {[]{return logic->IsChild && logic->CanUse(RG_ZELDAS_LETTER) && logic->HasItem(RG_FAIRY_OCARINA) && logic->AtDay;}}),
                   LocationAccess(RC_LLR_GS_TREE,         {[]{return logic->IsChild;}}),
                   LocationAccess(RC_LLR_GS_RAIN_SHED,    {[]{return logic->IsChild && logic->AtNight && logic->CanGetNightTimeGS;}}),
                   LocationAccess(RC_LLR_GS_HOUSE_WINDOW, {[]{return logic->IsChild && logic->HookshotOrBoomerang && logic->AtNight && logic->CanGetNightTimeGS;}}),

@@ -663,9 +663,9 @@ void Context::ApplyItemEffect(Item& item, bool remove) {
                         case RG_EYEDROPS:
                         case RG_CLAIM_CHECK:
                             if (remove) {
-                                mSaveContext->adultTradeItems &= ~(1 << (item.GetItemID() - ITEM_POCKET_EGG));
+                                mSaveContext->adultTradeItems &= ~(1 << (item.GetGIEntry()->itemId - ITEM_POCKET_EGG));
                             } else {
-                                mSaveContext->adultTradeItems |= (1 << (item.GetItemID() - ITEM_POCKET_EGG));
+                                mSaveContext->adultTradeItems |= (1 << (item.GetGIEntry()->itemId - ITEM_POCKET_EGG));
                             }
                             break;
                         case RG_PROGRESSIVE_HOOKSHOT:
@@ -682,76 +682,76 @@ void Context::ApplyItemEffect(Item& item, bool remove) {
                             } else if (newItem > 2) {
                                 newItem = 2;
                             }
-                            SetInventory(ITEM_HOOKSHOT, HookshotLookup[i]);
+                            SetInventory(ITEM_HOOKSHOT, HookshotLookup[newItem]);
                         }   break;
                         case RG_PROGRESSIVE_STRENGTH:
                         {
                             auto currentLevel = CurrentUpgrade(UPG_STRENGTH);
-                            auto newLevel = currentLevel + remove ? -1 : 1;
-                            SetUpgrade(UPG_STRENGTH, remove ? -1 : 1);
+                            auto newLevel = currentLevel + (remove ? -1 : 1);
+                            SetUpgrade(UPG_STRENGTH, newLevel);
                         }   break;
                         case RG_PROGRESSIVE_BOMB_BAG:
                         {
                             auto currentLevel = CurrentUpgrade(UPG_BOMB_BAG);
-                            auto newLevel = currentLevel + remove ? -1 : 1;
+                            auto newLevel = currentLevel + (remove ? -1 : 1);
                             if (currentLevel == 0 && !remove || currentLevel == 1 && remove) {
-                                SetInventory(ITEM_BOMB, remove ? ITEM_NONE : ITEM_BOMB);
+                                SetInventory(ITEM_BOMB, (remove ? ITEM_NONE : ITEM_BOMB));
                             }
                             SetUpgrade(UPG_BOMB_BAG, newLevel);
                         }   break;
                         case RG_PROGRESSIVE_BOW:
                         {
                             auto currentLevel = CurrentUpgrade(UPG_QUIVER);
-                            auto newLevel = currentLevel + remove ? -1 : 1;
+                            auto newLevel = currentLevel + (remove ? -1 : 1);
                             if (currentLevel == 0 && !remove || currentLevel == 1 && remove) {
-                                SetInventory(ITEM_BOW, remove ? ITEM_NONE : ITEM_BOW);
+                                SetInventory(ITEM_BOW, (remove ? ITEM_NONE : ITEM_BOW));
                             }
                             SetUpgrade(UPG_QUIVER, newLevel);
                         }   break;
                         case RG_PROGRESSIVE_SLINGSHOT:
                         {
                             auto currentLevel = CurrentUpgrade(UPG_BULLET_BAG);
-                            auto newLevel = currentLevel + remove ? -1 : 1;
+                            auto newLevel = currentLevel + (remove ? -1 : 1);
                             if (currentLevel == 0 && !remove || currentLevel == 1 && remove) {
-                                SetInventory(ITEM_SLINGSHOT, remove ? ITEM_NONE : ITEM_SLINGSHOT);
+                                SetInventory(ITEM_SLINGSHOT, (remove ? ITEM_NONE : ITEM_SLINGSHOT));
                             }
                             SetUpgrade(UPG_BULLET_BAG, newLevel);
                         }   break;
                         case RG_PROGRESSIVE_WALLET:
                         {
                             auto currentLevel = CurrentUpgrade(UPG_WALLET);
-                            auto newLevel = currentLevel + remove ? -1 : 1;
+                            auto newLevel = currentLevel + (remove ? -1 : 1);
                             SetUpgrade(UPG_WALLET, newLevel);
                         }   break;
                         case RG_PROGRESSIVE_SCALE:
                         {
                             auto currentLevel = CurrentUpgrade(UPG_SCALE);
-                            auto newLevel = currentLevel + remove ? -1 : 1;
+                            auto newLevel = currentLevel + (remove ? -1 : 1);
                             SetUpgrade(UPG_SCALE, newLevel);
                         }   break;
                         case RG_PROGRESSIVE_NUT_UPGRADE:
                         {
                             auto currentLevel = CurrentUpgrade(UPG_NUTS);
-                            auto newLevel = currentLevel + remove ? -1 : 1;
+                            auto newLevel = currentLevel + (remove ? -1 : 1);
                             if (currentLevel == 0 && !remove || currentLevel == 1 && remove) {
-                                SetInventory(ITEM_NUT, remove ? ITEM_NONE : ITEM_NUT);
+                                SetInventory(ITEM_NUT, (remove ? ITEM_NONE : ITEM_NUT));
                             }
                             SetUpgrade(UPG_NUTS, newLevel);
                         }   break;
                         case RG_PROGRESSIVE_STICK_UPGRADE:
                         {
                             auto currentLevel = CurrentUpgrade(UPG_STICKS);
-                            auto newLevel = currentLevel + remove ? -1 : 1;
+                            auto newLevel = currentLevel + (remove ? -1 : 1);
                             if (currentLevel == 0 && !remove || currentLevel == 1 && remove) {
-                                SetInventory(ITEM_STICK, remove ? ITEM_NONE : ITEM_STICK);
+                                SetInventory(ITEM_STICK, (remove ? ITEM_NONE : ITEM_STICK));
                             }
                             SetUpgrade(UPG_STICKS, newLevel);
                         }   break;
                         case RG_PROGRESSIVE_BOMBCHUS:
-                            SetInventory(ITEM_BOMBCHU, remove ? ITEM_NONE : ITEM_BOMBCHU);
+                            SetInventory(ITEM_BOMBCHU, (remove ? ITEM_NONE : ITEM_BOMBCHU));
                             break;
                         case RG_PROGRESSIVE_MAGIC_METER:
-                            mSaveContext->magicLevel += remove ? -1 : 1;
+                            mSaveContext->magicLevel += (remove ? -1 : 1);
                             break;
                         case RG_PROGRESSIVE_OCARINA:
                         {
@@ -770,11 +770,11 @@ void Context::ApplyItemEffect(Item& item, bool remove) {
                             SetInventory(ITEM_OCARINA_FAIRY, OcarinaLookup[i]);
                         }   break;
                         case ITEM_HEART_CONTAINER:
-                            mSaveContext->health += remove ? -4 : 4;
+                            mSaveContext->health += (remove ? -4 : 4);
                             break;
                         case ITEM_HEART_PIECE:
                         case ITEM_HEART_PIECE_2:
-                            mSaveContext->health += remove ? -1 : 1;
+                            mSaveContext->health += (remove ? -1 : 1);
                             break;
                         case RG_BOOMERANG:
                         case RG_LENS_OF_TRUTH:
@@ -785,7 +785,7 @@ void Context::ApplyItemEffect(Item& item, bool remove) {
                         case RG_FIRE_ARROWS:
                         case RG_ICE_ARROWS:
                         case RG_LIGHT_ARROWS:
-                            SetInventory(item.GetItemID(), remove ? ITEM_NONE : item.GetItemID());
+                            SetInventory(item.GetItemID(), (remove ? ITEM_NONE : item.GetItemID()));
                             break;
                         case RG_STONE_OF_AGONY:
                             SetQuestItem(QUEST_STONE_OF_AGONY, remove);
@@ -793,7 +793,7 @@ void Context::ApplyItemEffect(Item& item, bool remove) {
                         case RG_MAGIC_BEAN:
                         case RG_MAGIC_BEAN_PACK:
                         {
-                            auto change = item.GetRandomizerGet() == RG_MAGIC_BEAN ? 1 : 10;
+                            auto change = (item.GetRandomizerGet() == RG_MAGIC_BEAN ? 1 : 10);
                             auto current = GetAmmo(ITEM_BEAN);
                             SetAmmo(ITEM_BEAN, current + (remove ? -change : change));
                         }   break;

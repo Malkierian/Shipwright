@@ -289,6 +289,8 @@ namespace Rando {
         MagicMeter      = (ctx->GetSaveContext()->magicLevel > 0) && (AmmoCanDrop || (HasBottle && BuyMagicPotion));
         BombBag         = HasItem(RG_BOMB_BAG) && (BuyBomb || AmmoCanDrop);
         Bow             = CanUse(RG_FAIRY_BOW) && (BuyArrow || AmmoCanDrop);
+        ProgressiveWallet = ctx->CurrentUpgrade(UPG_WALLET);
+        ProgressiveScale = ctx->CurrentUpgrade(UPG_SCALE);
         Swim            = ProgressiveScale      >= 1;
         SilverScale     = ProgressiveScale      >= 2;
         GoldScale       = ProgressiveScale      >= 3;

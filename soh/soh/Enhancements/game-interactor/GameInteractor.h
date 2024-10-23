@@ -117,7 +117,7 @@ typedef enum {
     /* Vanilla Condition: 
     ```
         LINK_IS_ADULT &&
-        gSaveContext.entranceIndex == ENTR_KAKARIKO_VILLAGE_0 &&
+        gSaveContext.entranceIndex == ENTR_KAKARIKO_VILLAGE_FRONT_GATE &&
         Flags_GetEventChkInf(EVENTCHKINF_USED_FOREST_TEMPLE_BLUE_WARP) &&
         Flags_GetEventChkInf(EVENTCHKINF_USED_FIRE_TEMPLE_BLUE_WARP) &&
         Flags_GetEventChkInf(EVENTCHKINF_USED_WATER_TEMPLE_BLUE_WARP) &&

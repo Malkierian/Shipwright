@@ -358,7 +358,7 @@ void EnHeishi4_MarketSneak(EnHeishi4* this, PlayState* play) {
         switch (play->msgCtx.choiceIndex) {
             case 0: //yes
                 if (IS_RANDO && Randomizer_GetSettingValue(RSK_SHUFFLE_OVERWORLD_ENTRANCES) != RO_GENERIC_OFF){
-                    play->nextEntranceIndex = Entrance_OverrideNextIndex(ENTR_HYRULE_FIELD_7); // Market Entrance -> HF
+                    play->nextEntranceIndex = Entrance_OverrideNextIndex(ENTR_HYRULE_FIELD_ON_BRIDGE_SPAWN); // Market Entrance -> HF
                 } else {
                     play->nextEntranceIndex = ENTR_HYRULE_FIELD_0; // HF Near bridge (OoT cutscene entrance) to not fall in the water
                 } 

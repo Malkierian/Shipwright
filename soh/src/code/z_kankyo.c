@@ -2004,7 +2004,7 @@ void Environment_PlaySceneSequence(PlayState* play) {
     play->envCtx.unk_E0 = 0xFF;
 
     // both lost woods exits on the bridge from kokiri to hyrule field
-    if (((void)0, gSaveContext.entranceIndex) == ENTR_LOST_WOODS_8 || ((void)0, gSaveContext.entranceIndex) == ENTR_LOST_WOODS_9) {
+    if (((void)0, gSaveContext.entranceIndex) == ENTR_LOST_WOODS_BRIDGE_WEST_EXIT || ((void)0, gSaveContext.entranceIndex) == ENTR_LOST_WOODS_BRIDGE_EAST_EXIT) {
         Audio_PlayNatureAmbienceSequence(NATURE_ID_KOKIRI_REGION);
     } else if (((void)0, gSaveContext.forcedSeqId) != NA_BGM_GENERAL_SFX) {
         if (!Environment_IsForcedSequenceDisabled()) {
@@ -2546,22 +2546,22 @@ void Environment_WarpSongLeave(PlayState* play) {
     gSaveContext.nextTransitionType = TRANS_TYPE_FADE_WHITE;
 
     switch (play->nextEntranceIndex) {
-        case ENTR_DEATH_MOUNTAIN_CRATER_0:
+        case ENTR_DEATH_MOUNTAIN_CRATER_UPPER_EXIT:
             Flags_SetEventChkInf(EVENTCHKINF_ENTERED_DEATH_MOUNTAIN_CRATER);
             break;
-        case ENTR_LAKE_HYLIA_0:
+        case ENTR_LAKE_HYLIA_NORTH_EXIT:
             Flags_SetEventChkInf(EVENTCHKINF_ENTERED_LAKE_HYLIA);
             break;
-        case ENTR_DESERT_COLOSSUS_0:
+        case ENTR_DESERT_COLOSSUS_EAST_EXIT:
             Flags_SetEventChkInf(EVENTCHKINF_ENTERED_DESERT_COLOSSUS);
             break;
-        case ENTR_GRAVEYARD_0:
+        case ENTR_GRAVEYARD_ENTRANCE:
             Flags_SetEventChkInf(EVENTCHKINF_ENTERED_GRAVEYARD);
             break;
-        case ENTR_TEMPLE_OF_TIME_0:
+        case ENTR_TEMPLE_OF_TIME_ENTRANCE:
             Flags_SetEventChkInf(EVENTCHKINF_ENTERED_TEMPLE_OF_TIME);
             break;
-        case ENTR_SACRED_FOREST_MEADOW_0:
+        case ENTR_SACRED_FOREST_MEADOW_SOUTH_EXIT:
             break;
     }
 }

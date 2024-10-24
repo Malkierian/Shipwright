@@ -96,8 +96,8 @@ static u8 overridingNextEntrance = false;
 // For the grotto exit list, the entrance index is 0x0800 + the grotto id
 void Grotto_InitExitAndLoadLists(void) {
     for (u8 i = 0; i < NUM_GROTTOS; i++) {
-        grottoLoadList[i] = ENTRANCE_RANDO_GROTTO_LOAD_START + i;
-        grottoExitList[i] = ENTRANCE_RANDO_GROTTO_EXIT_START + i;
+        grottoLoadList[i] = ENTRANCE_GROTTO_LOAD_START + i;
+        grottoExitList[i] = ENTRANCE_GROTTO_EXIT_START + i;
     }
 }
 
@@ -146,7 +146,7 @@ s16 Grotto_GetEntranceValueHandlingGrottoRando(s16 nextEntranceIndex) {
     s8 tempGrottoId = nextEntranceIndex & 0x00FF;
 
     // Grotto Returns
-    if (nextEntranceIndex >= ENTRANCE_RANDO_GROTTO_EXIT_START && nextEntranceIndex < ENTRANCE_RANDO_GROTTO_EXIT_START + NUM_GROTTOS) {
+    if (nextEntranceIndex >= ENTRANCE_GROTTO_EXIT_START && nextEntranceIndex < ENTRANCE_GROTTO_EXIT_START + NUM_GROTTOS) {
         GrottoReturnInfo grotto = grottoReturnTable[tempGrottoId];
 
         // When the nextEntranceIndex is determined by a dynamic exit,
@@ -161,7 +161,7 @@ s16 Grotto_GetEntranceValueHandlingGrottoRando(s16 nextEntranceIndex) {
             nextEntranceIndex = ENTR_RETURN_GROTTO;
         }
     // Grotto Loads
-    } else if (nextEntranceIndex >= ENTRANCE_RANDO_GROTTO_LOAD_START && nextEntranceIndex < ENTRANCE_RANDO_GROTTO_EXIT_START) {
+    } else if (nextEntranceIndex >= ENTRANCE_GROTTO_LOAD_START && nextEntranceIndex < ENTRANCE_GROTTO_EXIT_START) {
         GrottoLoadInfo grotto = grottoLoadTable[tempGrottoId];
         nextEntranceIndex = grotto.entranceIndex;
     }
@@ -181,8 +181,8 @@ s16 Grotto_OverrideSpecialEntrance(s16 nextEntranceIndex) {
     // If Link hits a grotto exit, load the entrance index from the grotto exit list
     // based on the current grotto ID
     if (nextEntranceIndex == ENTR_RETURN_GROTTO) {
-        Entrance_SetEntranceDiscovered(ENTRANCE_RANDO_GROTTO_EXIT_START + grottoId, false);
-        EntranceTracker_SetLastEntranceOverride(ENTRANCE_RANDO_GROTTO_EXIT_START + grottoId);
+        Entrance_SetEntranceDiscovered(ENTRANCE_GROTTO_EXIT_START + grottoId, false);
+        EntranceTracker_SetLastEntranceOverride(ENTRANCE_GROTTO_EXIT_START + grottoId);
         nextEntranceIndex = grottoExitList[grottoId];
     }
 
@@ -190,7 +190,7 @@ s16 Grotto_OverrideSpecialEntrance(s16 nextEntranceIndex) {
     grottoId = nextEntranceIndex & 0x00FF;
 
     // Grotto Returns
-    if (nextEntranceIndex >= ENTRANCE_RANDO_GROTTO_EXIT_START && nextEntranceIndex < ENTRANCE_RANDO_GROTTO_EXIT_START + NUM_GROTTOS) {
+    if (nextEntranceIndex >= ENTRANCE_GROTTO_EXIT_START && nextEntranceIndex < ENTRANCE_GROTTO_EXIT_START + NUM_GROTTOS) {
 
         GrottoReturnInfo grotto = grottoReturnTable[grottoId];
         Grotto_SetupReturnInfo(grotto, RESPAWN_MODE_RETURN);
@@ -215,7 +215,7 @@ s16 Grotto_OverrideSpecialEntrance(s16 nextEntranceIndex) {
 
         lastEntranceType = GROTTO_RETURN;
     // Grotto Loads
-    } else if (nextEntranceIndex >= ENTRANCE_RANDO_GROTTO_LOAD_START && nextEntranceIndex < ENTRANCE_RANDO_GROTTO_EXIT_START) {
+    } else if (nextEntranceIndex >= ENTRANCE_GROTTO_LOAD_START && nextEntranceIndex < ENTRANCE_GROTTO_EXIT_START) {
 
         // Set the respawn data to load the correct grotto
         GrottoLoadInfo grotto = grottoLoadTable[grottoId];
@@ -252,8 +252,8 @@ void Grotto_OverrideActorEntrance(Actor* thisx) {
 
         if (grottoContent == grottoLoadTable[index].content && gPlayState->sceneNum == grottoLoadTable[index].scene) {
             // Find the override for the matching index from the grotto Load List
-            Entrance_SetEntranceDiscovered(ENTRANCE_RANDO_GROTTO_LOAD_START + index, false);
-            EntranceTracker_SetLastEntranceOverride(ENTRANCE_RANDO_GROTTO_LOAD_START + index);
+            Entrance_SetEntranceDiscovered(ENTRANCE_GROTTO_LOAD_START + index, false);
+            EntranceTracker_SetLastEntranceOverride(ENTRANCE_GROTTO_LOAD_START + index);
             index = grottoLoadList[index];
 
             // Run the index through the special entrances override check
@@ -326,9 +326,9 @@ void Grotto_SanitizeEntranceType(void) {
 s16 Grotto_GetRenamedGrottoIndexFromOriginal(s8 content, s8 scene) {
     for (s16 index = 0; index < NUM_GROTTOS; index++) {
         if (content == grottoLoadTable[index].content && scene == grottoLoadTable[index].scene) {
-            return ENTRANCE_RANDO_GROTTO_LOAD_START | index;
+            return ENTRANCE_GROTTO_LOAD_START | index;
         }
     }
 
-    return ENTRANCE_RANDO_GROTTO_LOAD_START;
+    return ENTRANCE_GROTTO_LOAD_START;
 }

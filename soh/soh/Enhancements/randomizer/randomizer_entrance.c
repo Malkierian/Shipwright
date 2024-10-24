@@ -199,12 +199,12 @@ void Entrance_Init(void) {
         }
 
         //Overwrite grotto related indices
-        if (originalIndex >= ENTRANCE_RANDO_GROTTO_EXIT_START) {
+        if (originalIndex >= ENTRANCE_GROTTO_EXIT_START) {
             Grotto_SetExitOverride(originalIndex, overrideIndex);
             continue;
         }
 
-        if (originalIndex >= ENTRANCE_RANDO_GROTTO_LOAD_START && originalIndex < ENTRANCE_RANDO_GROTTO_EXIT_START) {
+        if (originalIndex >= ENTRANCE_GROTTO_LOAD_START && originalIndex < ENTRANCE_GROTTO_EXIT_START) {
             Grotto_SetLoadOverride(originalIndex, overrideIndex);
             continue;
         }

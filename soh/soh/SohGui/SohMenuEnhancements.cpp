@@ -21,6 +21,28 @@ namespace SohGui {
 
 extern std::shared_ptr<SohMenu> mSohMenu;
 using namespace UIWidgets;
+static bool allItemCountsChecked = false;
+
+void AllItemCounts(WidgetInfo& info) {
+    int numOptions = ARRAY_COUNT(itemCountMessageCVars);
+    allItemCountsChecked = std::all_of(itemCountMessageCVars, itemCountMessageCVars + numOptions,
+        [](const char* cvar) { return CVarGetInteger(cvar, 0); });
+}
+static bool allSkipsChecked = false;
+
+void SkipAllCutscenes(WidgetInfo& info) {
+    allSkipsChecked =
+        CVarGetInteger(CVAR_ENHANCEMENT("TimeSavers.SkipCutscene.Intro"), IS_RANDO) &&
+        CVarGetInteger(CVAR_ENHANCEMENT("TimeSavers.SkipCutscene.Entrances"), IS_RANDO) &&
+        CVarGetInteger(CVAR_ENHANCEMENT("TimeSavers.SkipCutscene.Story"), IS_RANDO) &&
+        CVarGetInteger(CVAR_ENHANCEMENT("TimeSavers.SkipCutscene.LearnSong"), IS_RANDO) &&
+        CVarGetInteger(CVAR_ENHANCEMENT("TimeSavers.SkipCutscene.BossIntro"), IS_RANDO) &&
+        CVarGetInteger(CVAR_ENHANCEMENT("TimeSavers.SkipCutscene.QuickBossDeaths"), IS_RANDO) &&
+        CVarGetInteger(CVAR_ENHANCEMENT("TimeSavers.SkipCutscene.OnePoint"), IS_RANDO) &&
+        CVarGetInteger(CVAR_ENHANCEMENT("TimeSavers.SkipOwlInteractions"), IS_RANDO) &&
+        CVarGetInteger(CVAR_ENHANCEMENT("TimeSavers.SkipMiscInteractions"), IS_RANDO) &&
+        CVarGetInteger(CVAR_ENHANCEMENT("TimeSavers.DisableTitleCard"), IS_RANDO);
+}
 
 void SohMenu::AddMenuEnhancements() {
     // Add Enhancements Menu
@@ -192,14 +214,9 @@ void SohMenu::AddMenuEnhancements() {
 
     AddWidget(path, "Item Count Messages", WIDGET_SEPARATOR_TEXT);
     int numOptions = ARRAY_COUNT(itemCountMessageCVars);
-    bool allItemCountsChecked = false;
     AddWidget(path, "All", WIDGET_CHECKBOX)
         .ValuePointer(&allItemCountsChecked)
-        //.PreFunc([](WidgetInfo& info) {
-        //    int numOptions = ARRAY_COUNT(itemCountMessageCVars);
-        //    *std::get<bool*>(info.valuePointer) = std::all_of(itemCountMessageCVars, itemCountMessageCVars + numOptions,
-        //                                                      [](const char* cvar) { return CVarGetInteger(cvar, 0); });
-        //})
+        .PreFunc(AllItemCounts)
         .Callback([](WidgetInfo& info) {
             int32_t newValue = *std::get<bool*>(info.valuePointer) ? 1 : 0;
             int numOptions = ARRAY_COUNT(itemCountMessageCVars);
@@ -266,22 +283,9 @@ void SohMenu::AddMenuEnhancements() {
     path.column = SECTION_COLUMN_1;
 
     AddWidget(path, "Cutscenes", WIDGET_SEPARATOR_TEXT);
-    bool allSkipsChecked = false;
     AddWidget(path, "Skip All", WIDGET_CHECKBOX)
         .ValuePointer(&allSkipsChecked)
-        /*.PreFunc([](WidgetInfo& info) {
-            *std::get<bool*>(info.valuePointer) =
-                CVarGetInteger(CVAR_ENHANCEMENT("TimeSavers.SkipCutscene.Intro"), IS_RANDO) &&
-                CVarGetInteger(CVAR_ENHANCEMENT("TimeSavers.SkipCutscene.Entrances"), IS_RANDO) &&
-                CVarGetInteger(CVAR_ENHANCEMENT("TimeSavers.SkipCutscene.Story"), IS_RANDO) &&
-                CVarGetInteger(CVAR_ENHANCEMENT("TimeSavers.SkipCutscene.LearnSong"), IS_RANDO) &&
-                CVarGetInteger(CVAR_ENHANCEMENT("TimeSavers.SkipCutscene.BossIntro"), IS_RANDO) &&
-                CVarGetInteger(CVAR_ENHANCEMENT("TimeSavers.SkipCutscene.QuickBossDeaths"), IS_RANDO) &&
-                CVarGetInteger(CVAR_ENHANCEMENT("TimeSavers.SkipCutscene.OnePoint"), IS_RANDO) &&
-                CVarGetInteger(CVAR_ENHANCEMENT("TimeSavers.SkipOwlInteractions"), IS_RANDO) &&
-                CVarGetInteger(CVAR_ENHANCEMENT("TimeSavers.SkipMiscInteractions"), IS_RANDO) &&
-                CVarGetInteger(CVAR_ENHANCEMENT("TimeSavers.DisableTitleCard"), IS_RANDO);
-        })*/
+        .PreFunc(SkipAllCutscenes)
         .Callback([](WidgetInfo& info) {
             int32_t newValue = *std::get<bool*>(info.valuePointer) ? 1 : 0;
 

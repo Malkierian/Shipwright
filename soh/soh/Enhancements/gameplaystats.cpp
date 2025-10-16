@@ -1,6 +1,6 @@
 #include "gameplaystats.h"
 
-#include "soh/SaveManager.h"
+#include "soh/SaveManager/SaveManager.h"
 #include "functions.h"
 #include "macros.h"
 #include "soh/cvar_prefixes.h"

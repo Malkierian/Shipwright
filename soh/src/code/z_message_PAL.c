@@ -12,7 +12,7 @@
 #include "soh/Enhancements/game-interactor/GameInteractor.h"
 #include "soh/Enhancements/game-interactor/GameInteractor_Hooks.h"
 #include "soh/OTRGlobals.h"
-#include "soh/SaveManager.h"
+#include "soh/SaveManager/SaveManager.h"
 #include "soh/ResourceManagerHelpers.h"
 
 // #region SOH [NTSC] - Allows custom messages to work on japanese

@@ -20,7 +20,7 @@
 #include "soh/Enhancements/game-interactor/GameInteractor_Hooks.h"
 #include "soh/OTRGlobals.h"
 #include "soh/ResourceManagerHelpers.h"
-#include "soh/SaveManager.h"
+#include "soh/SaveManager/SaveManager.h"
 #include "soh/Enhancements/kaleido.h"
 
 static void* sEquipmentFRATexs[] = {

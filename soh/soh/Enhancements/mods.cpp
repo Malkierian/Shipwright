@@ -3,7 +3,7 @@
 #include "game-interactor/GameInteractor.h"
 #include "tts/tts.h"
 #include "soh/OTRGlobals.h"
-#include "soh/SaveManager.h"
+#include "soh/SaveManager/SaveManager.h"
 #include "soh/ResourceManagerHelpers.h"
 #include "soh/resource/type/Skeleton.h"
 #include "soh/Enhancements/boss-rush/BossRush.h"

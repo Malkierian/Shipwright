@@ -6,7 +6,7 @@
 #include "soh/Enhancements/game-interactor/GameInteractor_Hooks.h"
 #include "soh/Enhancements/randomizer/savefile.h"
 #include "soh/OTRGlobals.h"
-#include "soh/SaveManager.h"
+#include "soh/SaveManager/SaveManager.h"
 #include "soh/ResourceManagerHelpers.h"
 
 #define NUM_DUNGEONS 8

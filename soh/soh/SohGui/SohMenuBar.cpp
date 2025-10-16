@@ -7,7 +7,7 @@
 #include "include/z64audio.h"
 #include <fast/backends/gfx_rendering_api.h>
 #include "soh/OTRGlobals.h"
-#include "soh/SaveManager.h"
+#include "soh/SaveManager/SaveManager.h"
 #include "z64.h"
 #include "soh/cvar_prefixes.h"
 #include "macros.h"

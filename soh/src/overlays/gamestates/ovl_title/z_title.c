@@ -10,7 +10,7 @@
 #include "assets/objects/gameplay_keep/gameplay_keep.h"
 #include <soh/Enhancements/bootcommands.h>
 #include <soh/GameVersions.h>
-#include <soh/SaveManager.h>
+#include <soh/SaveManager/SaveManager.h>
 #include "soh/ResourceManagerHelpers.h"
 #include "soh/Enhancements/game-interactor/GameInteractor_Hooks.h"
 #include <string.h>

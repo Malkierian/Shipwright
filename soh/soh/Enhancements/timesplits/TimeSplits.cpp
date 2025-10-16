@@ -5,7 +5,7 @@
 #include <ship/Context.h>
 #include "TimeSplits.h"
 #include "soh/Enhancements/gameplaystats.h"
-#include "soh/SaveManager.h"
+#include "soh/SaveManager/SaveManager.h"
 #include "soh/util.h"
 
 #include "soh/OTRGlobals.h"

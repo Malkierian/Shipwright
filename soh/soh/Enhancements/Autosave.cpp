@@ -2,7 +2,7 @@
 #include "soh/Enhancements/game-interactor/GameInteractor.h"
 #include "soh/Notification/Notification.h"
 #include "soh/ShipInit.hpp"
-#include "soh/SaveManager.h"
+#include "soh/SaveManager/SaveManager.h"
 
 extern "C" {
 extern PlayState* gPlayState;

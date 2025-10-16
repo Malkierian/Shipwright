@@ -12,7 +12,7 @@
 #include "soh/Enhancements/game-interactor/GameInteractor_Hooks.h"
 #include "soh/SohGui/ImGuiUtils.h"
 #include "soh/Notification/Notification.h"
-#include "soh/SaveManager.h"
+#include "soh/SaveManager/SaveManager.h"
 
 extern "C" {
 #include "macros.h"

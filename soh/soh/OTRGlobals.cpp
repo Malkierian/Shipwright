@@ -73,7 +73,7 @@
 #include "soh/SohGui/SohGui.hpp"
 #include "soh/SohGui/ImGuiUtils.h"
 #include "ActorDB.h"
-#include "SaveManager.h"
+#include "soh/SaveManager/SaveManager.h"
 
 #ifdef ENABLE_REMOTE_CONTROL
 #include "soh/Network/CrowdControl/CrowdControl.h"

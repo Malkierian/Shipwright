@@ -3,7 +3,7 @@
 #include "assets/overlays/ovl_File_Choose/ovl_file_choose.h"
 #include "assets/soh_assets.h"
 #include "soh/Enhancements/game-interactor/GameInteractor_Hooks.h"
-#include "soh/SaveManager.h"
+#include "soh/SaveManager/SaveManager.h"
 #include "soh/ResourceManagerHelpers.h"
 
 // File based on matching decomp for z_file_nameset_NES on N64 1.0 https://decomp.me/scratch/1tru6

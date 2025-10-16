@@ -22,7 +22,7 @@
 #include "SohMenu.h"
 #include "include/global.h"
 #include "include/z64audio.h"
-#include "soh/SaveManager.h"
+#include "soh/SaveManager/SaveManager.h"
 #include "soh/OTRGlobals.h"
 #include "soh/Enhancements/Presets/Presets.h"
 #include "soh/resource/type/Skeleton.h"

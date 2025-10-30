@@ -105,6 +105,10 @@ void Anchor::SendPacket_UpdateTeamState() {
     SendJsonToRemote(payload);
 }
 
+uint32_t Anchor::GetOwnClientID() {
+    return ownClientId;
+}
+
 void Anchor::SendPacket_ClearTeamState() {
     json payload;
     payload["type"] = UPDATE_TEAM_STATE;

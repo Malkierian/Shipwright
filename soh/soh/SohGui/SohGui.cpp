@@ -109,7 +109,6 @@ std::shared_ptr<RandomizerSettingsWindow> mRandomizerSettingsWindow;
 std::shared_ptr<SohModalWindow> mModalWindow;
 std::shared_ptr<Notification::Window> mNotificationWindow;
 std::shared_ptr<TimeDisplayWindow> mTimeDisplayWindow;
-std::shared_ptr<AboutWindow> mAboutWindow;
 #ifdef ENABLE_REMOTE_CONTROL    
 std::shared_ptr<AnchorRoomWindow> mAnchorRoomWindow;
 #endif

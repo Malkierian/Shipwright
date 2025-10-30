@@ -128,9 +128,11 @@ class Anchor : public Network {
     void OnIncomingJson(nlohmann::json payload);
     void OnConnected();
     void OnDisconnected();
-    void DrawMenu();
+    void AnchorCustomWidget();
     void SendJsonToRemote(nlohmann::json packet);
     bool IsSaveLoaded();
+
+    uint32_t GetOwnClientID();
 
     void SendPacket_ClearTeamState();
     void SendPacket_DamagePlayer(u32 clientId, u8 damageEffect, u8 damage);

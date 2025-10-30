@@ -92,6 +92,9 @@ void GameInteractor_ExecuteOnKaleidoUpdate();
 // Mark: - Audio
 void GameInteractor_ExecuteOnSeqPlayerInit(int32_t playerIdx, int32_t seqId);
 
+// MARK: - Rando
+void GameInteractor_ExecuteOnRandoEntranceDiscovered(u16 entranceIndex, u8 isReversedEntrance);
+
 #ifdef __cplusplus
 }
 #endif

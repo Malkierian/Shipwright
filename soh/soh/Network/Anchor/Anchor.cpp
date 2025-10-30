@@ -5,12 +5,18 @@
 #include <libultraship/libultraship.h>
 #include "soh/Enhancements/game-interactor/GameInteractor.h"
 #include "soh/OTRGlobals.h"
+#include "soh/SohGui/SohGui.hpp"
+#include "soh/SohGui/SohMenu.h"
 #include "soh/Enhancements/nametag.h"
 
 extern "C" {
 #include "variables.h"
 #include "functions.h"
 extern PlayState* gPlayState;
+}
+
+namespace SohGui {
+extern std::shared_ptr<SohMenu> mSohMenu;
 }
 
 // MARK: - Overrides
@@ -276,9 +282,13 @@ bool Anchor::IsSaveLoaded() {
 }
 
 // MARK: - UI
+static const char* pvpModes[3] = { "Off", "On", "On + Friendly Fire" };
+static std::vector<const char*> teleportModes = { "None", "Team Only", "All" };
+static std::vector<const char*> showLocationsModes = { "None", "Team Only", "All" };
 
-void Anchor::DrawMenu() {
+void AnchorCustomWidget(WidgetInfo& info) {
     ImGui::PushID("Anchor");
+    auto anchor = Anchor::Instance;
 
     std::string host = CVarGetString(CVAR_REMOTE_ANCHOR("Host"), "anchor.proxysaw.dev");
     uint16_t port = CVarGetInteger(CVAR_REMOTE_ANCHOR("Port"), 43383);
@@ -294,7 +304,7 @@ void Anchor::DrawMenu() {
         // ImGui::SetClipboardText("https://github.com/garrettjoecox/anchor");
     }
 
-    ImGui::BeginDisabled(isEnabled);
+    ImGui::BeginDisabled(anchor->isEnabled);
     ImGui::Text("Host & Port");
     if (UIWidgets::InputString("##Host", &host)) {
         CVarSetString(CVAR_REMOTE_ANCHOR("Host"), host.c_str());
@@ -328,7 +338,7 @@ void Anchor::DrawMenu() {
     }
     ImGui::Text("Room ID");
     ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
-    if (UIWidgets::InputString("##RoomId", &anchorRoomId, isEnabled ? ImGuiInputTextFlags_Password : 0)) {
+    if (UIWidgets::InputString("##RoomId", &anchorRoomId, UIWidgets::InputOptions().IsSecret(anchor->isEnabled))) {
         CVarSetString(CVAR_REMOTE_ANCHOR("RoomId"), anchorRoomId.c_str());
         Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesNextFrame();
     }
@@ -343,53 +353,50 @@ void Anchor::DrawMenu() {
     ImGui::Spacing();
 
     ImGui::BeginDisabled(!isFormValid);
-    const char* buttonLabel = isEnabled ? "Disable" : "Enable";
+    const char* buttonLabel = anchor->isEnabled ? "Disable" : "Enable";
     if (ImGui::Button(buttonLabel, ImVec2(-1.0f, 0.0f))) {
-        if (isEnabled) {
+        if (anchor->isEnabled) {
             CVarClear(CVAR_REMOTE_ANCHOR("Enabled"));
             Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesNextFrame();
-            Disable();
+            anchor->Disable();
         } else {
             CVarSetInteger(CVAR_REMOTE_ANCHOR("Enabled"), 1);
             Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesNextFrame();
-            Enable();
+            anchor->Enable();
         }
     }
     ImGui::EndDisabled();
 
-    if (isEnabled) {
+    if (anchor->isEnabled) {
         ImGui::Spacing();
-        if (isConnected) {
+        if (anchor->isConnected) {
             ImGui::Text("Connected");
 
-            if (roomState.ownerClientId == ownClientId) {
+            if (anchor->roomState.ownerClientId == anchor->GetOwnClientID()) {
                 if (ImGui::BeginMenu("Room Settings")) {
-                    ImGui::Text("PvP Mode:");
-                    static const char* pvpModes[3] = { "Off", "On", "On + Friendly Fire" };
-                    if (UIWidgets::EnhancementCombobox(CVAR_REMOTE_ANCHOR("RoomSettings.PvpMode"), pvpModes, 1)) {
-                        SendPacket_UpdateRoomState();
+                    if (UIWidgets::CVarCombobox("PvP Mode:" , CVAR_REMOTE_ANCHOR("RoomSettings.PvpMode"),
+                        pvpModes, UIWidgets::ComboboxOptions().DefaultIndex(1).LabelPosition(UIWidgets::LabelPositions::Above))) {
+                        anchor->SendPacket_UpdateRoomState();
                     }
-                    ImGui::Text("Show Locations For:");
-                    static const char* showLocationsModes[3] = { "None", "Team Only", "All" };
-                    if (UIWidgets::EnhancementCombobox(CVAR_REMOTE_ANCHOR("RoomSettings.ShowLocationsMode"), showLocationsModes, 1)) {
-                        SendPacket_UpdateRoomState();
+                    if (UIWidgets::CVarCombobox("Show Locations For:", CVAR_REMOTE_ANCHOR("RoomSettings.ShowLocationsMode"),
+                        showLocationsModes, UIWidgets::ComboboxOptions().DefaultIndex(1).LabelPosition(UIWidgets::LabelPositions::Above))) {
+                        anchor->SendPacket_UpdateRoomState();
                     }
-                    ImGui::Text("Allow Teleporting To:");
-                    static const char* teleportModes[3] = { "None", "Team Only", "All" };
-                    if (UIWidgets::EnhancementCombobox(CVAR_REMOTE_ANCHOR("RoomSettings.TeleportMode"), teleportModes, 1)) {
-                        SendPacket_UpdateRoomState();
+                    if (UIWidgets::CVarCombobox("Allow Teleporting To:", CVAR_REMOTE_ANCHOR("RoomSettings.TeleportMode"),
+                        teleportModes, UIWidgets::ComboboxOptions().DefaultIndex(1).LabelPosition(UIWidgets::LabelPositions::Above))) {
+                        anchor->SendPacket_UpdateRoomState();
                     }
                     ImGui::EndMenu();
                 }
             }
 
             if (ImGui::Button("Request Team State", ImVec2(ImGui::GetContentRegionAvail().x - 25.0f, 0.0f))) {
-                SendPacket_RequestTeamState();
+                anchor->SendPacket_RequestTeamState();
             }
-            if (roomState.ownerClientId == ownClientId) {
+            if (anchor->roomState.ownerClientId == anchor->GetOwnClientID()) {
                 ImGui::SameLine();
                 if (ImGui::Button(ICON_FA_TRASH)) {
-                    SendPacket_ClearTeamState();
+                    anchor->SendPacket_ClearTeamState();
                 }
                 UIWidgets::Tooltip("Clear Team State");
             }
@@ -400,5 +407,14 @@ void Anchor::DrawMenu() {
 
     ImGui::PopID();
 }
+
+void RegisterAnchorMenu() {
+    WidgetPath path = { "Network", "Anchor", SECTION_COLUMN_1 };
+    SohGui::mSohMenu->AddWidget(path, "AnchorWidget", WIDGET_CUSTOM)
+        .CustomFunction(AnchorCustomWidget)
+        .HideInSearch(true);
+}
+
+static RegisterMenuInitFunc menuInitFunc(RegisterAnchorMenu);
 
 #endif

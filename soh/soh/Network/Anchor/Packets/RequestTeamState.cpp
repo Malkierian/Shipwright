@@ -8,8 +8,8 @@
 /**
  * REQUEST_TEAM_STATE
  *
- * Requests team state from the server, which will pass on the request to any connected teammates, or send the last known
- * state if no teammates are connected.
+ * Requests team state from the server, which will pass on the request to any connected teammates, or send the last
+ * known state if no teammates are connected.
  *
  * This fires when loading into a file while Anchor is connected, or when Anchor is connected while a file is already
  * loaded

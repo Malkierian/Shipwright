@@ -213,7 +213,7 @@ void func_8086ED50(BgBombwall* this, PlayState* play) {
 void func_8086ED70(BgBombwall* this, PlayState* play) {
     // #region SOH [Co-op]
     if ((this->collider.base.acFlags & AC_HIT) || Flags_GetSwitch(play, this->dyna.actor.params & 0x3F)) {
-    // #endregion
+        // #endregion
         this->collider.base.acFlags &= ~AC_HIT;
         func_8086EDFC(this, play);
         Flags_SetSwitch(play, this->dyna.actor.params & 0x3F);

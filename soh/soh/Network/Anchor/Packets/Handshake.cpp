@@ -8,7 +8,7 @@
 
 /**
  * HANDSHAKE
- * 
+ *
  * Sent by the client to the server when it first connects to the server, sends over both the local room settings
  * in case the room needs to be created, along with the current client state
  */

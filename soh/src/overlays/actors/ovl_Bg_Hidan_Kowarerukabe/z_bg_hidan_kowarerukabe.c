@@ -304,8 +304,9 @@ void BgHidanKowarerukabe_Update(Actor* thisx, PlayState* play) {
     s32 pad;
 
     // #region SOH [Co-op]
-    if ((Actor_GetCollidedExplosive(play, &this->collider.base) != NULL) || Flags_GetSwitch(play, (this->dyna.actor.params >> 8) & 0x3F)) {
-    // #endregion
+    if ((Actor_GetCollidedExplosive(play, &this->collider.base) != NULL) ||
+        Flags_GetSwitch(play, (this->dyna.actor.params >> 8) & 0x3F)) {
+        // #endregion
         BgHidanKowarerukabe_Break(this, play);
         Flags_SetSwitch(play, (this->dyna.actor.params >> 8) & 0x3F);
 

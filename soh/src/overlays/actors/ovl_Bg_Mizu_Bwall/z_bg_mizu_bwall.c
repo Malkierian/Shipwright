@@ -466,7 +466,7 @@ void BgMizuBwall_Idle(BgMizuBwall* this, PlayState* play) {
     BgMizuBwall_SetAlpha(this, play);
     // #region SOH [Co-op]
     if ((this->collider.base.acFlags & AC_HIT) || Flags_GetSwitch(play, ((u16)this->dyna.actor.params >> 8) & 0x3F)) {
-    // #endregion
+        // #endregion
         this->collider.base.acFlags &= ~AC_HIT;
         Flags_SetSwitch(play, ((u16)this->dyna.actor.params >> 8) & 0x3F);
         this->breakTimer = 1;

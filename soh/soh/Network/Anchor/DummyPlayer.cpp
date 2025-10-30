@@ -144,15 +144,15 @@ void DummyPlayer_Update(Actor* actor, PlayState* play) {
         gSaveContext.equips.buttonItems[0] = originalButtonItem0;
     }
 
-    if (
-        Anchor::Instance->roomState.pvpMode == 0 ||
-        (Anchor::Instance->roomState.pvpMode == 1 && client.teamId == CVarGetString(CVAR_REMOTE_ANCHOR("TeamId"), "default"))
-    ) {
+    if (Anchor::Instance->roomState.pvpMode == 0 ||
+        (Anchor::Instance->roomState.pvpMode == 1 &&
+         client.teamId == CVarGetString(CVAR_REMOTE_ANCHOR("TeamId"), "default"))) {
         return;
     }
 
     if (player->cylinder.base.acFlags & AC_HIT && player->invincibilityTimer == 0) {
-        Anchor::Instance->SendPacket_DamagePlayer(client.clientId, player->actor.colChkInfo.damageEffect, player->actor.colChkInfo.damage);
+        Anchor::Instance->SendPacket_DamagePlayer(client.clientId, player->actor.colChkInfo.damageEffect,
+                                                  player->actor.colChkInfo.damage);
         if (player->actor.colChkInfo.damageEffect == DUMMY_PLAYER_HIT_RESPONSE_STUN) {
             Actor_SetColorFilter(&player->actor, 0, 0xFF, 0, 24);
         } else {
@@ -163,11 +163,13 @@ void DummyPlayer_Update(Actor* actor, PlayState* play) {
     Collider_UpdateCylinder(&player->actor, &player->cylinder);
 
     if (!(player->stateFlags2 & PLAYER_STATE2_FROZEN)) {
-        if (!(player->stateFlags1 & (PLAYER_STATE1_DEAD | PLAYER_STATE1_HANGING_OFF_LEDGE | PLAYER_STATE1_CLIMBING_LEDGE | PLAYER_STATE1_ON_HORSE))) {
+        if (!(player->stateFlags1 & (PLAYER_STATE1_DEAD | PLAYER_STATE1_HANGING_OFF_LEDGE |
+                                     PLAYER_STATE1_CLIMBING_LEDGE | PLAYER_STATE1_ON_HORSE))) {
             CollisionCheck_SetOC(play, &play->colChkCtx, &player->cylinder.base);
         }
 
-        if (!(player->stateFlags1 & (PLAYER_STATE1_DEAD | PLAYER_STATE1_DAMAGED)) && (player->invincibilityTimer <= 0)) {
+        if (!(player->stateFlags1 & (PLAYER_STATE1_DEAD | PLAYER_STATE1_DAMAGED)) &&
+            (player->invincibilityTimer <= 0)) {
             CollisionCheck_SetAC(play, &play->colChkCtx, &player->cylinder.base);
 
             if (player->invincibilityTimer < 0) {

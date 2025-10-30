@@ -20,27 +20,15 @@ inline void from_json(const json& j, Color_RGB8& color) {
 }
 
 inline void to_json(json& j, const Color_RGB8& color) {
-    j = json{
-        {"r", color.r},
-        {"g", color.g},
-        {"b", color.b}
-    };
+    j = json{ { "r", color.r }, { "g", color.g }, { "b", color.b } };
 }
 
 inline void to_json(json& j, const Vec3f& vec) {
-    j = json{
-        {"x", vec.x},
-        {"y", vec.y},
-        {"z", vec.z}
-    };
+    j = json{ { "x", vec.x }, { "y", vec.y }, { "z", vec.z } };
 }
 
 inline void to_json(json& j, const Vec3s& vec) {
-    j = json{
-        {"x", vec.x},
-        {"y", vec.y},
-        {"z", vec.z}
-    };
+    j = json{ { "x", vec.x }, { "y", vec.y }, { "z", vec.z } };
 }
 
 inline void from_json(const json& j, Vec3f& vec) {
@@ -56,10 +44,7 @@ inline void from_json(const json& j, Vec3s& vec) {
 }
 
 inline void to_json(json& j, const PosRot& posRot) {
-    j = json{
-        {"pos", posRot.pos},
-        {"rot", posRot.rot}
-    };
+    j = json{ { "pos", posRot.pos }, { "rot", posRot.rot } };
 }
 
 inline void from_json(const json& j, PosRot& posRot) {
@@ -83,17 +68,15 @@ inline void from_json(const json& j, AnchorClient& client) {
 }
 
 inline void to_json(json& j, const Inventory& inventory) {
-    j = json{
-        {"items", inventory.items},
-        {"ammo", inventory.ammo},
-        {"equipment", inventory.equipment},
-        {"upgrades", inventory.upgrades},
-        {"questItems", inventory.questItems},
-        {"dungeonItems", inventory.dungeonItems},
-        {"dungeonKeys", inventory.dungeonKeys},
-        {"defenseHearts", inventory.defenseHearts},
-        {"gsTokens", inventory.gsTokens}
-    };
+    j = json{ { "items", inventory.items },
+              { "ammo", inventory.ammo },
+              { "equipment", inventory.equipment },
+              { "upgrades", inventory.upgrades },
+              { "questItems", inventory.questItems },
+              { "dungeonItems", inventory.dungeonItems },
+              { "dungeonKeys", inventory.dungeonKeys },
+              { "defenseHearts", inventory.defenseHearts },
+              { "gsTokens", inventory.gsTokens } };
 }
 
 inline void from_json(const json& j, Inventory& inventory) {
@@ -110,8 +93,8 @@ inline void from_json(const json& j, Inventory& inventory) {
 
 inline void to_json(json& j, const SohStats& sohStats) {
     j = json{
-        {"entrancesDiscovered", sohStats.entrancesDiscovered},
-        {"fileCreatedAt", sohStats.fileCreatedAt},
+        { "entrancesDiscovered", sohStats.entrancesDiscovered },
+        { "fileCreatedAt", sohStats.fileCreatedAt },
     };
 }
 
@@ -122,7 +105,7 @@ inline void from_json(const json& j, SohStats& sohStats) {
 
 inline void to_json(json& j, const ShipRandomizerSaveContextData& shipRandomizerSaveContextData) {
     j = json{
-        {"triforcePiecesCollected", shipRandomizerSaveContextData.triforcePiecesCollected},
+        { "triforcePiecesCollected", shipRandomizerSaveContextData.triforcePiecesCollected },
     };
 }
 
@@ -132,7 +115,7 @@ inline void from_json(const json& j, ShipRandomizerSaveContextData& shipRandomiz
 
 inline void to_json(json& j, const ShipQuestSpecificSaveContextData& shipQuestSpecificSaveContextData) {
     j = json{
-        {"randomizer", shipQuestSpecificSaveContextData.randomizer},
+        { "randomizer", shipQuestSpecificSaveContextData.randomizer },
     };
 }
 
@@ -142,8 +125,8 @@ inline void from_json(const json& j, ShipQuestSpecificSaveContextData& shipQuest
 
 inline void to_json(json& j, const ShipQuestSaveContextData& shipQuestSaveContextData) {
     j = json{
-        {"id", shipQuestSaveContextData.id},
-        {"data", shipQuestSaveContextData.data},
+        { "id", shipQuestSaveContextData.id },
+        { "data", shipQuestSaveContextData.data },
     };
 }
 
@@ -154,9 +137,9 @@ inline void from_json(const json& j, ShipQuestSaveContextData& shipQuestSaveCont
 
 inline void to_json(json& j, const ShipSaveContextData& shipSaveContextData) {
     j = json{
-        {"stats", shipSaveContextData.stats},
-        {"quest", shipSaveContextData.quest},
-        {"randomizerInf", shipSaveContextData.randomizerInf},
+        { "stats", shipSaveContextData.stats },
+        { "quest", shipSaveContextData.quest },
+        { "randomizerInf", shipSaveContextData.randomizerInf },
     };
 }
 
@@ -176,21 +159,21 @@ inline void to_json(json& j, const SaveContext& saveContext) {
     }
 
     j = json{
-        {"healthCapacity", saveContext.healthCapacity},
-        {"magicLevel", saveContext.magicLevel},
-        {"magicCapacity", saveContext.magicCapacity},
-        {"isMagicAcquired", saveContext.isMagicAcquired},
-        {"isDoubleMagicAcquired", saveContext.isDoubleMagicAcquired},
-        {"isDoubleDefenseAcquired", saveContext.isDoubleDefenseAcquired},
-        {"bgsFlag", saveContext.bgsFlag},
-        {"swordHealth", saveContext.swordHealth},
-        {"sceneFlags", sceneFlagsArray},
-        {"eventChkInf", saveContext.eventChkInf},
-        {"itemGetInf", saveContext.itemGetInf},
-        {"infTable", saveContext.infTable},
-        {"gsFlags", saveContext.gsFlags},
-        {"inventory", saveContext.inventory},
-        {"ship", saveContext.ship},
+        { "healthCapacity", saveContext.healthCapacity },
+        { "magicLevel", saveContext.magicLevel },
+        { "magicCapacity", saveContext.magicCapacity },
+        { "isMagicAcquired", saveContext.isMagicAcquired },
+        { "isDoubleMagicAcquired", saveContext.isDoubleMagicAcquired },
+        { "isDoubleDefenseAcquired", saveContext.isDoubleDefenseAcquired },
+        { "bgsFlag", saveContext.bgsFlag },
+        { "swordHealth", saveContext.swordHealth },
+        { "sceneFlags", sceneFlagsArray },
+        { "eventChkInf", saveContext.eventChkInf },
+        { "itemGetInf", saveContext.itemGetInf },
+        { "infTable", saveContext.infTable },
+        { "gsFlags", saveContext.gsFlags },
+        { "inventory", saveContext.inventory },
+        { "ship", saveContext.ship },
     };
 }
 

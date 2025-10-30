@@ -128,8 +128,9 @@ void BgHidanDalm_Wait(BgHidanDalm* this, PlayState* play) {
 
     // #region SOH [Co-op]
     if (((this->collider.base.acFlags & AC_HIT) && !Player_InCsMode(play) &&
-        (player->meleeWeaponAnimation == 22 || player->meleeWeaponAnimation == 23)) || Flags_GetSwitch(play, this->switchFlag)) {
-    // #endregion
+         (player->meleeWeaponAnimation == 22 || player->meleeWeaponAnimation == 23)) ||
+        Flags_GetSwitch(play, this->switchFlag)) {
+        // #endregion
         this->collider.base.acFlags &= ~AC_HIT;
         if ((this->collider.elements[0].info.bumperFlags & BUMP_HIT) ||
             (this->collider.elements[1].info.bumperFlags & BUMP_HIT)) {

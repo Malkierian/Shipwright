@@ -12,7 +12,7 @@ extern "C" {
 
 /**
  * UPDATE_BEANS_COUNT
- * 
+ *
  * Keeps the client's bean count in sync as they buy/use them
  */
 

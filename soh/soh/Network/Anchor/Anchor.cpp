@@ -22,7 +22,8 @@ extern std::shared_ptr<SohMenu> mSohMenu;
 // MARK: - Overrides
 
 void Anchor::Enable() {
-    Network::Enable(CVarGetString(CVAR_REMOTE_ANCHOR("Host"), "anchor.proxysaw.dev"), CVarGetInteger(CVAR_REMOTE_ANCHOR("Port"), 43383));
+    Network::Enable(CVarGetString(CVAR_REMOTE_ANCHOR("Host"), "anchor.proxysaw.dev"),
+                    CVarGetInteger(CVAR_REMOTE_ANCHOR("Port"), 43383));
     ownClientId = CVarGetInteger(CVAR_REMOTE_ANCHOR("LastClientId"), 0);
     roomState.ownerClientId = 0;
 }
@@ -83,42 +84,62 @@ void Anchor::OnIncomingJson(nlohmann::json payload) {
     }
 
     // packetType here is a string so we can't use a switch statement
-         if (packetType == ALL_CLIENT_STATE)         HandlePacket_AllClientState(payload);
-    else if (packetType == DAMAGE_PLAYER)            HandlePacket_DamagePlayer(payload);
-    else if (packetType == DISABLE_ANCHOR)           HandlePacket_DisableAnchor(payload);
-    else if (packetType == ENTRANCE_DISCOVERED)      HandlePacket_EntranceDiscovered(payload);
-    else if (packetType == GAME_COMPLETE)            HandlePacket_GameComplete(payload);
-    else if (packetType == GIVE_ITEM)                HandlePacket_GiveItem(payload);
-    else if (packetType == PLAYER_SFX)               HandlePacket_PlayerSfx(payload);
-    else if (packetType == PLAYER_UPDATE)            HandlePacket_PlayerUpdate(payload);
-    else if (packetType == UPDATE_TEAM_STATE)        HandlePacket_UpdateTeamState(payload);
-    else if (packetType == REQUEST_TEAM_STATE)       HandlePacket_RequestTeamState(payload);
-    else if (packetType == REQUEST_TELEPORT)         HandlePacket_RequestTeleport(payload);
-    else if (packetType == SERVER_MESSAGE)           HandlePacket_ServerMessage(payload);
-    else if (packetType == SET_CHECK_STATUS)         HandlePacket_SetCheckStatus(payload);
-    else if (packetType == SET_FLAG)                 HandlePacket_SetFlag(payload);
-    else if (packetType == TELEPORT_TO)              HandlePacket_TeleportTo(payload);
-    else if (packetType == UNSET_FLAG)               HandlePacket_UnsetFlag(payload);
-    else if (packetType == UPDATE_BEANS_COUNT)       HandlePacket_UpdateBeansCount(payload);
-    else if (packetType == UPDATE_CLIENT_STATE)      HandlePacket_UpdateClientState(payload);
-    else if (packetType == UPDATE_ROOM_STATE)        HandlePacket_UpdateRoomState(payload);
-    else if (packetType == UPDATE_DUNGEON_ITEMS)     HandlePacket_UpdateDungeonItems(payload);
+    if (packetType == ALL_CLIENT_STATE)
+        HandlePacket_AllClientState(payload);
+    else if (packetType == DAMAGE_PLAYER)
+        HandlePacket_DamagePlayer(payload);
+    else if (packetType == DISABLE_ANCHOR)
+        HandlePacket_DisableAnchor(payload);
+    else if (packetType == ENTRANCE_DISCOVERED)
+        HandlePacket_EntranceDiscovered(payload);
+    else if (packetType == GAME_COMPLETE)
+        HandlePacket_GameComplete(payload);
+    else if (packetType == GIVE_ITEM)
+        HandlePacket_GiveItem(payload);
+    else if (packetType == PLAYER_SFX)
+        HandlePacket_PlayerSfx(payload);
+    else if (packetType == PLAYER_UPDATE)
+        HandlePacket_PlayerUpdate(payload);
+    else if (packetType == UPDATE_TEAM_STATE)
+        HandlePacket_UpdateTeamState(payload);
+    else if (packetType == REQUEST_TEAM_STATE)
+        HandlePacket_RequestTeamState(payload);
+    else if (packetType == REQUEST_TELEPORT)
+        HandlePacket_RequestTeleport(payload);
+    else if (packetType == SERVER_MESSAGE)
+        HandlePacket_ServerMessage(payload);
+    else if (packetType == SET_CHECK_STATUS)
+        HandlePacket_SetCheckStatus(payload);
+    else if (packetType == SET_FLAG)
+        HandlePacket_SetFlag(payload);
+    else if (packetType == TELEPORT_TO)
+        HandlePacket_TeleportTo(payload);
+    else if (packetType == UNSET_FLAG)
+        HandlePacket_UnsetFlag(payload);
+    else if (packetType == UPDATE_BEANS_COUNT)
+        HandlePacket_UpdateBeansCount(payload);
+    else if (packetType == UPDATE_CLIENT_STATE)
+        HandlePacket_UpdateClientState(payload);
+    else if (packetType == UPDATE_ROOM_STATE)
+        HandlePacket_UpdateRoomState(payload);
+    else if (packetType == UPDATE_DUNGEON_ITEMS)
+        HandlePacket_UpdateDungeonItems(payload);
 }
 
 // Macros to let us easily register and unregister functions when the anchor is enabled/disabled
-#define HOOK(hook, condition, body) \
-    static HOOK_ID hook = 0; \
-    GameInteractor::Instance->UnregisterGameHook<GameInteractor::hook>(hook); \
-    hook = 0; \
-    if (condition) { \
+#define HOOK(hook, condition, body)                                                    \
+    static HOOK_ID hook = 0;                                                           \
+    GameInteractor::Instance->UnregisterGameHook<GameInteractor::hook>(hook);          \
+    hook = 0;                                                                          \
+    if (condition) {                                                                   \
         hook = GameInteractor::Instance->RegisterGameHook<GameInteractor::hook>(body); \
     }
 
-#define HOOK_FOR_ID(hook, condition, id, body) \
-    static HOOK_ID hook = 0; \
-    GameInteractor::Instance->UnregisterGameHookForID<GameInteractor::hook>(hook); \
-    hook = 0; \
-    if (condition) { \
+#define HOOK_FOR_ID(hook, condition, id, body)                                                  \
+    static HOOK_ID hook = 0;                                                                    \
+    GameInteractor::Instance->UnregisterGameHookForID<GameInteractor::hook>(hook);              \
+    hook = 0;                                                                                   \
+    if (condition) {                                                                            \
         hook = GameInteractor::Instance->RegisterGameHookForID<GameInteractor::hook>(id, body); \
     }
 
@@ -131,9 +152,7 @@ void Anchor::RegisterHooks() {
         }
     });
 
-    HOOK(OnPresentFileSelect, isConnected, [&]() {
-        SendPacket_UpdateClientState();
-    });
+    HOOK(OnPresentFileSelect, isConnected, [&]() { SendPacket_UpdateClientState(); });
 
     HOOK_FOR_ID(ShouldActorInit, isConnected, ACTOR_PLAYER, [&](void* actorRef, bool* should) {
         Actor* actor = (Actor*)actorRef;
@@ -158,13 +177,9 @@ void Anchor::RegisterHooks() {
         SendPacket_PlayerUpdate();
     });
 
-    HOOK(OnPlayerSfx, isConnected, [&](u16 sfxId) {
-        SendPacket_PlayerSfx(sfxId);
-    });
+    HOOK(OnPlayerSfx, isConnected, [&](u16 sfxId) { SendPacket_PlayerSfx(sfxId); });
 
-    HOOK(OnLoadGame, isConnected, [&](s16 fileNum) {
-        justLoadedSave = true;
-    });
+    HOOK(OnLoadGame, isConnected, [&](s16 fileNum) { justLoadedSave = true; });
 
     HOOK(OnSaveFile, isConnected, [&](s16 fileNum, int sectionID) {
         if (sectionID == 0) {
@@ -172,21 +187,15 @@ void Anchor::RegisterHooks() {
         }
     });
 
-    HOOK(OnFlagSet, isConnected, [&](s16 flagType, s16 flag) {
-        SendPacket_SetFlag(SCENE_ID_MAX, flagType, flag);
-    });
+    HOOK(OnFlagSet, isConnected, [&](s16 flagType, s16 flag) { SendPacket_SetFlag(SCENE_ID_MAX, flagType, flag); });
 
-    HOOK(OnFlagUnset, isConnected, [&](s16 flagType, s16 flag) {
-        SendPacket_UnsetFlag(SCENE_ID_MAX, flagType, flag);
-    });
+    HOOK(OnFlagUnset, isConnected, [&](s16 flagType, s16 flag) { SendPacket_UnsetFlag(SCENE_ID_MAX, flagType, flag); });
 
-    HOOK(OnSceneFlagSet, isConnected, [&](s16 sceneNum, s16 flagType, s16 flag) { 
-        SendPacket_SetFlag(sceneNum, flagType, flag);
-    });
+    HOOK(OnSceneFlagSet, isConnected,
+         [&](s16 sceneNum, s16 flagType, s16 flag) { SendPacket_SetFlag(sceneNum, flagType, flag); });
 
-    HOOK(OnSceneFlagUnset, isConnected, [&](s16 sceneNum, s16 flagType, s16 flag) {
-        SendPacket_UnsetFlag(sceneNum, flagType, flag);
-    });
+    HOOK(OnSceneFlagUnset, isConnected,
+         [&](s16 sceneNum, s16 flagType, s16 flag) { SendPacket_UnsetFlag(sceneNum, flagType, flag); });
 
     HOOK(OnRandoSetCheckStatus, isConnected, [&](RandomizerCheck rc, RandomizerCheckStatus status) {
         if (!isHandlingUpdateTeamState) {
@@ -200,17 +209,15 @@ void Anchor::RegisterHooks() {
         }
     });
 
-    HOOK(OnRandoEntranceDiscovered, isConnected, [&](u16 entranceIndex, u8 isReversedEntrance) {
-        SendPacket_EntranceDiscovered(entranceIndex);
-    });
+    HOOK(OnRandoEntranceDiscovered, isConnected,
+         [&](u16 entranceIndex, u8 isReversedEntrance) { SendPacket_EntranceDiscovered(entranceIndex); });
 
-    HOOK_FOR_ID(OnBossDefeat, isConnected, ACTOR_BOSS_GANON2, [&](void* refActor) {
-        SendPacket_GameComplete();
-    });
+    HOOK_FOR_ID(OnBossDefeat, isConnected, ACTOR_BOSS_GANON2, [&](void* refActor) { SendPacket_GameComplete(); });
 
     HOOK(OnItemReceive, isConnected, [&](GetItemEntry itemEntry) {
         // Handle vanilla dungeon items a bit differently
-        if (itemEntry.modIndex == MOD_NONE && (itemEntry.itemId >= ITEM_KEY_BOSS && itemEntry.itemId <= ITEM_KEY_SMALL)) {
+        if (itemEntry.modIndex == MOD_NONE &&
+            (itemEntry.itemId >= ITEM_KEY_BOSS && itemEntry.itemId <= ITEM_KEY_SMALL)) {
             SendPacket_UpdateDungeonItems();
             return;
         }
@@ -250,9 +257,9 @@ void Anchor::RefreshClientActors() {
         }
 
         actorIndexToClientId.push_back(clientId);
-        // We are using a hook `ShouldActorInit` to override the init/update/draw/destroy functions of the Player we spawn
-        // We quickly store a mapping of "index" to clientId, then within the init function we use this to get the clientId
-        // and store it on player->zTargetActiveTimer (unused s32 for the dummy) for convenience
+        // We are using a hook `ShouldActorInit` to override the init/update/draw/destroy functions of the Player we
+        // spawn We quickly store a mapping of "index" to clientId, then within the init function we use this to get the
+        // clientId and store it on player->zTargetActiveTimer (unused s32 for the dummy) for convenience
         auto dummy = Actor_Spawn(&gPlayState->actorCtx, gPlayState, ACTOR_PLAYER, client.posRot.pos.x,
                                  client.posRot.pos.y, client.posRot.pos.z, client.posRot.rot.x, client.posRot.rot.y,
                                  client.posRot.rot.z, actorIndexToClientId.size() - 1, false);
@@ -296,7 +303,7 @@ void AnchorCustomWidget(WidgetInfo& info) {
     std::string anchorRoomId = CVarGetString(CVAR_REMOTE_ANCHOR("RoomId"), "");
     std::string anchorName = CVarGetString(CVAR_REMOTE_ANCHOR("Name"), "");
     bool isFormValid = !SohUtils::IsStringEmpty(host) && port > 1024 && port < 65535 &&
-        !SohUtils::IsStringEmpty(anchorRoomId) && !SohUtils::IsStringEmpty(anchorName);
+                       !SohUtils::IsStringEmpty(anchorRoomId) && !SohUtils::IsStringEmpty(anchorName);
 
     ImGui::SeparatorText("Anchor");
     // UIWidgets::Tooltip("Anchor Stuff");
@@ -306,45 +313,45 @@ void AnchorCustomWidget(WidgetInfo& info) {
 
     ImGui::BeginDisabled(anchor->isEnabled);
     ImGui::Text("Host & Port");
-    if (UIWidgets::InputString("##Host", &host)) {
+    if (UIWidgets::InputString("##Host", &host,
+                               UIWidgets::InputOptions()
+                                   .Size(ImGui::GetContentRegionAvail() -
+                                         ImVec2((ImGui::GetFontSize() * 5 + ImGui::GetStyle().ItemSpacing.x), 0))
+                                   .Color(THEME_COLOR))) {
         CVarSetString(CVAR_REMOTE_ANCHOR("Host"), host.c_str());
         Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesNextFrame();
     }
 
     ImGui::SameLine();
+    UIWidgets::PushStyleInput(THEME_COLOR);
     ImGui::SetNextItemWidth(ImGui::GetFontSize() * 5);
     if (ImGui::InputScalar("##Port", ImGuiDataType_U16, &port)) {
         CVarSetInteger(CVAR_REMOTE_ANCHOR("Port"), port);
         Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesNextFrame();
     }
+    UIWidgets::PopStyleInput();
 
     ImGui::Text("Tunic Color & Name");
     static Color_RGBA8 color = CVarGetColor(CVAR_REMOTE_ANCHOR("Color"), { 100, 255, 100, 255 });
     static ImVec4 colorVec = ImVec4(color.r / 255.0, color.g / 255.0, color.b / 255.0, 1);
-    if (ImGui::ColorEdit3("##Color", (float*)&colorVec,
-                          ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel)) {
-        color.r = colorVec.x * 255.0;
-        color.g = colorVec.y * 255.0;
-        color.b = colorVec.z * 255.0;
-
-        CVarSetColor(CVAR_REMOTE_ANCHOR("Color"), color);
-        Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesNextFrame();
-    }
+    UIWidgets::CVarColorPicker("##TunicColor", CVAR_REMOTE_ANCHOR("Color"), { 100, 255, 100, 255 }, false,
+                               ImGuiColorEditFlags_NoLabel, THEME_COLOR);
     ImGui::SameLine();
     ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
-    if (UIWidgets::InputString("##Name", &anchorName)) {
+    if (UIWidgets::InputString("##Name", &anchorName, UIWidgets::InputOptions().Color(THEME_COLOR))) {
         CVarSetString(CVAR_REMOTE_ANCHOR("Name"), anchorName.c_str());
         Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesNextFrame();
     }
     ImGui::Text("Room ID");
     ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
-    if (UIWidgets::InputString("##RoomId", &anchorRoomId, UIWidgets::InputOptions().IsSecret(anchor->isEnabled))) {
+    if (UIWidgets::InputString("##RoomId", &anchorRoomId,
+                               UIWidgets::InputOptions().IsSecret(anchor->isEnabled).Color(THEME_COLOR))) {
         CVarSetString(CVAR_REMOTE_ANCHOR("RoomId"), anchorRoomId.c_str());
         Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesNextFrame();
     }
     ImGui::Text("Team ID (Items & Flags Shared)");
     ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
-    if (UIWidgets::InputString("##TeamId", &anchorTeamId)) {
+    if (UIWidgets::InputString("##TeamId", &anchorTeamId, UIWidgets::InputOptions().Color(THEME_COLOR))) {
         CVarSetString(CVAR_REMOTE_ANCHOR("TeamId"), anchorTeamId.c_str());
         Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesNextFrame();
     }
@@ -354,6 +361,7 @@ void AnchorCustomWidget(WidgetInfo& info) {
 
     ImGui::BeginDisabled(!isFormValid);
     const char* buttonLabel = anchor->isEnabled ? "Disable" : "Enable";
+    UIWidgets::PushStyleButton(THEME_COLOR);
     if (ImGui::Button(buttonLabel, ImVec2(-1.0f, 0.0f))) {
         if (anchor->isEnabled) {
             CVarClear(CVAR_REMOTE_ANCHOR("Enabled"));
@@ -365,6 +373,7 @@ void AnchorCustomWidget(WidgetInfo& info) {
             anchor->Enable();
         }
     }
+    UIWidgets::PopStyleButton();
     ImGui::EndDisabled();
 
     if (anchor->isEnabled) {
@@ -373,26 +382,44 @@ void AnchorCustomWidget(WidgetInfo& info) {
             ImGui::Text("Connected");
 
             if (anchor->roomState.ownerClientId == anchor->GetOwnClientID()) {
-                if (ImGui::BeginMenu("Room Settings")) {
-                    if (UIWidgets::CVarCombobox("PvP Mode:" , CVAR_REMOTE_ANCHOR("RoomSettings.PvpMode"),
-                        pvpModes, UIWidgets::ComboboxOptions().DefaultIndex(1).LabelPosition(UIWidgets::LabelPositions::Above))) {
-                        anchor->SendPacket_UpdateRoomState();
-                    }
-                    if (UIWidgets::CVarCombobox("Show Locations For:", CVAR_REMOTE_ANCHOR("RoomSettings.ShowLocationsMode"),
-                        showLocationsModes, UIWidgets::ComboboxOptions().DefaultIndex(1).LabelPosition(UIWidgets::LabelPositions::Above))) {
-                        anchor->SendPacket_UpdateRoomState();
-                    }
-                    if (UIWidgets::CVarCombobox("Allow Teleporting To:", CVAR_REMOTE_ANCHOR("RoomSettings.TeleportMode"),
-                        teleportModes, UIWidgets::ComboboxOptions().DefaultIndex(1).LabelPosition(UIWidgets::LabelPositions::Above))) {
-                        anchor->SendPacket_UpdateRoomState();
-                    }
-                    ImGui::EndMenu();
+                // if (ImGui::BeginMenu("Room Settings")) {
+                if (UIWidgets::CVarCombobox("PvP Mode:", CVAR_REMOTE_ANCHOR("RoomSettings.PvpMode"), pvpModes,
+                                            UIWidgets::ComboboxOptions()
+                                                .DefaultIndex(1)
+                                                .LabelPosition(UIWidgets::LabelPositions::Above)
+                                                .Color(THEME_COLOR))) {
+                    anchor->SendPacket_UpdateRoomState();
                 }
+                if (UIWidgets::CVarCombobox("Show Locations For:", CVAR_REMOTE_ANCHOR("RoomSettings.ShowLocationsMode"),
+                                            showLocationsModes,
+                                            UIWidgets::ComboboxOptions()
+                                                .DefaultIndex(1)
+                                                .LabelPosition(UIWidgets::LabelPositions::Above)
+                                                .Color(THEME_COLOR))) {
+                    anchor->SendPacket_UpdateRoomState();
+                }
+                if (UIWidgets::CVarCombobox("Allow Teleporting To:", CVAR_REMOTE_ANCHOR("RoomSettings.TeleportMode"),
+                                            teleportModes,
+                                            UIWidgets::ComboboxOptions()
+                                                .DefaultIndex(1)
+                                                .LabelPosition(UIWidgets::LabelPositions::Above)
+                                                .Color(THEME_COLOR))) {
+                    anchor->SendPacket_UpdateRoomState();
+                }
+                // ImGui::EndMenu();
+                //}
             }
 
-            if (ImGui::Button("Request Team State", ImVec2(ImGui::GetContentRegionAvail().x - 25.0f, 0.0f))) {
+            UIWidgets::PushStyleButton(THEME_COLOR);
+            ImVec2 requestWidth = { 0.0f, 0.0f };
+            if (anchor->roomState.ownerClientId == anchor->GetOwnClientID()) {
+                requestWidth.x = ImGui::GetContentRegionAvail().x - ImGui::CalcTextSize(ICON_FA_TRASH).x -
+                                 ImGui::GetStyle().ItemSpacing.x - (ImGui::GetStyle().FramePadding.x * 2.0f);
+            }
+            if (ImGui::Button("Request Team State", requestWidth)) {
                 anchor->SendPacket_RequestTeamState();
             }
+
             if (anchor->roomState.ownerClientId == anchor->GetOwnClientID()) {
                 ImGui::SameLine();
                 if (ImGui::Button(ICON_FA_TRASH)) {
@@ -400,6 +427,7 @@ void AnchorCustomWidget(WidgetInfo& info) {
                 }
                 UIWidgets::Tooltip("Clear Team State");
             }
+            UIWidgets::PopStyleButton();
         } else {
             ImGui::Text("Connecting...");
         }

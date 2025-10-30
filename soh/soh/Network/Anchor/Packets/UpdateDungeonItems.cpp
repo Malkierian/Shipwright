@@ -8,8 +8,8 @@
 
 /**
  * UPDATE_DUNGEON_ITEMS
- * 
- * This is for 2 things, first is updating the dungeon items in vanilla saves, and second is 
+ *
+ * This is for 2 things, first is updating the dungeon items in vanilla saves, and second is
  * for ensuring the amount of keys used is synced as players are using them.
  */
 

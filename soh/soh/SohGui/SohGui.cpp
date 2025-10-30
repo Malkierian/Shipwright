@@ -38,14 +38,6 @@
 #include "soh/Network/Anchor/Anchor.h"
 #endif
 
-bool isBetaQuestEnabled = false;
-
-extern "C" {
-    void enableBetaQuest() { isBetaQuestEnabled = true; }
-    void disableBetaQuest() { isBetaQuestEnabled = false; }
-}
-
-
 namespace SohGui {
 
 // MARK: - Properties
@@ -109,7 +101,7 @@ std::shared_ptr<RandomizerSettingsWindow> mRandomizerSettingsWindow;
 std::shared_ptr<SohModalWindow> mModalWindow;
 std::shared_ptr<Notification::Window> mNotificationWindow;
 std::shared_ptr<TimeDisplayWindow> mTimeDisplayWindow;
-#ifdef ENABLE_REMOTE_CONTROL    
+#ifdef ENABLE_REMOTE_CONTROL
 std::shared_ptr<AnchorRoomWindow> mAnchorRoomWindow;
 #endif
 
@@ -220,8 +212,8 @@ void SetupGuiElements() {
     mTimeDisplayWindow = std::make_shared<TimeDisplayWindow>(CVAR_WINDOW("TimeDisplayEnabled"), "Additional Timers");
     gui->AddGuiWindow(mTimeDisplayWindow);
 #ifdef ENABLE_REMOTE_CONTROL
-        mAnchorRoomWindow = std::make_shared<AnchorRoomWindow>(CVAR_WINDOW("AnchorRoom"), "Anchor Room");
-        gui->AddGuiWindow(mAnchorRoomWindow);
+    mAnchorRoomWindow = std::make_shared<AnchorRoomWindow>(CVAR_WINDOW("AnchorRoom"), "Anchor Room");
+    gui->AddGuiWindow(mAnchorRoomWindow);
 #endif
 }
 

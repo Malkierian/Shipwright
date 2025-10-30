@@ -8,7 +8,7 @@
 
 /**
  * SET_FLAG
- * 
+ *
  * Fired when a flag is set in the save context
  */
 

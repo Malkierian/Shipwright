@@ -10,7 +10,7 @@ static bool isResultOfHandling = false;
 
 /**
  * SET_CHECK_STATUS
- * 
+ *
  * Fired when a check status is updated or skipped
  */
 

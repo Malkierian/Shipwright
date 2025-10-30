@@ -14,8 +14,8 @@ void AnchorRoomWindow::Draw() {
         return;
     }
 
-
-    ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0, 0, 0, CVarGetFloat(CVAR_SETTING("Notifications.BgOpacity"), 0.5f)));
+    ImGui::PushStyleColor(ImGuiCol_WindowBg,
+                          ImVec4(0, 0, 0, CVarGetFloat(CVAR_SETTING("Notifications.BgOpacity"), 0.5f)));
     ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0, 0, 0, 0));
     ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 4.0f);
 
@@ -23,15 +23,9 @@ void AnchorRoomWindow::Draw() {
     ImGui::SetNextWindowViewport(vp->ID);
 
     ImGui::Begin("Anchor Room", nullptr,
-        ImGuiWindowFlags_AlwaysAutoResize |
-        ImGuiWindowFlags_NoNav |
-        ImGuiWindowFlags_NoFocusOnAppearing |
-        ImGuiWindowFlags_NoResize |
-        ImGuiWindowFlags_NoDocking |
-        ImGuiWindowFlags_NoTitleBar |
-        ImGuiWindowFlags_NoScrollWithMouse |
-        ImGuiWindowFlags_NoScrollbar
-    );
+                 ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoNav | ImGuiWindowFlags_NoFocusOnAppearing |
+                     ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoTitleBar |
+                     ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoScrollbar);
 
     // First build a list of teams
     std::set<std::string> teams;
@@ -66,17 +60,19 @@ void AnchorRoomWindow::Draw() {
                 ImGui::Text("%s", client.name.c_str());
             }
 
-            if (Anchor::Instance->roomState.showLocationsMode == 2 || (Anchor::Instance->roomState.showLocationsMode == 1 && isOwnTeam)) {
+            if (Anchor::Instance->roomState.showLocationsMode == 2 ||
+                (Anchor::Instance->roomState.showLocationsMode == 1 && isOwnTeam)) {
                 if ((client.self ? Anchor::Instance->IsSaveLoaded() : client.isSaveLoaded)) {
                     ImGui::SameLine();
-                    ImGui::TextColored(ImVec4(1, 1, 1, 0.5f), "- %s", SohUtils::GetSceneName(client.self ? gPlayState->sceneNum : client.sceneNum).c_str());
+                    ImGui::TextColored(
+                        ImVec4(1, 1, 1, 0.5f), "- %s",
+                        SohUtils::GetSceneName(client.self ? gPlayState->sceneNum : client.sceneNum).c_str());
                 }
             }
 
-            if (
-                Anchor::Instance->IsSaveLoaded() && !client.self && client.isSaveLoaded && 
-                (Anchor::Instance->roomState.teleportMode == 2 || (Anchor::Instance->roomState.teleportMode == 1 && isOwnTeam))
-            ) {
+            if (Anchor::Instance->IsSaveLoaded() && !client.self && client.isSaveLoaded &&
+                (Anchor::Instance->roomState.teleportMode == 2 ||
+                 (Anchor::Instance->roomState.teleportMode == 1 && isOwnTeam))) {
                 ImGui::SameLine();
                 ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
                 if (ImGui::Button(ICON_FA_LOCATION_ARROW, ImVec2(15.0f, 15.0f))) {
@@ -97,7 +93,8 @@ void AnchorRoomWindow::Draw() {
                 }
             }
             uint32_t seed = IS_RANDO ? Rando::Context::GetInstance()->GetSeed() : 0;
-            if (client.isSaveLoaded && Anchor::Instance->IsSaveLoaded() && client.seed != seed && client.online && !client.self) {
+            if (client.isSaveLoaded && Anchor::Instance->IsSaveLoaded() && client.seed != seed && client.online &&
+                !client.self) {
                 ImGui::SameLine();
                 ImGui::TextColored(ImVec4(1, 0, 0, 1), ICON_FA_EXCLAMATION_TRIANGLE);
                 if (ImGui::IsItemHovered()) {
@@ -111,7 +108,6 @@ void AnchorRoomWindow::Draw() {
             ImGui::PopID();
         }
     }
-
 
     ImGui::End();
 

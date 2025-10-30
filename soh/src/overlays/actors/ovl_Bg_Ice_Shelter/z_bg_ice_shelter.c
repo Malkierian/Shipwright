@@ -338,8 +338,9 @@ void func_8089107C(BgIceShelter* this, PlayState* play) {
     if ((this->cylinder1.base.acFlags & AC_HIT) || Flags_GetSwitch(play, this->dyna.actor.params & 0x3F)) {
         this->cylinder1.base.acFlags &= ~AC_HIT;
 
-        if (((this->cylinder1.base.ac != NULL) && (this->cylinder1.base.ac->id == ACTOR_EN_ICE_HONO)) || Flags_GetSwitch(play, this->dyna.actor.params & 0x3F)) {
-    // #endregion
+        if (((this->cylinder1.base.ac != NULL) && (this->cylinder1.base.ac->id == ACTOR_EN_ICE_HONO)) ||
+            Flags_GetSwitch(play, this->dyna.actor.params & 0x3F)) {
+            // #endregion
             if (type == 4) {
                 if (this->dyna.actor.parent != NULL) {
                     this->dyna.actor.parent->freezeTimer = 50;

@@ -8,12 +8,8 @@
 #include "soh/Enhancements/randomizer/3drando/random.hpp"
 
 const std::string gameCompleteMessages[] = {
-    "killed Ganon",
-    "saved Zelda",
-    "proved their Courage",
-    "collected the Triforce",
-    "is the Hero of Time",
-    "proved Mido wrong",
+    "killed Ganon",           "saved Zelda",         "proved their Courage",
+    "collected the Triforce", "is the Hero of Time", "proved Mido wrong",
 };
 
 /**

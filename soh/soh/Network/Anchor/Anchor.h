@@ -54,9 +54,9 @@ typedef struct {
 
 typedef struct {
     uint32_t ownerClientId;
-    u8 pvpMode; // 0 = off, 1 = on, 2 = on with friendly fire
+    u8 pvpMode;           // 0 = off, 1 = on, 2 = on with friendly fire
     u8 showLocationsMode; // 0 = none, 1 = team, 2 = all
-    u8 teleportMode; // 0 = off, 1 = team, 2 = all
+    u8 teleportMode;      // 0 = off, 1 = team, 2 = all
 } RoomState;
 
 class Anchor : public Network {
@@ -166,10 +166,10 @@ class AnchorRoomWindow : public Ship::GuiWindow {
   public:
     using GuiWindow::GuiWindow;
 
-    void InitElement() override {};
-    void DrawElement() override {};
+    void InitElement() override{};
+    void DrawElement() override{};
     void Draw() override;
-    void UpdateElement() override {};
+    void UpdateElement() override{};
 };
 
 #endif // __cplusplus

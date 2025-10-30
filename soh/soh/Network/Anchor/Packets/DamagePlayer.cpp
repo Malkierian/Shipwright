@@ -56,7 +56,8 @@ void Anchor::HandlePacket_DamagePlayer(nlohmann::json payload) {
         return;
     }
 
-    func_80837C0C(gPlayState, self, damageEffect, 4.0f, 5.0f, Actor_WorldYawTowardActor(&otherPlayer->actor, &self->actor), 20);
+    func_80837C0C(gPlayState, self, damageEffect, 4.0f, 5.0f,
+                  Actor_WorldYawTowardActor(&otherPlayer->actor, &self->actor), 20);
 }
 
 #endif // ENABLE_REMOTE_CONTROL

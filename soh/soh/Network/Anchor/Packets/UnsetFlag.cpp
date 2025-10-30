@@ -8,7 +8,7 @@
 
 /**
  * UNSET_FLAG
- * 
+ *
  * Fired when a flag is unset in the save context
  */
 
@@ -49,7 +49,6 @@ void Anchor::HandlePacket_UnsetFlag(nlohmann::json payload) {
         effect->parameters[2] = payload["flag"].get<int16_t>();
         effect->Apply();
     }
-
 }
 
 #endif // ENABLE_REMOTE_CONTROL

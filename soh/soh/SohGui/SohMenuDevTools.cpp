@@ -112,8 +112,14 @@ void SohMenu::AddMenuDevTools() {
                               " This does not affect the log file output")
                      .ComboMap(logLevels))
         .Callback([](WidgetInfo& info) {
-            Ship::Context::GetInstance()->GetLogger()->set_level(
-                (spdlog::level::level_enum)CVarGetInteger(CVAR_DEVELOPER_TOOLS("LogLevel"), DEBUG_LOG_DEBUG));
+#if (_DEBUG)
+            int32_t defaultLogLevel = 0;
+#else
+            int32_t defaultLogLevel = 2;
+#endif
+            auto logLevel = static_cast<spdlog::level::level_enum>(CVarGetInteger(CVAR_DEVELOPER_TOOLS("LogLevel"), defaultLogLevel));
+            Ship::Context::GetInstance()->GetLogger()->set_level(logLevel);
+            Ship::Context::GetInstance()->GetLogger()->flush_on(logLevel);
         })
         .PreFunc([](WidgetInfo& info) { info.isHidden = mSohMenu->disabledMap.at(DISABLE_FOR_DEBUG_MODE_OFF).active; });
 

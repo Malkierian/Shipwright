@@ -321,13 +321,12 @@ void OTRGlobals::Initialize() {
     context->InitConsole();
 
 #if (_DEBUG)
-    int32_t defaultLogLevel = 0;
+    int defaultLogLevel = 0;
 #else
-    int32_t defaultLogLevel = 2;
+    int defaultLogLevel = 2;
 #endif
-    auto logLevel = static_cast<spdlog::level::level_enum>(CVarGetInteger(CVAR_DEVELOPER_TOOLS("LogLevel"), defaultLogLevel));
-    Ship::Context::GetInstance()->GetLogger()->set_level(logLevel);
-    Ship::Context::GetInstance()->GetLogger()->flush_on(logLevel);
+    Ship::Context::GetInstance()->GetLogger()->set_level(
+        (spdlog::level::level_enum)CVarGetInteger(CVAR_DEVELOPER_TOOLS("LogLevel"), defaultLogLevel));
     Ship::Context::GetInstance()->GetLogger()->set_pattern("[%H:%M:%S.%e] [%s:%#] [%l] %v");
 
     auto sohInputEditorWindow =

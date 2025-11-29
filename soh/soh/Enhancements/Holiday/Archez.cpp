@@ -117,5 +117,5 @@ static void RegisterMenu() {
             "Overrides most charactor skeletons with snow balls to make them look like Snow Golems"));
 }
 
-static RegisterShipInitFunc initFunc(OnConfigurationChanged);
+static RegisterShipInitFunc initFunc(OnConfigurationChanged, { CVAR("SnowGolems") });
 static RegisterMenuInitFunc menuInitFunc(RegisterMenu);

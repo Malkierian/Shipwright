@@ -69,5 +69,5 @@ static void RegisterMenu() {
         .Options(UIWidgets::CheckboxOptions().Tooltip("Don't you dare talk to them."));
 }
 
-static RegisterShipInitFunc initFunc(OnConfigurationChanged);
+static RegisterShipInitFunc initFunc(OnConfigurationChanged, { CVAR("EvilGossipStone") });
 static RegisterMenuInitFunc menuInitFunc(RegisterMenu);

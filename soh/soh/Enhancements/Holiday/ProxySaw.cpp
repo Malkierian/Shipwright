@@ -222,5 +222,6 @@ static void RegisterMenu() {
     SohGui::mSohMenu->AddWidget(path, "Super Bonk", WIDGET_CVAR_CHECKBOX).CVar(CVAR("SuperBonk"));
 }
 
-static RegisterShipInitFunc initFunc(OnConfigurationChanged);
+static RegisterShipInitFunc initFunc(OnConfigurationChanged, { CVAR("Snowballs"), CVAR("Icebergs"),
+                                                               CVAR("DownTheRabbitHole"), CVAR("SuperBonk") });
 static RegisterMenuInitFunc menuInitFunc(RegisterMenu);

@@ -221,5 +221,8 @@ static void RegisterMenu() {
         .Options(UIWidgets::CheckboxOptions().Tooltip("Ever persistent hailstorm throughout hyrule"));
 }
 
-static RegisterShipInitFunc initFunc(OnConfigurationChanged);
+static RegisterShipInitFunc initFunc(OnConfigurationChanged, {
+                                                                 CVAR("Penguins"),
+                                                                 CVAR("Hailstorm"),
+                                                             });
 static RegisterMenuInitFunc menuInitFunc(RegisterMenu);

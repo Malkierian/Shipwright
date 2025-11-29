@@ -131,5 +131,5 @@ static void RegisterMenu() {
                                                       "attempt to convince Ganon to join you instead."));
 }
 
-static RegisterShipInitFunc initFunc(OnConfigurationChanged);
+static RegisterShipInitFunc initFunc(OnConfigurationChanged, { CVAR("GanonDatingSim") });
 static RegisterMenuInitFunc menuInitFunc(RegisterMenu);

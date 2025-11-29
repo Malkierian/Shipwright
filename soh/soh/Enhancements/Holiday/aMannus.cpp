@@ -68,5 +68,5 @@ static void RegisterMenu() {
             "Using Nayru's Love will now act as Roc's Feather instead! No magic required."));
 }
 
-static RegisterShipInitFunc initFunc(OnConfigurationChanged);
+static RegisterShipInitFunc initFunc(OnConfigurationChanged, { CVAR("RocsFeather") });
 static RegisterMenuInitFunc menuInitFunc(RegisterMenu);

@@ -123,5 +123,5 @@ static void RegisterMenu() {
         .Options(UIWidgets::CheckboxOptions().Tooltip("Equip bombs over an already equipped Bow to shoot bomb arrows"));
 }
 
-static RegisterShipInitFunc initFunc(OnConfigurationChanged);
+static RegisterShipInitFunc initFunc(OnConfigurationChanged, { CVAR("BombArrows.Enabled") });
 static RegisterMenuInitFunc menuInitFunc(RegisterMenu);

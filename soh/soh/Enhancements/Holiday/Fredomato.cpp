@@ -525,5 +525,8 @@ static void RegisterMenu() {
         .Options(UIWidgets::IntSliderOptions().DefaultValue(1000).Min(40).Max(2000));
 }
 
-static RegisterShipInitFunc initFunc(OnConfigurationChanged);
+static RegisterShipInitFunc initFunc(OnConfigurationChanged, {
+                                                                 CVAR("FredsQuest.Enabled"),
+                                                                 CVAR("RandomTraps.Enabled"),
+                                                             });
 static RegisterMenuInitFunc menuInitFunc(RegisterMenu);

@@ -656,20 +656,6 @@ void EnDu_PostLimbDraw(PlayState* play, s32 limbIndex, Gfx** dList, Vec3s* rot, 
     if (limbIndex == 16) {
         Matrix_MultVec3f(&D_809FF40C, &this->actor.focus.pos);
     }
-
-    if (CVarGetInteger(CVAR_GENERAL("LetItSnow"), 0)) {
-        if (limbIndex == 17) {
-            OPEN_DISPS(play->state.gfxCtx);
-            Matrix_Push();
-            Matrix_RotateZYX(13062, -1329, -15499, MTXMODE_APPLY);
-            Matrix_Translate(945.946f, -297.297f, 608.108f, MTXMODE_APPLY);
-            Matrix_Scale(1.217f, 1.217f, 1.217f, MTXMODE_APPLY);
-            gSPMatrix(POLY_OPA_DISP++, MATRIX_NEWMTX(play->state.gfxCtx), G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-            gSPDisplayList(POLY_OPA_DISP++, gSantaHatGenericDL);
-            Matrix_Pop();
-            CLOSE_DISPS(play->state.gfxCtx);
-        }
-    }
 }
 
 void EnDu_Draw(Actor* thisx, PlayState* play) {

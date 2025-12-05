@@ -1137,7 +1137,7 @@ s32 EnNiw_OverrideLimbDraw(PlayState* play, s32 limbIndex, Gfx** dList, Vec3f* p
 s32 EnNiw_PostLimbDraw(PlayState* play, s32 limbIndex, Gfx** dList, Vec3s* rot, void* thisx) {
     EnNiw* this = (EnNiw*)thisx;
 
-    if (CVarGetInteger(CVAR_GENERAL("LetItSnow"), 0)) {
+    if (CVarGetInteger("gHoliday.Visual.Hats", 0)) {
         if (limbIndex == 15) {
             OPEN_DISPS(play->state.gfxCtx);
             Matrix_Push();

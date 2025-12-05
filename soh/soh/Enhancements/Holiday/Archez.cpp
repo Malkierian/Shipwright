@@ -15,8 +15,7 @@ extern "C" {
 extern PlayState* gPlayState;
 }
 
-#define AUTHOR "Archez"
-#define CVAR(v) "gHoliday." AUTHOR "." v
+#define CVAR(v) "gHoliday.Gameplay." v
 
 static bool sSkipNextLimb = false;
 static bool sSkipNextSkeleton = false;
@@ -108,8 +107,7 @@ static void OnConfigurationChanged() {
 }
 
 static void RegisterMenu() {
-    WidgetPath path = { "Holiday", AUTHOR, SECTION_COLUMN_1 };
-    SohGui::mSohMenu->AddSidebarEntry("Holiday", AUTHOR, SECTION_COLUMN_2);
+    WidgetPath path = { "Holiday", "Visual", SECTION_COLUMN_1 };
     SohGui::mSohMenu->AddWidget(path, "Snow Golems", WIDGET_CVAR_CHECKBOX)
         .CVar(CVAR("SnowGolems"))
         .Callback([](WidgetInfo& info) { OnConfigurationChanged(); })

@@ -12,8 +12,7 @@ extern "C" {
 extern PlayState* gPlayState;
 }
 
-#define AUTHOR "AGreenSpoon"
-#define CVAR(v) "gHoliday." AUTHOR "." v
+#define CVAR(v) "gHoliday.Gameplay." v
 
 void EnGs_Evil(EnGs* enGs, PlayState* play) {
     Player* player = GET_PLAYER(gPlayState);
@@ -62,11 +61,10 @@ static void OnConfigurationChanged() {
 }
 
 static void RegisterMenu() {
-    WidgetPath path = { "Holiday", AUTHOR, SECTION_COLUMN_1 };
-    SohGui::mSohMenu->AddSidebarEntry("Holiday", AUTHOR, SECTION_COLUMN_2);
+    WidgetPath path = { "Holiday", "Gameplay", SECTION_COLUMN_1 };
     SohGui::mSohMenu->AddWidget(path, "Evil Gossip Stone", WIDGET_CVAR_CHECKBOX)
         .CVar(CVAR("EvilGossipStone"))
-        .Options(UIWidgets::CheckboxOptions().Tooltip("Don't you dare talk to them."));
+        .Options(UIWidgets::CheckboxOptions().Tooltip("Gossip stones become hostile after being spoken to."));
 }
 
 static RegisterShipInitFunc initFunc(OnConfigurationChanged, { CVAR("EvilGossipStone") });

@@ -10,9 +10,7 @@ extern PlayState* gPlayState;
 // TODO: Include anything you need here from C land
 }
 
-// TODO: Change this to YourName
-#define AUTHOR "LL"
-#define CVAR(v) "gHoliday." AUTHOR "." v
+#define CVAR(v) "gHoliday.Gameplay." v
 
 static ImVec4 customColorZero = RAINBOW_PRESETS[0][0];
 static ImVec4 customColorOne = RAINBOW_PRESETS[0][1];
@@ -54,8 +52,7 @@ static void OnConfigurationChanged() {
 }
 
 static void RegisterMenu() {
-    WidgetPath path = { "Holiday", AUTHOR, SECTION_COLUMN_1 };
-    SohGui::mSohMenu->AddSidebarEntry("Holiday", AUTHOR, SECTION_COLUMN_2);
+    WidgetPath path = { "Holiday", "Gameplay", SECTION_COLUMN_1 };
 
     SohGui::mSohMenu->AddWidget(path, "Custom Rainbows", WIDGET_CVAR_CHECKBOX).CVar(CVAR("EnableCustomRainbows"));
 

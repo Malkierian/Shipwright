@@ -1,7 +1,6 @@
 #include "Holiday.hpp"
 
-#define AUTHOR "aMannus"
-#define CVAR(v) "gHoliday." AUTHOR "." v
+#define CVAR(v) "gHoliday.Gameplay." v
 
 extern "C" {
 #include <z64.h>;
@@ -59,8 +58,7 @@ static void OnConfigurationChanged() {
 }
 
 static void RegisterMenu() {
-    WidgetPath path = { "Holiday", AUTHOR, SECTION_COLUMN_1 };
-    SohGui::mSohMenu->AddSidebarEntry("Holiday", AUTHOR, SECTION_COLUMN_2);
+    WidgetPath path = { "Holiday", "Gameplay", SECTION_COLUMN_1 };
 
     SohGui::mSohMenu->AddWidget(path, "Roc's Feather", WIDGET_CVAR_CHECKBOX)
         .CVar(CVAR("RocsFeather"))

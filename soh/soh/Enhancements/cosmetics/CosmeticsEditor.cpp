@@ -615,23 +615,6 @@ void CosmeticsUpdateTick() {
     5. GFX Command: The GFX command you want to insert
 */
 void ApplyOrResetCustomGfxPatches(bool manualChange) {
-    if (manualChange) {
-        PATCH_GFX(object_wood02_DL_007968, "Tree1", "gLetItSnow", 17, gsDPSetPrimColor(0, 0, 255, 255, 255, 255));
-        PATCH_GFX(object_wood02_DL_000090, "Tree2", "gLetItSnow", 17, gsDPSetPrimColor(0, 0, 200, 255, 255, 255));
-        PATCH_GFX(object_wood02_DL_000340, "Tree3", "gLetItSnow", 17, gsDPSetPrimColor(0, 0, 255, 255, 255, 255));
-        PATCH_GFX(object_wood02_DL_000340, "Tree4", "gLetItSnow", 24, gsDPSetPrimColor(0, 0, 255, 255, 255, 255));
-        PATCH_GFX(spot00_room_0DL_0139A8, "Path1", "gLetItSnow", 23, gsDPSetPrimColor(0, 0, 100, 150, 255, 60));
-        PATCH_GFX(spot00_room_0DL_013250, "Path2", "gLetItSnow", 23, gsDPSetPrimColor(0, 0, 100, 150, 255, 60));
-        PATCH_GFX(spot00_room_0DL_0143C8, "Path3", "gLetItSnow", 23, gsDPSetPrimColor(0, 0, 100, 150, 255, 60));
-        PATCH_GFX(spot04_room_0DL_018048, "Path4", "gLetItSnow", 24, gsDPSetPrimColor(0, 0, 100, 150, 255, 60));
-        PATCH_GFX(spot04_room_1DL_007810, "Path5", "gLetItSnow", 24, gsDPSetPrimColor(0, 0, 100, 150, 255, 60));
-        PATCH_GFX(spot20_room_0DL_0062D0, "Path6", "gLetItSnow", 23, gsDPSetPrimColor(0, 0, 200, 230, 255, 30));
-        PATCH_GFX(spot20_room_0DL_004460, "Path8", "gLetItSnow", 31, gsDPSetPrimColor(0, 0, 200, 230, 255, 30));
-        PATCH_GFX(spot20_room_0DL_004460, "Path9", "gLetItSnow", 118, gsDPSetPrimColor(0, 0, 200, 230, 255, 30));
-        PATCH_GFX(spot20_room_0DL_0065E8, "Path10", "gLetItSnow", 24, gsDPSetPrimColor(0, 0, 200, 230, 255, 30));
-        PATCH_GFX(spot03_room_0DL_00C4B0, "Path11", "gLetItSnow", 23, gsDPSetPrimColor(0, 0, 200, 230, 255, 30));
-        PATCH_GFX(spot15_room_0DL_00C748, "Path12", "gLetItSnow", 23, gsDPSetPrimColor(0, 0, 200, 230, 255, 30));
-    }
     static CosmeticOption& magicFaroresPrimary = cosmeticOptions.at("Magic.FaroresPrimary");
     if (manualChange || CVarGetInteger(magicFaroresPrimary.rainbowCvar, 0)) {
         Color_RGBA8 color = CVarGetColor(magicFaroresPrimary.valuesCvar, magicFaroresPrimary.defaultColor);
@@ -1937,14 +1920,6 @@ void Reset_Option_Double(const char* Button_Title, const char* name) {
 
 void DrawSillyTab() {
     ImGui::BeginDisabled(CVarGetInteger(CVAR_SETTING("DisableChanges"), 0));
-
-    UIWidgets::Separator(true, true, 2.0f, 2.0f);
-
-    UIWidgets::CVarCheckbox("Let It Snow", CVAR_GENERAL("LetItSnow"),
-                            UIWidgets::CheckboxOptions()
-                                .Color(THEME_COLOR)
-                                .Tooltip("Makes snow fall, changes chest texture colors to red and green, etc, for "
-                                         "December holidays.\nWill reset on restart outside of December 23-25."));
 
     UIWidgets::Separator(true, true, 2.0f, 2.0f);
 

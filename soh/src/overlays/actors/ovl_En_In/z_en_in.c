@@ -993,7 +993,7 @@ void EnIn_PostLimbDraw(PlayState* play, s32 limbIndex, Gfx** dList, Vec3s* rot, 
         gSPDisplayList(POLY_OPA_DISP++, gIngoChildEraPitchForkDL);
     }
 
-    if (CVarGetInteger(CVAR_GENERAL("LetItSnow"), 0)) {
+    if (CVarGetInteger("gHoliday.Visual.Hats", 0)) {
         if (limbIndex == 16) {
             Matrix_Push();
             Matrix_RotateZYX(-8192, -222, -11513, MTXMODE_APPLY);

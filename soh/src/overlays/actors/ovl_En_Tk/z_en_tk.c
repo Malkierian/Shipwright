@@ -730,7 +730,7 @@ void EnTk_PostLimbDraw(PlayState* play, s32 limbIndex, Gfx** dList, Vec3s* rot, 
         func_80B1D200(play);
     }
 
-    if (limbIndex == 16 && CVarGetInteger(CVAR_GENERAL("LetItSnow"), 0)) {
+    if (limbIndex == 16 && CVarGetInteger("gHoliday.Visual.Hats", 0)) {
         OPEN_DISPS(play->state.gfxCtx);
         Matrix_Push();
         Matrix_RotateZYX(10627, 3321, -13727, MTXMODE_APPLY);

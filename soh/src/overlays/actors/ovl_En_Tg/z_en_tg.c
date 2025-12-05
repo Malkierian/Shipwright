@@ -168,7 +168,7 @@ void EnTg_PostLimbDraw(PlayState* play, s32 limbIndex, Gfx** dList, Vec3s* rot, 
     if (limbIndex == 9) {
         // Place the target point at the guy's head instead of the center of the actor
         Matrix_MultVec3f(&targetOffset, &this->actor.focus.pos);
-        if (CVAR_GENERAL("LetItSnow")) {
+        if (CVarGetInteger("gHoliday.Visual.Hats", 0)) {
             OPEN_DISPS(play->state.gfxCtx);
             Matrix_Push();
             Matrix_RotateZYX(-3100, 1992, 2435, MTXMODE_APPLY);
@@ -180,7 +180,7 @@ void EnTg_PostLimbDraw(PlayState* play, s32 limbIndex, Gfx** dList, Vec3s* rot, 
             Matrix_Pop();
             CLOSE_DISPS(play->state.gfxCtx);
         }
-    } else if (limbIndex == 20 && CVarGetInteger(CVAR_GENERAL("LetItSnow"), 0)) {
+    } else if (limbIndex == 20 && CVarGetInteger("gHoliday.Visual.Hats", 0)) {
         OPEN_DISPS(play->state.gfxCtx);
         Matrix_Push();
         Matrix_RotateZYX(-2657, -1550, 1549, MTXMODE_APPLY);

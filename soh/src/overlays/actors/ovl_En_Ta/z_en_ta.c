@@ -1217,7 +1217,7 @@ void EnTa_PostLimbDraw(PlayState* play, s32 limbIndex, Gfx** dList, Vec3s* rot, 
         Matrix_MultVec3f(&D_80B16E7C, &this->actor.focus.pos);
     }
 
-    if (limbIndex == 15 && CVarGetInteger(CVAR_GENERAL("LetItSnow"), 0)) {
+    if (limbIndex == 15 && CVarGetInteger("gHoliday.Visual.Hats", 0)) {
         OPEN_DISPS(play->state.gfxCtx);
         Matrix_Push();
         Matrix_RotateZYX(11955, -1993, 221, MTXMODE_APPLY);

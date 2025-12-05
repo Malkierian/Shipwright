@@ -2429,7 +2429,7 @@ void EnOssan_DrawStickDirectionPrompts(PlayState* play, EnOssan* this) {
 s32 EnOssan_PostLimbDraw(PlayState* play, s32 limbIndex, Gfx** dList, Vec3s* rot, void* thisx) {
     EnOssan* this = (EnOssan*)thisx;
 
-    if (CVarGetInteger(CVAR_GENERAL("LetItSnow"), 0)) {
+    if (CVarGetInteger("gHoliday.Visual.Hats", 0)) {
         if (limbIndex == 8) {
             switch (this->actor.params) {
                 case 4: {
@@ -2529,7 +2529,7 @@ s32 EnOssan_OverrideLimbDrawKokiriShopkeeper(PlayState* play, s32 limbIndex, Gfx
         gSPSegment(POLY_OPA_DISP++, 0x0A, SEGMENTED_TO_VIRTUAL(sKokiriShopkeeperEyeTextures[this->eyeTextureIdx]));
     }
 
-    if (limbIndex == 15 && CVarGetInteger(CVAR_GENERAL("LetItSnow"), 0)) {
+    if (limbIndex == 15 && CVarGetInteger("gHoliday.Visual.Hats", 0)) {
         Matrix_Push();
         Matrix_RotateZYX(14169, -2215, 0, MTXMODE_APPLY);
         Matrix_Translate(1810.811f, -351.351f, -94.595f, MTXMODE_APPLY);

@@ -12,8 +12,7 @@ extern "C" {
 extern PlayState* gPlayState;
 }
 
-#define AUTHOR "NotProxySaw"
-#define CVAR(v) "gHoliday." AUTHOR "." v
+#define CVAR(v) "gHoliday.Gameplay." v
 
 int dialogIndex = 0;
 int affection = 0;
@@ -122,8 +121,7 @@ static void OnConfigurationChanged() {
 }
 
 static void RegisterMenu() {
-    WidgetPath path = { "Holiday", AUTHOR, SECTION_COLUMN_1 };
-    SohGui::mSohMenu->AddSidebarEntry("Holiday", AUTHOR, SECTION_COLUMN_2);
+    WidgetPath path = { "Holiday", "Gameplay", SECTION_COLUMN_1 };
 
     SohGui::mSohMenu->AddWidget(path, "Ganon Dating Sim", WIDGET_CVAR_CHECKBOX)
         .CVar(CVAR("GanonDatingSim"))

@@ -556,7 +556,7 @@ void EnSkb_PostLimbDraw(PlayState* play, s32 limbIndex, Gfx** dList, Vec3s* rot,
         BodyBreak_SetInfo(&this->bodyBreak, limbIndex, 0, 18, 18, dList, BODYBREAK_OBJECT_DEFAULT);
     }
 
-    if (limbIndex == 11 && CVarGetInteger(CVAR_GENERAL("LetItSnow"), 0)) {
+    if (limbIndex == 11 && CVarGetInteger("gHoliday.Visual.Hats", 0)) {
         OPEN_DISPS(play->state.gfxCtx);
         Matrix_Push();
         Matrix_RotateZYX(0, 0, -2215, MTXMODE_APPLY);

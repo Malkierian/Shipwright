@@ -1359,7 +1359,7 @@ void BossDodongo_PostLimbDraw(PlayState* play, s32 limbIndex, Gfx** dList, Vec3s
     }
     Collider_UpdateSpheres(limbIndex, &this->collider);
 
-    if (CVarGetInteger(CVAR_GENERAL("LetItSnow"), 0)) {
+    if (CVarGetInteger("gHoliday.Visual.Hats", 0)) {
         if (limbIndex == 7) {
             OPEN_DISPS(play->state.gfxCtx);
             Matrix_Push();

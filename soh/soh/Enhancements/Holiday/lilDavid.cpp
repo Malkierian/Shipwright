@@ -17,8 +17,7 @@ void func_809B45E0(EnArrow*, PlayState*);
 void func_809B4640(EnArrow*, PlayState*);
 }
 
-#define AUTHOR "lilDavid"
-#define CVAR(v) "gHoliday." AUTHOR "." v
+#define CVAR(v) "gHoliday.Gameplay." v
 
 static void OnConfigurationChanged() {
     if (!CVarGetInteger(CVAR("BombArrows.Enabled"), 0))
@@ -116,8 +115,7 @@ static void OnConfigurationChanged() {
 }
 
 static void RegisterMenu() {
-    WidgetPath path = { "Holiday", AUTHOR, SECTION_COLUMN_1 };
-    SohGui::mSohMenu->AddSidebarEntry("Holiday", AUTHOR, SECTION_COLUMN_2);
+    WidgetPath path = { "Holiday", "Gameplay", SECTION_COLUMN_1 };
     SohGui::mSohMenu->AddWidget(path, "Bomb Arrows", WIDGET_CVAR_CHECKBOX)
         .CVar(CVAR("BombArrows.Enabled"))
         .Options(UIWidgets::CheckboxOptions().Tooltip("Equip bombs over an already equipped Bow to shoot bomb arrows"));

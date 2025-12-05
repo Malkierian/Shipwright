@@ -955,7 +955,7 @@ void EnIk_PostLimbDraw3(PlayState* play, s32 limbIndex, Gfx** dList, Vec3s* rot,
             break;
     }
 
-    if (CVarGetInteger(CVAR_GENERAL("LetItSnow"), 0)) {
+    if (CVarGetInteger("gHoliday.Visual.Hats", 0)) {
         if (limbIndex == 11) {
             Matrix_Push();
             Matrix_RotateZYX(0, 0, -15056, MTXMODE_APPLY);
@@ -1249,7 +1249,7 @@ void EnIk_PostLimbDraw2(PlayState* play, s32 limbIndex, Gfx** dList, Vec3s* rot,
         } break;
     }
 
-    if (CVarGetInteger(CVAR_GENERAL("LetItSnow"), 0)) {
+    if (CVarGetInteger("gHoliday.Visual.Hats", 0)) {
         if (limbIndex == 11) {
             Matrix_Push();
             Matrix_RotateZYX(0, 0, -15056, MTXMODE_APPLY);
@@ -1408,7 +1408,7 @@ void EnIk_PostLimbDraw1(PlayState* play, s32 limbIndex, Gfx** dList, Vec3s* rot,
             break;
     }
 
-    if (CVarGetInteger(CVAR_GENERAL("LetItSnow"), 0)) {
+    if (CVarGetInteger("gHoliday.Visual.Hats", 0)) {
         if (limbIndex == 11) {
             Matrix_Push();
             Matrix_RotateZYX(0, 0, -15056, MTXMODE_APPLY);

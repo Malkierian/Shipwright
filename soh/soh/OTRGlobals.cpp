@@ -1282,6 +1282,22 @@ extern "C" void InitOTR(int argc, char* argv[]) {
     conf->RegisterVersionUpdater(std::make_shared<SOH::ConfigVersion4Updater>());
     conf->RunVersionUpdates();
 
+    CVarRegisterInteger(CVAR_SETTING("AltAssets"), 1);
+    CVarRegisterInteger(CVAR_GENERAL("LetItSnow"), 1);
+    CVarRegisterInteger("gHoliday.Visual.SnowingWeather", 1);
+    CVarRegisterInteger("gHoliday.Visual.Hats", 1);
+    CVarRegisterInteger("gHoliday.Gameplay.Snowballs", 1);
+    CVarRegisterInteger(CVAR_COSMETIC("Hud.AButton.Changed"), 1);
+    CVarRegisterColor(CVAR_COSMETIC("Hud.AButton.Value"), Color_RGBA8{ 255, 255, 255, 255 });
+    CVarRegisterInteger(CVAR_COSMETIC("Hud.BButton.Changed"), 1);
+    CVarRegisterColor(CVAR_COSMETIC("Hud.BButton.Value"), Color_RGBA8{ 255, 255, 255, 255 });
+    CVarRegisterInteger(CVAR_COSMETIC("Hud.CButtons.Changed"), 1);
+    CVarRegisterColor(CVAR_COSMETIC("Hud.CButtons.Value"), Color_RGBA8{ 255, 255, 255, 255 });
+    CVarRegisterInteger(CVAR_COSMETIC("Consumable.Hearts.Changed"), 1);
+    CVarRegisterColor(CVAR_COSMETIC("Consumable.Hearts.Value"), Color_RGBA8{ 255, 158, 0, 255 });
+    CVarRegisterInteger(CVAR_COSMETIC("Consumable.Magic.Changed"), 1);
+    CVarRegisterColor(CVAR_COSMETIC("Consumable.Magic.Value"), Color_RGBA8{ 255, 0, 0, 255 });
+
     SohGui::SetupGuiElements();
     ShipInit::InitAll();
 
@@ -1324,23 +1340,6 @@ extern "C" void InitOTR(int argc, char* argv[]) {
 
     time_t now = time(NULL);
     tm* tm_now = localtime(&now);
-    // if (tm_now->tm_mon == 11 && tm_now->tm_mday >= 24 && tm_now->tm_mday <= 25) {
-    //     CVarRegisterInteger(CVAR_GENERAL("LetItSnow"), 1);
-    // } else {
-    //     CVarClear(CVAR_GENERAL("LetItSnow"));
-    // }
-
-    CVarRegisterInteger(CVAR_GENERAL("LetItSnow"), 1);
-    CVarRegisterInteger(CVAR_COSMETIC("Hud.AButton.Changed"), 1);
-    CVarRegisterColor(CVAR_COSMETIC("Hud.AButton.Value"), Color_RGBA8{ 255, 255, 255, 255 });
-    CVarRegisterInteger(CVAR_COSMETIC("Hud.BButton.Changed"), 1);
-    CVarRegisterColor(CVAR_COSMETIC("Hud.BButton.Value"), Color_RGBA8{ 255, 255, 255, 255 });
-    CVarRegisterInteger(CVAR_COSMETIC("Hud.CButtons.Changed"), 1);
-    CVarRegisterColor(CVAR_COSMETIC("Hud.CButtons.Value"), Color_RGBA8{ 255, 255, 255, 255 });
-    CVarRegisterInteger(CVAR_COSMETIC("Consumable.Hearts.Changed"), 1);
-    CVarRegisterColor(CVAR_COSMETIC("Consumable.Hearts.Value"), Color_RGBA8{ 255, 158, 0, 255 });
-    CVarRegisterInteger(CVAR_COSMETIC("Consumable.Magic.Changed"), 1);
-    CVarRegisterColor(CVAR_COSMETIC("Consumable.Magic.Value"), Color_RGBA8{ 255, 0, 0, 255 });
 
     srand(now);
 #ifdef ENABLE_REMOTE_CONTROL

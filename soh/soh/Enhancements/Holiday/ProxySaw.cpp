@@ -15,6 +15,16 @@ extern "C" {
 #include "macros.h"
 #include "functions.h"
 #include "variables.h"
+#include "objects/object_wood02/object_wood02.h"
+#include "scenes/overworld/spot00/spot00_room_0.h"
+#include "scenes/overworld/spot04/spot04_room_0.h"
+#include "scenes/overworld/spot04/spot04_room_1.h"
+#include "scenes/overworld/spot20/spot20_room_0.h"
+#include "scenes/overworld/spot03/spot03_room_0.h"
+#include "scenes/overworld/spot15/spot15_room_0.h"
+
+void ResourceMgr_PatchGfxByName(const char* path, const char* patchName, int index, Gfx instruction);
+void ResourceMgr_UnpatchGfxByName(const char* path, const char* patchName);
 
 extern PlayState* gPlayState;
 extern "C" s16 gEnSnowballId;
@@ -22,8 +32,7 @@ void DoorAna_SetupAction(DoorAna* doorAna, DoorAnaActionFunc actionFunc);
 void DoorAna_GrabPlayer(DoorAna* doorAna, PlayState* play);
 }
 
-#define AUTHOR "ProxySaw"
-#define CVAR(v) "gHoliday." AUTHOR "." v
+#define CVAR(v) "gHoliday.Gameplay." v
 
 static CollisionPoly snowballPoly;
 static Vec3f snowballPos;
@@ -202,8 +211,7 @@ static void OnConfigurationChanged() {
 }
 
 static void RegisterMenu() {
-    WidgetPath path = { "Holiday", AUTHOR, SECTION_COLUMN_1 };
-    SohGui::mSohMenu->AddSidebarEntry("Holiday", AUTHOR, SECTION_COLUMN_2);
+    WidgetPath path = { "Holiday", "Gameplay", SECTION_COLUMN_1 };
 
     SohGui::mSohMenu->AddWidget(path, "Snowballs", WIDGET_CVAR_CHECKBOX)
         .CVar(CVAR("Snowballs"))
@@ -220,7 +228,52 @@ static void RegisterMenu() {
             "Random grottos will spawn throughout Hyrule. Who knows where they will take you?"));
 
     SohGui::mSohMenu->AddWidget(path, "Super Bonk", WIDGET_CVAR_CHECKBOX).CVar(CVAR("SuperBonk"));
+
+    path.sidebarName = "Visual";
+    path.column = SECTION_COLUMN_1;
+
+    SohGui::mSohMenu->AddWidget(path, "Snow Everywhere", WIDGET_CVAR_CHECKBOX)
+        .CVar("gHoliday.Visual.SnowingWeather")
+        .Options(
+            UIWidgets::CheckboxOptions().Tooltip("Enables the snow fall effect in all areas, colors trees and paths white. Best paired with the official holiday texture pack."));
+
+    SohGui::mSohMenu->AddWidget(path, "Festive Hats", WIDGET_CVAR_CHECKBOX)
+        .CVar("gHoliday.Visual.Hats")
+        .Options(
+            UIWidgets::CheckboxOptions().Tooltip("Link and NPCs will wear festive holiday hats."));
+
+    SohGui::mSohMenu->AddWidget(path, "Present Chests", WIDGET_CVAR_CHECKBOX)
+        .CVar("gHoliday.Visual.PresentChests")
+        .Options(
+            UIWidgets::CheckboxOptions().Tooltip("Treasure chests will use present textures."));
 }
+
+#define PATCH_GFX(path, name, cvar, index, instruction)             \
+    if (CVarGetInteger(cvar, 0)) {                                  \
+        ResourceMgr_PatchGfxByName(path, name, index, instruction); \
+    } else {                                                        \
+        ResourceMgr_UnpatchGfxByName(path, name);                   \
+    }
+
+static void PatchTrees() {
+    PATCH_GFX(object_wood02_DL_007968, "Tree1", "gHoliday.Visual.SnowingWeather", 17, gsDPSetPrimColor(0, 0, 255, 255, 255, 255));
+    PATCH_GFX(object_wood02_DL_000090, "Tree2", "gHoliday.Visual.SnowingWeather", 17, gsDPSetPrimColor(0, 0, 200, 255, 255, 255));
+    PATCH_GFX(object_wood02_DL_000340, "Tree3", "gHoliday.Visual.SnowingWeather", 17, gsDPSetPrimColor(0, 0, 255, 255, 255, 255));
+    PATCH_GFX(object_wood02_DL_000340, "Tree4", "gHoliday.Visual.SnowingWeather", 24, gsDPSetPrimColor(0, 0, 255, 255, 255, 255));
+    PATCH_GFX(spot00_room_0DL_0139A8, "Path1", "gHoliday.Visual.SnowingWeather", 23, gsDPSetPrimColor(0, 0, 100, 150, 255, 60));
+    PATCH_GFX(spot00_room_0DL_013250, "Path2", "gHoliday.Visual.SnowingWeather", 23, gsDPSetPrimColor(0, 0, 100, 150, 255, 60));
+    PATCH_GFX(spot00_room_0DL_0143C8, "Path3", "gHoliday.Visual.SnowingWeather", 23, gsDPSetPrimColor(0, 0, 100, 150, 255, 60));
+    PATCH_GFX(spot04_room_0DL_018048, "Path4", "gHoliday.Visual.SnowingWeather", 24, gsDPSetPrimColor(0, 0, 100, 150, 255, 60));
+    PATCH_GFX(spot04_room_1DL_007810, "Path5", "gHoliday.Visual.SnowingWeather", 24, gsDPSetPrimColor(0, 0, 100, 150, 255, 60));
+    PATCH_GFX(spot20_room_0DL_0062D0, "Path6", "gHoliday.Visual.SnowingWeather", 23, gsDPSetPrimColor(0, 0, 200, 230, 255, 30));
+    PATCH_GFX(spot20_room_0DL_004460, "Path8", "gHoliday.Visual.SnowingWeather", 31, gsDPSetPrimColor(0, 0, 200, 230, 255, 30));
+    PATCH_GFX(spot20_room_0DL_004460, "Path9", "gHoliday.Visual.SnowingWeather", 118, gsDPSetPrimColor(0, 0, 200, 230, 255, 30));
+    PATCH_GFX(spot20_room_0DL_0065E8, "Path10", "gHoliday.Visual.SnowingWeather", 24, gsDPSetPrimColor(0, 0, 200, 230, 255, 30));
+    PATCH_GFX(spot03_room_0DL_00C4B0, "Path11", "gHoliday.Visual.SnowingWeather", 23, gsDPSetPrimColor(0, 0, 200, 230, 255, 30));
+    PATCH_GFX(spot15_room_0DL_00C748, "Path12", "gHoliday.Visual.SnowingWeather", 23, gsDPSetPrimColor(0, 0, 200, 230, 255, 30));
+}
+
+static RegisterShipInitFunc initFuncTrees(PatchTrees, { "gHoliday.Visual.SnowingWeather" });
 
 static RegisterShipInitFunc initFunc(OnConfigurationChanged, { CVAR("Snowballs"), CVAR("Icebergs"),
                                                                CVAR("DownTheRabbitHole"), CVAR("SuperBonk") });

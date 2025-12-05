@@ -423,7 +423,7 @@ void EnToryo_PostLimbDraw(PlayState* play, s32 limbIndex, Gfx** dList, Vec3s* ro
             break;
     }
 
-    if (limbIndex == 15 && CVarGetInteger(CVAR_GENERAL("LetItSnow"), 0)) {
+    if (limbIndex == 15 && CVarGetInteger("gHoliday.Visual.Hats", 0)) {
         OPEN_DISPS(play->state.gfxCtx);
         Matrix_Push();
         Matrix_RotateZYX(-23691, 664, -2879, MTXMODE_APPLY);

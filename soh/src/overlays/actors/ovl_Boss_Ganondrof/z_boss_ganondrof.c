@@ -1436,7 +1436,7 @@ void BossGanondrof_PostLimbDraw(PlayState* play, s32 limbIndex, Gfx** dList, Vec
         Matrix_MultVec3f(&zeroVec, &this->bodyPartsPos[limbIndex - 1]);
     }
 
-    if (CVarGetInteger(CVAR_GENERAL("LetItSnow"), 0) && this->deathState == NOT_DEAD) {
+    if (CVarGetInteger("gHoliday.Visual.Hats", 0) && this->deathState == NOT_DEAD) {
         if (limbIndex == 15) {
             OPEN_DISPS(play->state.gfxCtx);
             Matrix_Push();

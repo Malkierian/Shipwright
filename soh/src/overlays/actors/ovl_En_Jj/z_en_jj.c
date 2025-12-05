@@ -313,7 +313,7 @@ void EnJj_Update(Actor* thisx, PlayState* play) {
 s32 EnJj_PostLimbDraw(PlayState* play, s32 limbIndex, Gfx** dList, Vec3s* rot, void* thisx) {
     EnJj* this = (EnJj*)thisx;
 
-    if (CVarGetInteger(CVAR_GENERAL("LetItSnow"), 0)) {
+    if (CVarGetInteger("gHoliday.Visual.Hats", 0)) {
         if (limbIndex == 13) {
             OPEN_DISPS(play->state.gfxCtx);
             Matrix_Push();

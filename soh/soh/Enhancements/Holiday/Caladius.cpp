@@ -16,8 +16,7 @@ extern PlayState* gPlayState;
 uint64_t GetUnixTimestamp();
 }
 
-#define AUTHOR "Caladius"
-#define CVAR(v) "gHoliday." AUTHOR "." v
+#define CVAR(v) "gHoliday.Gameplay." v
 
 bool isFeverDisabled = false;
 bool isExchangeDisabled = false;
@@ -242,12 +241,6 @@ static void OnFeverConfigurationChanged() {
     if (fontScale < 1.0f) {
         fontScale = 1.0f;
     }
-    if (CVarGetInteger(CVAR("ExtendTimer"), 0) < 1) {
-        CVarSetInteger(CVAR("ExtendTimer"), 1);
-    }
-    if (CVarGetInteger(CVAR("StartTimer"), 0) < 1) {
-        CVarSetInteger(CVAR("StartTimer"), 1);
-    }
 }
 
 void CaladiusWindow::Draw() {
@@ -271,18 +264,11 @@ void CaladiusWindow::Draw() {
 }
 
 static void RegisterMenu() {
-    WidgetPath path = { "Holiday", AUTHOR, SECTION_COLUMN_1 };
-    SohGui::mSohMenu->AddSidebarEntry("Holiday", AUTHOR, SECTION_COLUMN_2);
+    WidgetPath path = { "Holiday", "Gameplay", SECTION_COLUMN_2 };
     SohGui::mSohMenu->AddWidget(path, "Holiday Fever", WIDGET_CVAR_CHECKBOX)
         .CVar(CVAR("Fever.Enabled"))
         .Callback([](WidgetInfo& info) { OnFeverConfigurationChanged(); })
-        .Options(UIWidgets::CheckboxOptions().Tooltip("Can you beat your objective before the Fever sets in?\n"
-                                                      "- Obtaining Ice Traps extends your timer."));
-    SohGui::mSohMenu->AddWidget(path, "Font: %.1fx", WIDGET_CVAR_SLIDER_FLOAT)
-        .CVar(CVAR("FontScale"))
-        .Callback([](WidgetInfo& info) { OnFeverConfigurationChanged(); })
-        .PreFunc([](WidgetInfo& info) { info.options.get()->disabled = !CVarGetInteger(CVAR("Fever.Enabled"), 0); })
-        .Options(UIWidgets::FloatSliderOptions().DefaultValue(1.0f).Min(1.0f).Max(5.0f));
+        .Options(UIWidgets::CheckboxOptions().Tooltip("Death will come for you when the timer runs out? Obtaining Ice Traps extends your timer. \n\nShould be enabled before starting a new file, won't work well with existing files."));
     SohGui::mSohMenu->AddWidget(path, "Starting Timer: %d minutes", WIDGET_CVAR_SLIDER_INT)
         .CVar(CVAR("StartTimer"))
         .Callback([](WidgetInfo& info) { OnFeverConfigurationChanged(); })
@@ -294,24 +280,12 @@ static void RegisterMenu() {
         .PreFunc([](WidgetInfo& info) { info.options.get()->disabled = !CVarGetInteger(CVAR("Fever.Enabled"), 0); })
         .Options(UIWidgets::IntSliderOptions().DefaultValue(5).Min(1).Max(10));
 
-    SohGui::mSohMenu->AddWidget(path, "BoulderBlitzSect", WIDGET_SEPARATOR);
-    SohGui::mSohMenu->AddWidget(path, "Boulder Blitz", WIDGET_CVAR_CHECKBOX)
+    path.column = SECTION_COLUMN_1;
+
+    SohGui::mSohMenu->AddWidget(path, "Shuffle Boulders & Ice", WIDGET_CVAR_CHECKBOX)
         .CVar(CVAR("Blitz.Enabled"))
         .Callback([](WidgetInfo& info) { OnBlitzChange(); })
-        .Options(UIWidgets::CheckboxOptions().Tooltip("Boulders will randomly be replaced with other boulder types."));
-
-    SohGui::mSohMenu->AddWidget(path, "OrnamentExchSect", WIDGET_SEPARATOR);
-    SohGui::mSohMenu->AddWidget(path, "Ornament Exchange", WIDGET_CVAR_CHECKBOX)
-        .CVar(CVAR("OrnExch.Enabled"))
-        .Callback([](WidgetInfo& info) { OnPresentChange(); })
-        .Options(UIWidgets::CheckboxOptions().Tooltip(
-            "See Malon as Young Link in Lon Lon Ranch to exchange Gifts for Ornaments!"));
-
-    SohGui::mSohMenu->AddWidget(path, "Gifts Required: %d Gifts", WIDGET_CVAR_SLIDER_INT)
-        .CVar(CVAR("OrnExch.Amount"))
-        .Callback([](WidgetInfo& info) { OnFeverConfigurationChanged(); })
-        .PreFunc([](WidgetInfo& info) { info.options.get()->disabled = !CVarGetInteger(CVAR("OrnExch.Enabled"), 0); })
-        .Options(UIWidgets::IntSliderOptions().DefaultValue(15).Min(5).Max(30));
+        .Options(UIWidgets::CheckboxOptions().Tooltip("Boulders & Ice will randomly be replaced with other boulders & ice when the scene loads."));
 }
 
 static void RegisterMod() {

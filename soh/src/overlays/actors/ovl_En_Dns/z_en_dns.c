@@ -494,7 +494,7 @@ void EnDns_Update(Actor* thisx, PlayState* play) {
 void EnDns_PostLimbDraw(PlayState* play, s32 limbIndex, Gfx** dList, Vec3s* rot, void* thisx) {
     EnDns* this = (EnDns*)thisx;
 
-    if (CVarGetInteger(CVAR_GENERAL("LetItSnow"), 0)) {
+    if (CVarGetInteger("gHoliday.Visual.Hats", 0)) {
         if (limbIndex == 17) {
             OPEN_DISPS(play->state.gfxCtx);
             Matrix_Push();

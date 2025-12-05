@@ -251,7 +251,7 @@ static Vec3f sConstVec3f = { 0.2f, 0.2f, 0.2f };
 s32 EnNiwGirl_PostLimbDraw(PlayState* play, s32 limbIndex, Gfx** dList, Vec3s* rot, void* thisx) {
     EnNiwGirl* this = (EnNiwGirl*)thisx;
 
-    if (CVarGetInteger(CVAR_GENERAL("LetItSnow"), 0)) {
+    if (CVarGetInteger("gHoliday.Visual.Hats", 0)) {
         if (limbIndex == 4) {
             OPEN_DISPS(play->state.gfxCtx);
             Matrix_Push();

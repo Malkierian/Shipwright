@@ -15,8 +15,7 @@ void func_80ABBBA8(EnNutsball* nut, PlayState* play);
 void EnNutsball_Draw(Actor* nut, PlayState* play);
 }
 
-#define AUTHOR "Grimey"
-#define CVAR(v) "gHoliday." AUTHOR "." v
+#define CVAR(v) "gHoliday.Gameplay." v
 
 static bool spawningPenguins = false;
 
@@ -209,12 +208,7 @@ static void OnConfigurationChanged() {
 }
 
 static void RegisterMenu() {
-    WidgetPath path = { "Holiday", AUTHOR, SECTION_COLUMN_1 };
-    SohGui::mSohMenu->AddSidebarEntry("Holiday", AUTHOR, SECTION_COLUMN_2);
-
-    SohGui::mSohMenu->AddWidget(path, "Penguins", WIDGET_CVAR_CHECKBOX)
-        .CVar(CVAR("Penguins"))
-        .Options(UIWidgets::CheckboxOptions().Tooltip("Penguins will spawn in huddles throughout hyrule"));
+    WidgetPath path = { "Holiday", "Gameplay", SECTION_COLUMN_1 };
 
     SohGui::mSohMenu->AddWidget(path, "Hailstorm", WIDGET_CVAR_CHECKBOX)
         .CVar(CVAR("Hailstorm"))

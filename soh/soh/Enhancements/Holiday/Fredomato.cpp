@@ -127,7 +127,9 @@ static void RandomGrotto_Draw(Actor* actor, PlayState* play) {
 static Vec3f FindValidPos(f32 distance) {
     Vec3f pos;
     pos.y = 9999.0f;
-    while (true) {
+    int attempts = 0;
+
+    while (attempts++ < 20) {
         if (GET_PLAYER(gPlayState) != nullptr) {
             pos.x = GET_PLAYER(gPlayState)->actor.world.pos.x;
             pos.z = GET_PLAYER(gPlayState)->actor.world.pos.z;
@@ -156,6 +158,10 @@ static void SpawnRandomGrotto() {
     }
 
     Vec3f pos = FindValidPos(2000.0f);
+    if (pos.y == 9999.0f) {
+        return;
+    }
+
     Actor* grotto =
         Actor_Spawn(&gPlayState->actorCtx, gPlayState, ACTOR_DOOR_ANA, pos.x, pos.y, pos.z, 0, 0, 0, 0, false);
     midoGrottoInit = false;
@@ -374,6 +380,10 @@ void RandomTrap_Draw(Actor* actor, PlayState* play) {
 
 void SpawnRandomTrap() {
     Vec3f pos = FindValidPos(2000.0f);
+    if (pos.y == 9999.0f) {
+        return;
+    }
+
     EnItem00* randomTrap = CustomItem::Spawn(pos.x, pos.y, pos.z, 0, CustomItem::TOSS_ON_SPAWN, 0, NULL, NULL);
     SoundSource_PlaySfxAtFixedWorldPos(gPlayState, &randomTrap->actor.world.pos, 20, NA_SE_EV_LIGHTNING);
     randomTrap->actor.update = RandomTrap_Update;

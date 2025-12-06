@@ -17,6 +17,18 @@ static void MiscVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, va_li
     va_copy(args, originalArgs);
 
     switch (id) {
+        case VB_GIVE_ITEM_MINUET_OF_FOREST:
+        case VB_GIVE_ITEM_BOLERO_OF_FIRE:
+        case VB_GIVE_ITEM_SERENADE_OF_WATER:
+        case VB_GIVE_ITEM_REQUIEM_OF_SPIRIT:
+        case VB_GIVE_ITEM_NOCTURNE_OF_SHADOW:
+        case VB_GIVE_ITEM_PRELUDE_OF_LIGHT:
+        case VB_GIVE_ITEM_ZELDAS_LULLABY:
+        case VB_GIVE_ITEM_EPONAS_SONG:
+        case VB_GIVE_ITEM_SARIAS_SONG:
+        case VB_GIVE_ITEM_SUNS_SONG:
+        case VB_GIVE_ITEM_SONG_OF_TIME:
+        case VB_GIVE_ITEM_SONG_OF_STORMS:
         case VB_GIVE_ITEM_FROM_TARGET_IN_WOODS:
         case VB_GIVE_ITEM_FROM_TALONS_CHICKENS:
         case VB_GIVE_ITEM_FROM_DIVING_MINIGAME:

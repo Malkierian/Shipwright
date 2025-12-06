@@ -3,10 +3,10 @@
 #define CVAR(v) "gHoliday.Gameplay." v
 
 extern "C" {
-#include <z64.h>;
-#include "functions.h";
-#include "variables.h";
-#include "macros.h";
+#include <z64.h>
+#include "functions.h"
+#include "variables.h"
+#include "macros.h"
 #include "objects/gameplay_keep/gameplay_keep.h"
 extern PlayState* gPlayState;
 }

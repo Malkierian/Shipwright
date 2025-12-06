@@ -7,6 +7,7 @@
 #include "soh/Enhancements/randomizer/3drando/random.hpp"
 #include "soh/Enhancements/randomizer/location_access.h"
 #include "soh/Enhancements/randomizer/entrance.h"
+#include <set>
 
 #include "objects/gameplay_field_keep/gameplay_field_keep.h"
 #include "objects/object_md/object_md.h"
@@ -113,26 +114,200 @@ static void SpawnIcebergs() {
     }
 }
 
-const s16 entrances[] = {
-    0x0000, 0x0209, 0x0004, 0x0242, 0x0028, 0x0221, 0x0169, 0x0215, 0x0165, 0x024A, 0x0010, 0x021D, 0x0082, 0x01E1,
-    0x0037, 0x0205, 0x0098, 0x02A6, 0x0088, 0x03D4, 0x0008, 0x03A8, 0x0467, 0x023D, 0x0433, 0x0443, 0x0437, 0x0447,
-    0x009C, 0x033C, 0x00C9, 0x026A, 0x00C1, 0x0266, 0x0043, 0x03CC, 0x045F, 0x0309, 0x03A0, 0x03D0, 0x007E, 0x026E,
-    0x0530, 0x01D1, 0x0507, 0x03BC, 0x0388, 0x02A2, 0x0063, 0x01D5, 0x0528, 0x03C0, 0x043B, 0x0067, 0x02FD, 0x0349,
-    0x0550, 0x04EE, 0x039C, 0x0345, 0x05C8, 0x05DC, 0x0072, 0x034D, 0x030D, 0x0355, 0x037C, 0x03FC, 0x0380, 0x03C4,
-    0x004F, 0x0378, 0x02F9, 0x042F, 0x05D0, 0x05D4, 0x052C, 0x03B8, 0x016D, 0x01CD, 0x00B7, 0x0201, 0x003B, 0x0463,
-    0x0588, 0x057C, 0x0578, 0x0340, 0x04C2, 0x03E8, 0x04BE, 0x0482, 0x0315, 0x045B, 0x0371, 0x0394, 0x0272, 0x0211,
-    0x0053, 0x0472, 0x0453, 0x0351, 0x0384, 0x044B, 0x03EC, 0x04FF, 0x0700, 0x0800, 0x0701, 0x0801, 0x0702, 0x0802,
-    0x0703, 0x0803, 0x0704, 0x0804, 0x0705, 0x0805, 0x0706, 0x0806, 0x0707, 0x0807, 0x0708, 0x0808, 0x0709, 0x0809,
-    0x070A, 0x080A, 0x070B, 0x080B, 0x070C, 0x080C, 0x070D, 0x080D, 0x070E, 0x080E, 0x070F, 0x080F, 0x0710, 0x0711,
-    0x0811, 0x0712, 0x0812, 0x0713, 0x0813, 0x0714, 0x0814, 0x0715, 0x0815, 0x0716, 0x0816, 0x0717, 0x0817, 0x0718,
-    0x0818, 0x0719, 0x0819, 0x081A, 0x071B, 0x081B, 0x071C, 0x081C, 0x071D, 0x081D, 0x071E, 0x081E, 0x071F, 0x081F,
-    0x0720, 0x0820, 0x004B, 0x035D, 0x031C, 0x0361, 0x002D, 0x050B, 0x044F, 0x0359, 0x05E0, 0x020D, 0x011E, 0x0286,
-    0x04E2, 0x04D6, 0x01DD, 0x04DA, 0x00FC, 0x01A9, 0x0185, 0x04DE, 0x0102, 0x0189, 0x0117, 0x018D, 0x0276, 0x01FD,
-    0x00DB, 0x017D, 0x00EA, 0x0181, 0x0157, 0x01F9, 0x0328, 0x0560, 0x0129, 0x022D, 0x0130, 0x03AC, 0x0123, 0x0365,
-    0x00B1, 0x0033, 0x0138, 0x025A, 0x0171, 0x025E, 0x00E4, 0x0195, 0x013D, 0x0191, 0x014D, 0x01B9, 0x0246, 0x01C1,
-    0x0147, 0x01BD, 0x0108, 0x019D, 0x0225, 0x01A1, 0x0219, 0x027E, 0x0554, 0x00BB, 0x0282, 0x0600, 0x04F6, 0x0604,
-    0x01F1, 0x0568, 0x05F4, 0x040F, 0x0252, 0x040B, 0x00C5, 0x0301, 0x0407, 0x000C, 0x024E, 0x0305, 0x0175, 0x0417,
-    0x0423, 0x008D, 0x02F5, 0x0413, 0x02B2, 0x0457, 0x047A, 0x010E, 0x0608, 0x0564, 0x060C, 0x0610, 0x0580
+std::vector<uint32_t> validEntrances = {
+    ENTR_DEKU_TREE_ENTRANCE,
+    ENTR_KOKIRI_FOREST_OUTSIDE_DEKU_TREE,
+    ENTR_DODONGOS_CAVERN_ENTRANCE,
+    ENTR_DEATH_MOUNTAIN_TRAIL_OUTSIDE_DODONGOS_CAVERN,
+    ENTR_JABU_JABU_ENTRANCE,
+    ENTR_ZORAS_FOUNTAIN_OUTSIDE_JABU_JABU,
+    ENTR_FOREST_TEMPLE_ENTRANCE,
+    ENTR_SACRED_FOREST_MEADOW_OUTSIDE_TEMPLE,
+    ENTR_FIRE_TEMPLE_ENTRANCE,
+    ENTR_DEATH_MOUNTAIN_CRATER_OUTSIDE_TEMPLE,
+    ENTR_WATER_TEMPLE_ENTRANCE,
+    ENTR_LAKE_HYLIA_OUTSIDE_TEMPLE,
+    ENTR_SPIRIT_TEMPLE_ENTRANCE,
+    ENTR_DESERT_COLOSSUS_OUTSIDE_TEMPLE,
+    ENTR_SHADOW_TEMPLE_ENTRANCE,
+    ENTR_GRAVEYARD_OUTSIDE_TEMPLE,
+    ENTR_BOTTOM_OF_THE_WELL_ENTRANCE,
+    ENTR_KAKARIKO_VILLAGE_OUTSIDE_BOTTOM_OF_THE_WELL,
+    ENTR_ICE_CAVERN_ENTRANCE,
+    ENTR_ZORAS_FOUNTAIN_OUTSIDE_ICE_CAVERN,
+    ENTR_GERUDO_TRAINING_GROUND_ENTRANCE,
+    ENTR_GERUDOS_FORTRESS_OUTSIDE_GERUDO_TRAINING_GROUND,
+    ENTR_INSIDE_GANONS_CASTLE_ENTRANCE,
+    ENTR_CASTLE_GROUNDS_RAINBOW_BRIDGE_EXIT,
+    ENTR_MIDOS_HOUSE_0,
+    ENTR_KOKIRI_FOREST_OUTSIDE_MIDOS_HOUSE,
+    ENTR_SARIAS_HOUSE_0,
+    ENTR_KOKIRI_FOREST_OUTSIDE_SARIAS_HOUSE,
+    ENTR_TWINS_HOUSE_0,
+    ENTR_KOKIRI_FOREST_OUTSIDE_TWINS_HOUSE,
+    ENTR_KNOW_IT_ALL_BROS_HOUSE_0,
+    ENTR_KOKIRI_FOREST_OUTSIDE_KNOW_IT_ALL_HOUSE,
+    ENTR_KOKIRI_SHOP_0,
+    ENTR_KOKIRI_FOREST_OUTSIDE_SHOP,
+    ENTR_LAKESIDE_LABORATORY_0,
+    ENTR_LAKE_HYLIA_OUTSIDE_LAB,
+    ENTR_FISHING_POND_0,
+    ENTR_LAKE_HYLIA_OUTSIDE_FISHING_POND,
+    ENTR_CARPENTERS_TENT_0,
+    ENTR_GERUDO_VALLEY_OUTSIDE_TENT,
+    ENTR_MARKET_GUARD_HOUSE_0,
+    ENTR_MARKET_ENTRANCE_OUTSIDE_GUARD_HOUSE,
+    ENTR_HAPPY_MASK_SHOP_0,
+    ENTR_MARKET_DAY_OUTSIDE_HAPPY_MASK_SHOP,
+    ENTR_BOMBCHU_BOWLING_ALLEY_0,
+    ENTR_MARKET_DAY_OUTSIDE_BOMBCHU_BOWLING,
+    ENTR_POTION_SHOP_MARKET_0,
+    ENTR_MARKET_DAY_OUTSIDE_POTION_SHOP,
+    ENTR_TREASURE_BOX_SHOP_0,
+    ENTR_MARKET_DAY_OUTSIDE_TREASURE_BOX_SHOP,
+    ENTR_BOMBCHU_SHOP_1,
+    ENTR_BACK_ALLEY_DAY_OUTSIDE_BOMBCHU_SHOP,
+    ENTR_BACK_ALLEY_MAN_IN_GREEN_HOUSE,
+    ENTR_BACK_ALLEY_DAY_OUTSIDE_MAN_IN_GREEN_HOUSE,
+    ENTR_KAKARIKO_CENTER_GUEST_HOUSE_0,
+    ENTR_KAKARIKO_VILLAGE_OUTSIDE_CENTER_GUEST_HOUSE,
+    ENTR_HOUSE_OF_SKULLTULA_0,
+    ENTR_KAKARIKO_VILLAGE_OUTSIDE_SKULKLTULA_HOUSE,
+    ENTR_IMPAS_HOUSE_FRONT,
+    ENTR_KAKARIKO_VILLAGE_OUTSIDE_IMPAS_HOUSE_FRONT,
+    ENTR_IMPAS_HOUSE_BACK,
+    ENTR_KAKARIKO_VILLAGE_OUTSIDE_IMPAS_HOUSE_BACK,
+    ENTR_POTION_SHOP_GRANNY_0,
+    ENTR_KAKARIKO_VILLAGE_OUTSIDE_SHOP_GRANNY,
+    ENTR_GRAVEKEEPERS_HUT_0,
+    ENTR_GRAVEYARD_OUTSIDE_DAMPES_HUT,
+    ENTR_GORON_SHOP_0,
+    ENTR_GORON_CITY_OUTSIDE_SHOP,
+    ENTR_ZORA_SHOP_0,
+    ENTR_ZORAS_DOMAIN_OUTSIDE_SHOP,
+    ENTR_LON_LON_BUILDINGS_TALONS_HOUSE,
+    ENTR_LON_LON_RANCH_OUTSIDE_TALONS_HOUSE,
+    ENTR_STABLE_0,
+    ENTR_LON_LON_RANCH_OUTSIDE_STABLES,
+    ENTR_LON_LON_BUILDINGS_TOWER,
+    ENTR_LON_LON_RANCH_OUTSIDE_TOWER,
+    ENTR_BAZAAR_1,
+    ENTR_MARKET_DAY_OUTSIDE_BAZAAR,
+    ENTR_SHOOTING_GALLERY_1,
+    ENTR_MARKET_DAY_OUTSIDE_SHOOTING_GALLERY,
+    ENTR_BAZAAR_0,
+    ENTR_KAKARIKO_VILLAGE_OUTSIDE_BAZAAR,
+    ENTR_SHOOTING_GALLERY_0,
+    ENTR_KAKARIKO_VILLAGE_OUTSIDE_SHOOTING_GALLERY,
+    ENTR_GREAT_FAIRYS_FOUNTAIN_SPELLS_NAYRUS_COLOSSUS,
+    ENTR_DESERT_COLOSSUS_GREAT_FAIRY_EXIT,
+    ENTR_GREAT_FAIRYS_FOUNTAIN_SPELLS_DINS_HC,
+    ENTR_CASTLE_GROUNDS_GREAT_FAIRY_EXIT,
+    ENTR_GREAT_FAIRYS_FOUNTAIN_MAGIC_OGC_DD,
+    ENTR_POTION_SHOP_KAKARIKO_1,
+    ENTR_GREAT_FAIRYS_FOUNTAIN_MAGIC_DMC,
+    ENTR_DEATH_MOUNTAIN_CRATER_GREAT_FAIRY_EXIT,
+    ENTR_GREAT_FAIRYS_FOUNTAIN_MAGIC_DMT,
+    ENTR_DEATH_MOUNTAIN_TRAIL_GREAT_FAIRY_EXIT,
+    ENTR_GREAT_FAIRYS_FOUNTAIN_SPELLS_FARORES_ZF,
+    ENTR_ZORAS_FOUNTAIN_OUTSIDE_GREAT_FAIRY,
+    ENTR_LINKS_HOUSE_1,
+    ENTR_KOKIRI_FOREST_OUTSIDE_LINKS_HOUSE,
+    ENTR_TEMPLE_OF_TIME_ENTRANCE,
+    ENTR_TEMPLE_OF_TIME_EXTERIOR_DAY_OUTSIDE_TEMPLE,
+    ENTR_WINDMILL_AND_DAMPES_GRAVE_WINDMILL,
+    ENTR_KAKARIKO_VILLAGE_OUTSIDE_WINDMILL,
+    ENTR_POTION_SHOP_KAKARIKO_FRONT,
+    ENTR_KAKARIKO_VILLAGE_OUTSIDE_POTION_SHOP_FRONT,
+    ENTR_POTION_SHOP_KAKARIKO_BACK,
+    ENTR_KAKARIKO_VILLAGE_OUTSIDE_POTION_SHOP_BACK,
+    ENTR_GRAVE_WITH_FAIRYS_FOUNTAIN_0,
+    ENTR_GRAVEYARD_SHIELD_GRAVE_EXIT,
+    ENTR_REDEAD_GRAVE_0,
+    ENTR_GRAVEYARD_HEART_PIECE_GRAVE_EXIT,
+    ENTR_ROYAL_FAMILYS_TOMB_0,
+    ENTR_GRAVEYARD_ROYAL_TOMB_EXIT,
+    ENTR_WINDMILL_AND_DAMPES_GRAVE_GRAVE,
+    ENTR_GRAVEYARD_DAMPES_GRAVE_EXIT,
+    ENTR_LOST_WOODS_BRIDGE_EAST_EXIT,
+    ENTR_KOKIRI_FOREST_LOWER_EXIT,
+    ENTR_LOST_WOODS_SOUTH_EXIT,
+    ENTR_KOKIRI_FOREST_UPPER_EXIT,
+    ENTR_GORON_CITY_TUNNEL_SHORTCUT,
+    ENTR_LOST_WOODS_TUNNEL_SHORTCUT,
+    ENTR_ZORAS_RIVER_UNDERWATER_SHORTCUT,
+    ENTR_LOST_WOODS_UNDERWATER_SHORTCUT,
+    ENTR_SACRED_FOREST_MEADOW_SOUTH_EXIT,
+    ENTR_LOST_WOODS_NORTH_EXIT,
+    ENTR_HYRULE_FIELD_WOODED_EXIT,
+    ENTR_LOST_WOODS_BRIDGE_WEST_EXIT,
+    ENTR_LAKE_HYLIA_NORTH_EXIT,
+    ENTR_HYRULE_FIELD_FENCE_EXIT,
+    ENTR_GERUDO_VALLEY_EAST_EXIT,
+    ENTR_HYRULE_FIELD_ROCKY_PATH,
+    ENTR_MARKET_ENTRANCE_NEAR_GUARD_EXIT,
+    ENTR_HYRULE_FIELD_ON_BRIDGE_SPAWN,
+    ENTR_KAKARIKO_VILLAGE_FRONT_GATE,
+    ENTR_HYRULE_FIELD_STAIRS_EXIT,
+    ENTR_ZORAS_RIVER_WEST_EXIT,
+    ENTR_HYRULE_FIELD_RIVER_EXIT,
+    ENTR_LON_LON_RANCH_ENTRANCE,
+    ENTR_HYRULE_FIELD_CENTER_EXIT,
+    ENTR_ZORAS_DOMAIN_UNDERWATER_SHORTCUT,
+    ENTR_LAKE_HYLIA_UNDERWATER_SHORTCUT,
+    ENTR_GERUDOS_FORTRESS_EAST_EXIT,
+    ENTR_GERUDO_VALLEY_WEST_EXIT,
+    ENTR_HAUNTED_WASTELAND_EAST_EXIT,
+    ENTR_GERUDOS_FORTRESS_GATE_EXIT,
+    ENTR_DESERT_COLOSSUS_EAST_EXIT,
+    ENTR_HAUNTED_WASTELAND_WEST_EXIT,
+    ENTR_MARKET_SOUTH_EXIT,
+    ENTR_MARKET_ENTRANCE_NORTH_EXIT,
+    ENTR_CASTLE_GROUNDS_SOUTH_EXIT,
+    ENTR_MARKET_DAY_CASTLE_EXIT,
+    ENTR_TEMPLE_OF_TIME_EXTERIOR_DAY_GOSSIP_STONE_EXIT,
+    ENTR_MARKET_DAY_TEMPLE_EXIT,
+    ENTR_GRAVEYARD_ENTRANCE,
+    ENTR_KAKARIKO_VILLAGE_SOUTHEAST_EXIT,
+    ENTR_DEATH_MOUNTAIN_TRAIL_BOTTOM_EXIT,
+    ENTR_KAKARIKO_VILLAGE_GUARD_GATE,
+    ENTR_GORON_CITY_UPPER_EXIT,
+    ENTR_DEATH_MOUNTAIN_TRAIL_GC_EXIT,
+    ENTR_DEATH_MOUNTAIN_CRATER_GC_EXIT,
+    ENTR_GORON_CITY_DARUNIA_ROOM_EXIT,
+    ENTR_DEATH_MOUNTAIN_CRATER_UPPER_EXIT,
+    ENTR_DEATH_MOUNTAIN_TRAIL_SUMMIT_EXIT,
+    ENTR_ZORAS_DOMAIN_ENTRANCE,
+    ENTR_ZORAS_RIVER_WATERFALL_EXIT,
+    ENTR_ZORAS_FOUNTAIN_TUNNEL_EXIT,
+    ENTR_ZORAS_DOMAIN_KING_ZORA_EXIT,
+    ENTR_LAKE_HYLIA_RIVER_EXIT,
+    ENTR_HYRULE_FIELD_OWL_DROP,
+    ENTR_KAKARIKO_VILLAGE_OWL_DROP,
+    ENTR_LINKS_HOUSE_CHILD_SPAWN,
+    ENTR_HYRULE_FIELD_10,
+    ENTR_SACRED_FOREST_MEADOW_WARP_PAD,
+    ENTR_DEATH_MOUNTAIN_CRATER_WARP_PAD,
+    ENTR_LAKE_HYLIA_WARP_PAD,
+    ENTR_DESERT_COLOSSUS_WARP_PAD,
+    ENTR_GRAVEYARD_WARP_PAD,
+    ENTR_TEMPLE_OF_TIME_WARP_PAD,
+    ENTR_DEKU_TREE_BOSS_ENTRANCE,
+    ENTR_DEKU_TREE_BOSS_DOOR,
+    ENTR_DODONGOS_CAVERN_BOSS_ENTRANCE,
+    ENTR_DODONGOS_CAVERN_BOSS_DOOR,
+    ENTR_JABU_JABU_BOSS_ENTRANCE,
+    ENTR_JABU_JABU_BOSS_DOOR,
+    ENTR_FOREST_TEMPLE_BOSS_ENTRANCE,
+    ENTR_FOREST_TEMPLE_BOSS_DOOR,
+    ENTR_FIRE_TEMPLE_BOSS_ENTRANCE,
+    ENTR_FIRE_TEMPLE_BOSS_DOOR,
+    ENTR_WATER_TEMPLE_BOSS_ENTRANCE,
+    ENTR_WATER_TEMPLE_BOSS_DOOR,
+    ENTR_SPIRIT_TEMPLE_BOSS_ENTRANCE,
+    ENTR_SPIRIT_TEMPLE_BOSS_DOOR,
+    ENTR_SHADOW_TEMPLE_BOSS_ENTRANCE,
+    ENTR_SHADOW_TEMPLE_BOSS_DOOR,
 };
 
 static void RandomGrotto_WaitOpen(DoorAna* doorAna, PlayState* play) {
@@ -141,7 +316,8 @@ static void RandomGrotto_WaitOpen(DoorAna* doorAna, PlayState* play) {
     if (Math_StepToF(&actor->scale.x, 0.01f, 0.001f)) {
         if ((actor->targetMode != 0) && (play->transitionTrigger == TRANS_TRIGGER_OFF) &&
             (player->stateFlags1 & PLAYER_STATE1_FLOOR_DISABLED) && (player->av1.actionVar1 == 0)) {
-            play->nextEntranceIndex = RandomElement(entrances);
+            Random_Init(rand() % 0xFFFFFFFF);
+            play->nextEntranceIndex = RandomElement(validEntrances);
             DoorAna_SetupAction((DoorAna*)actor, DoorAna_GrabPlayer);
         } else {
             if (!Player_InCsMode(play) && !(player->stateFlags1 & (PLAYER_STATE1_ON_HORSE | PLAYER_STATE1_IN_WATER)) &&
@@ -235,17 +411,16 @@ static void RegisterMenu() {
     SohGui::mSohMenu->AddWidget(path, "Snow Everywhere", WIDGET_CVAR_CHECKBOX)
         .CVar("gHoliday.Visual.SnowingWeather")
         .Options(
-            UIWidgets::CheckboxOptions().Tooltip("Enables the snow fall effect in all areas, colors trees and paths white. Best paired with the official holiday texture pack."));
+            UIWidgets::CheckboxOptions().Tooltip("Enables the snow fall effect in all areas, colors trees and paths "
+                                                 "white. Best paired with the official holiday texture pack."));
 
     SohGui::mSohMenu->AddWidget(path, "Festive Hats", WIDGET_CVAR_CHECKBOX)
         .CVar("gHoliday.Visual.Hats")
-        .Options(
-            UIWidgets::CheckboxOptions().Tooltip("Link and NPCs will wear festive holiday hats."));
+        .Options(UIWidgets::CheckboxOptions().Tooltip("Link and NPCs will wear festive holiday hats."));
 
     SohGui::mSohMenu->AddWidget(path, "Present Chests", WIDGET_CVAR_CHECKBOX)
         .CVar("gHoliday.Visual.PresentChests")
-        .Options(
-            UIWidgets::CheckboxOptions().Tooltip("Treasure chests will use present textures."));
+        .Options(UIWidgets::CheckboxOptions().Tooltip("Treasure chests will use present textures."));
 }
 
 #define PATCH_GFX(path, name, cvar, index, instruction)             \
@@ -256,21 +431,55 @@ static void RegisterMenu() {
     }
 
 static void PatchTrees() {
-    PATCH_GFX(object_wood02_DL_007968, "Tree1", "gHoliday.Visual.SnowingWeather", 17, gsDPSetPrimColor(0, 0, 255, 255, 255, 255));
-    PATCH_GFX(object_wood02_DL_000090, "Tree2", "gHoliday.Visual.SnowingWeather", 17, gsDPSetPrimColor(0, 0, 200, 255, 255, 255));
-    PATCH_GFX(object_wood02_DL_000340, "Tree3", "gHoliday.Visual.SnowingWeather", 17, gsDPSetPrimColor(0, 0, 255, 255, 255, 255));
-    PATCH_GFX(object_wood02_DL_000340, "Tree4", "gHoliday.Visual.SnowingWeather", 24, gsDPSetPrimColor(0, 0, 255, 255, 255, 255));
-    PATCH_GFX(spot00_room_0DL_0139A8, "Path1", "gHoliday.Visual.SnowingWeather", 23, gsDPSetPrimColor(0, 0, 100, 150, 255, 60));
-    PATCH_GFX(spot00_room_0DL_013250, "Path2", "gHoliday.Visual.SnowingWeather", 23, gsDPSetPrimColor(0, 0, 100, 150, 255, 60));
-    PATCH_GFX(spot00_room_0DL_0143C8, "Path3", "gHoliday.Visual.SnowingWeather", 23, gsDPSetPrimColor(0, 0, 100, 150, 255, 60));
-    PATCH_GFX(spot04_room_0DL_018048, "Path4", "gHoliday.Visual.SnowingWeather", 24, gsDPSetPrimColor(0, 0, 100, 150, 255, 60));
-    PATCH_GFX(spot04_room_1DL_007810, "Path5", "gHoliday.Visual.SnowingWeather", 24, gsDPSetPrimColor(0, 0, 100, 150, 255, 60));
-    PATCH_GFX(spot20_room_0DL_0062D0, "Path6", "gHoliday.Visual.SnowingWeather", 23, gsDPSetPrimColor(0, 0, 200, 230, 255, 30));
-    PATCH_GFX(spot20_room_0DL_004460, "Path8", "gHoliday.Visual.SnowingWeather", 31, gsDPSetPrimColor(0, 0, 200, 230, 255, 30));
-    PATCH_GFX(spot20_room_0DL_004460, "Path9", "gHoliday.Visual.SnowingWeather", 118, gsDPSetPrimColor(0, 0, 200, 230, 255, 30));
-    PATCH_GFX(spot20_room_0DL_0065E8, "Path10", "gHoliday.Visual.SnowingWeather", 24, gsDPSetPrimColor(0, 0, 200, 230, 255, 30));
-    PATCH_GFX(spot03_room_0DL_00C4B0, "Path11", "gHoliday.Visual.SnowingWeather", 23, gsDPSetPrimColor(0, 0, 200, 230, 255, 30));
-    PATCH_GFX(spot15_room_0DL_00C748, "Path12", "gHoliday.Visual.SnowingWeather", 23, gsDPSetPrimColor(0, 0, 200, 230, 255, 30));
+    PATCH_GFX(object_wood02_DL_007968, "Tree1", "gHoliday.Visual.SnowingWeather", 17,
+              gsDPSetPrimColor(0, 0, 255, 255, 255, 255));
+    PATCH_GFX(object_wood02_DL_000090, "Tree2", "gHoliday.Visual.SnowingWeather", 17,
+              gsDPSetPrimColor(0, 0, 200, 255, 255, 255));
+    PATCH_GFX(object_wood02_DL_000340, "Tree3", "gHoliday.Visual.SnowingWeather", 17,
+              gsDPSetPrimColor(0, 0, 255, 255, 255, 255));
+    PATCH_GFX(object_wood02_DL_000340, "Tree4", "gHoliday.Visual.SnowingWeather", 24,
+              gsDPSetPrimColor(0, 0, 255, 255, 255, 255));
+    PATCH_GFX(spot00_room_0DL_0139A8, "Path1", "gHoliday.Visual.SnowingWeather", 23,
+              gsDPSetPrimColor(0, 0, 100, 150, 255, 60));
+    PATCH_GFX(spot00_room_0DL_013250, "Path2", "gHoliday.Visual.SnowingWeather", 23,
+              gsDPSetPrimColor(0, 0, 100, 150, 255, 60));
+    PATCH_GFX(spot00_room_0DL_0143C8, "Path3", "gHoliday.Visual.SnowingWeather", 23,
+              gsDPSetPrimColor(0, 0, 100, 150, 255, 60));
+    PATCH_GFX(spot04_room_0DL_018048, "Path4", "gHoliday.Visual.SnowingWeather", 24,
+              gsDPSetPrimColor(0, 0, 100, 150, 255, 60));
+    PATCH_GFX(spot04_room_1DL_007810, "Path5", "gHoliday.Visual.SnowingWeather", 24,
+              gsDPSetPrimColor(0, 0, 100, 150, 255, 60));
+    PATCH_GFX(spot20_room_0DL_0062D0, "Path6", "gHoliday.Visual.SnowingWeather", 23,
+              gsDPSetPrimColor(0, 0, 200, 230, 255, 30));
+    PATCH_GFX(spot20_room_0DL_004460, "Path8", "gHoliday.Visual.SnowingWeather", 31,
+              gsDPSetPrimColor(0, 0, 200, 230, 255, 30));
+    PATCH_GFX(spot20_room_0DL_004460, "Path9", "gHoliday.Visual.SnowingWeather", 118,
+              gsDPSetPrimColor(0, 0, 200, 230, 255, 30));
+    PATCH_GFX(spot20_room_0DL_0065E8, "Path10", "gHoliday.Visual.SnowingWeather", 24,
+              gsDPSetPrimColor(0, 0, 200, 230, 255, 30));
+    PATCH_GFX(spot03_room_0DL_00C4B0, "Path11", "gHoliday.Visual.SnowingWeather", 23,
+              gsDPSetPrimColor(0, 0, 200, 230, 255, 30));
+    PATCH_GFX(spot15_room_0DL_00C748, "Path12", "gHoliday.Visual.SnowingWeather", 23,
+              gsDPSetPrimColor(0, 0, 200, 230, 255, 30));
+
+    static u32 blizzardActiveTimer = 0;
+    blizzardActiveTimer = 0;
+    CVarClear("gHoliday.Visual.SnowingWeatherActive");
+    COND_HOOK(OnPlayerUpdate, CVarGetInteger("gHoliday.Visual.SnowingWeather", 0), []() {
+        // Every frame has a 1/1000 chance to start a blizzard if there isn't one already
+        if (blizzardActiveTimer == 0 && rand() % 1000 == 0) {
+            blizzardActiveTimer = 20 * 20; // Lasts for 20 seconds
+            CVarSetInteger("gHoliday.Visual.SnowingWeatherActive", 2);
+        }
+        if (blizzardActiveTimer > 0) {
+            blizzardActiveTimer--;
+        }
+        if (blizzardActiveTimer == 0) {
+            CVarClear("gHoliday.Visual.SnowingWeatherActive");
+        } else if (blizzardActiveTimer < 20) {
+            CVarSetInteger("gHoliday.Visual.SnowingWeatherActive", 1);
+        }
+    });
 }
 
 static RegisterShipInitFunc initFuncTrees(PatchTrees, { "gHoliday.Visual.SnowingWeather" });

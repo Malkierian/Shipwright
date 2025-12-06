@@ -8,6 +8,7 @@
 #include "soh/Enhancements/randomizer/location_access.h"
 #include "soh/Enhancements/randomizer/entrance.h"
 #include "soh/Notification/Notification.h"
+#include "soh/Enhancements/custom-item/CustomItem.h"
 #include "soh/Enhancements/nametag.h"
 
 #include "objects/gameplay_field_keep/gameplay_field_keep.h"
@@ -373,8 +374,7 @@ void RandomTrap_Draw(Actor* actor, PlayState* play) {
 
 void SpawnRandomTrap() {
     Vec3f pos = FindValidPos(2000.0f);
-    EnItem00* randomTrap =
-        CustomItem::Spawn(pos.x, pos.y, pos.z, 0, CustomItem::TOSS_ON_SPAWN, 0, NULL, NULL);
+    EnItem00* randomTrap = CustomItem::Spawn(pos.x, pos.y, pos.z, 0, CustomItem::TOSS_ON_SPAWN, 0, NULL, NULL);
     SoundSource_PlaySfxAtFixedWorldPos(gPlayState, &randomTrap->actor.world.pos, 20, NA_SE_EV_LIGHTNING);
     randomTrap->actor.update = RandomTrap_Update;
     randomTrap->actor.draw = RandomTrap_Draw;
@@ -428,7 +428,8 @@ static void RegisterMenu() {
     SohGui::mSohMenu->AddWidget(path, "Chasing Knockback Spikes", WIDGET_CVAR_CHECKBOX)
         .CVar(CVAR("RandomTraps.Enabled"))
         .Options(UIWidgets::CheckboxOptions().Tooltip(
-            "Random spikes will spawn around you at a configurable rate, chasing you for a short time before disappearing. If they touch you, you get knocked back."));
+            "Random spikes will spawn around you at a configurable rate, chasing you for a short time before "
+            "disappearing. If they touch you, you get knocked back."));
 
     SohGui::mSohMenu->AddWidget(path, "Trap Lifetime (Seconds)", WIDGET_CVAR_SLIDER_INT)
         .CVar(CVAR("RandomTraps.Lifetime"))

@@ -328,30 +328,9 @@ static void InitRogueLikeGUI() {
         std::make_shared<RogueLike::GUI::LevelUpWindow>(CVAR_WINDOW("RogueLikeLevelUp"), "RogueLike Level Up");
     gui->AddGuiWindow(mLevelUpWindow);
 
-    SohGui::mSohMenu->AddMenuEntry("RogueLike", CVAR_SETTING("Menu.RogueLikeSidebarSection"));
-    SohGui::mSohMenu->AddSidebarEntry("RogueLike", "Configuration", 1);
-    WidgetPath path = { "RogueLike", "Configuration", SECTION_COLUMN_1 };
-    SohGui::mSohMenu->AddWidget(path, "Configuration", WIDGET_CUSTOM).CustomFunction([](WidgetInfo& info) {
-        if (UIWidgets::Button("Add XP Level", UIWidgets::ButtonOptions().Size(UIWidgets::Sizes::Inline))) {
-            RogueLike::XP::GrantXP(RogueLike::XP::ConvertLevelToXP(RogueLike::XP::GetCurrentLevel() + 1) -
-                                   gSaveContext.ship.quest.data.rogueLike.xp + 1);
-        }
-        ImGui::SameLine();
-        if (UIWidgets::Button("Remove XP Level", UIWidgets::ButtonOptions().Size(UIWidgets::Sizes::Inline))) {
-            gSaveContext.ship.quest.data.rogueLike.xp =
-                RogueLike::XP::ConvertLevelToXP(RogueLike::XP::GetCurrentLevel() - 1);
-        }
-        if (UIWidgets::Button("Add Difficulty Level", UIWidgets::ButtonOptions().Size(UIWidgets::Sizes::Inline))) {
-            RogueLike::Difficulty::IncrementDifficulty(
-                RogueLike::Difficulty::ConvertLevelToDifficulty(RogueLike::Difficulty::GetCurrentLevel() + 1) -
-                gSaveContext.ship.quest.data.rogueLike.difficulty + 1);
-        }
-        ImGui::SameLine();
-        if (UIWidgets::Button("Remove Difficulty Level", UIWidgets::ButtonOptions().Size(UIWidgets::Sizes::Inline))) {
-            gSaveContext.ship.quest.data.rogueLike.difficulty =
-                RogueLike::Difficulty::ConvertLevelToDifficulty(RogueLike::Difficulty::GetCurrentLevel() - 1);
-        }
-
+    SohGui::mSohMenu->AddSidebarEntry("Holiday", "RogueLike", 2);
+    WidgetPath path = { "Holiday", "RogueLike", SECTION_COLUMN_2 };
+    SohGui::mSohMenu->AddWidget(path, "RogueLikeRight", WIDGET_CUSTOM).CustomFunction([](WidgetInfo& info) {
         if (UIWidgets::Button("Reset All", UIWidgets::ButtonOptions().Size(UIWidgets::Sizes::Inline))) {
             CVarSetFloat("gRogueLike.BaseDifficulty", 5000.0f);
             CVarSetFloat("gRogueLike.DifficultyGrowthRate", 1.3f);
@@ -370,7 +349,7 @@ static void InitRogueLikeGUI() {
             CVarSetInteger("gRogueLike.XPDrop.Trees", 20);
         }
 
-        ImGui::SeparatorText("Difficulty Options:");
+        ImGui::SeparatorText("Scaling Options:");
 
         UIWidgets::CVarSliderFloat(
             "Base Difficulty", "gRogueLike.BaseDifficulty",
@@ -431,9 +410,43 @@ static void InitRogueLikeGUI() {
             UIWidgets::IntSliderOptions().Min(1).Max(5000).DefaultValue(20).Size(ImVec2(300.0f, 0.0f)));
     });
 
-    SohGui::mSohMenu->AddSidebarEntry("RogueLike", "Testing", 1);
-    path = { "RogueLike", "Testing", SECTION_COLUMN_1 };
-    SohGui::mSohMenu->AddWidget(path, "Testing", WIDGET_CUSTOM).CustomFunction([](WidgetInfo& info) {
+    path = { "Holiday", "RogueLike", SECTION_COLUMN_1 };
+    SohGui::mSohMenu->AddWidget(path, "RogueLikeLeft", WIDGET_CUSTOM).CustomFunction([](WidgetInfo& info) {
+        ImGui::TextWrapped(
+            "RogueLike mode is a very unpolished proof of concept that enables you to play through the game doing "
+            "various things to gain XP and gaining items and progression through random rolls instead of finding them "
+            "at specific points in the game. There are various settings to tweak the balance on the right hand panel, "
+            "the current balance has not really been heavily tested so feel free to experiment and share your "
+            "findings. Also if there is interest some one is welcome to pick this up and polish it into a more "
+            "complete mode, all of it is open source.");
+
+        ImGui::SeparatorText("Cheats:");
+
+        if (!IS_ROGUELIKE) {
+            ImGui::TextColored(ImVec4(1, 0, 0, 1), "Must be in a RogueLike save");
+            return;
+        }
+
+        if (UIWidgets::Button("Add XP Level", UIWidgets::ButtonOptions().Size(UIWidgets::Sizes::Inline))) {
+            RogueLike::XP::GrantXP(RogueLike::XP::ConvertLevelToXP(RogueLike::XP::GetCurrentLevel() + 1) -
+                                   gSaveContext.ship.quest.data.rogueLike.xp + 1);
+        }
+        ImGui::SameLine();
+        if (UIWidgets::Button("Remove XP Level", UIWidgets::ButtonOptions().Size(UIWidgets::Sizes::Inline))) {
+            gSaveContext.ship.quest.data.rogueLike.xp =
+                RogueLike::XP::ConvertLevelToXP(RogueLike::XP::GetCurrentLevel() - 1);
+        }
+        if (UIWidgets::Button("Add Difficulty Level", UIWidgets::ButtonOptions().Size(UIWidgets::Sizes::Inline))) {
+            RogueLike::Difficulty::IncrementDifficulty(
+                RogueLike::Difficulty::ConvertLevelToDifficulty(RogueLike::Difficulty::GetCurrentLevel() + 1) -
+                gSaveContext.ship.quest.data.rogueLike.difficulty + 1);
+        }
+        ImGui::SameLine();
+        if (UIWidgets::Button("Remove Difficulty Level", UIWidgets::ButtonOptions().Size(UIWidgets::Sizes::Inline))) {
+            gSaveContext.ship.quest.data.rogueLike.difficulty =
+                RogueLike::Difficulty::ConvertLevelToDifficulty(RogueLike::Difficulty::GetCurrentLevel() - 1);
+        }
+
         std::string statPlusValue = "";
         std::string statMinusValue = "";
         if (ImGui::BeginTable("Stat Testing", 2)) {

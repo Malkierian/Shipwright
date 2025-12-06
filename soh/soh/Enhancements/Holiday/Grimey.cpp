@@ -18,6 +18,7 @@ void EnNutsball_Draw(Actor* nut, PlayState* play);
 #define CVAR(v) "gHoliday.Gameplay." v
 
 static bool spawningPenguins = false;
+static u32 hailstormActiveTimer = 0;
 
 typedef enum {
     PENGUIN_STATE_IDLE,
@@ -102,46 +103,31 @@ void Penguin_Destroy(Actor* actor, PlayState* play) {
 
 static void OnConfigurationChanged() {
     COND_HOOK(OnPlayerUpdate, CVarGetInteger(CVAR("Hailstorm"), 0), []() {
-        // Every frame has a 1/500 chance of spawning close hail
-        if (rand() % 500 == 0) {
-            int spawned = 0;
-            while (spawned < 1) {
-                Vec3f pos = GET_PLAYER(gPlayState)->actor.world.pos;
-                pos.x += (float)Random(0, 50) - 25.0f;
-                pos.z += (float)Random(0, 50) - 25.0f;
-                pos.y += 200.0f;
-
-                Actor* actor = Actor_Spawn(&gPlayState->actorCtx, gPlayState, ACTOR_EN_NUTSBALL, pos.x, pos.y, pos.z, 0,
-                                           0, 0, 0, false);
-                EnNutsball* nut = (EnNutsball*)actor;
-                nut->actor.draw = EnNutsball_Draw;
-                nut->actor.shape.rot.y = 0;
-                nut->timer = 0;
-                nut->actionFunc = func_80ABBBA8;
-                nut->actor.speedXZ = 0.0f;
-                nut->actor.gravity = -2.0f;
-                spawned++;
-            }
+        // Every frame has a 1/1000 chance to start a hailstorm if there isn't one already
+        if (hailstormActiveTimer == 0 && rand() % 1000 == 0) {
+            hailstormActiveTimer = 20 * 10; // Lasts for 20 seconds
         }
-        // Every frame has a 1/50 chance of spawning far hail
-        if (rand() % 50 == 0) {
-            int spawned = 0;
-            while (spawned < 1) {
-                Vec3f pos = GET_PLAYER(gPlayState)->actor.world.pos;
-                pos.x += (float)Random(0, 500) - 250.0f;
-                pos.z += (float)Random(0, 500) - 250.0f;
-                pos.y += 200.0f;
+        if (hailstormActiveTimer > 0) {
+            hailstormActiveTimer--;
+            if (rand() % 2 == 0) {
+                int spawned = 0;
+                while (spawned < 1) {
+                    Vec3f pos = GET_PLAYER(gPlayState)->actor.world.pos;
+                    pos.x += (float)Random(0, 500) - 250.0f;
+                    pos.z += (float)Random(0, 500) - 250.0f;
+                    pos.y += 500.0f;
 
-                Actor* actor = Actor_Spawn(&gPlayState->actorCtx, gPlayState, ACTOR_EN_NUTSBALL, pos.x, pos.y, pos.z, 0,
-                                           0, 0, 0, false);
-                EnNutsball* nut = (EnNutsball*)actor;
-                nut->actor.draw = EnNutsball_Draw;
-                nut->actor.shape.rot.y = 0;
-                nut->timer = 0;
-                nut->actionFunc = func_80ABBBA8;
-                nut->actor.speedXZ = 0.0f;
-                nut->actor.gravity = -2.0f;
-                spawned++;
+                    Actor* actor = Actor_Spawn(&gPlayState->actorCtx, gPlayState, ACTOR_EN_NUTSBALL, pos.x, pos.y,
+                                               pos.z, 0, 0, 0, 0, false);
+                    EnNutsball* nut = (EnNutsball*)actor;
+                    nut->actor.draw = EnNutsball_Draw;
+                    nut->actor.shape.rot.y = 0;
+                    nut->timer = 0;
+                    nut->actionFunc = func_80ABBBA8;
+                    nut->actor.speedXZ = 0.0f;
+                    nut->actor.gravity = -2.0f;
+                    spawned++;
+                }
             }
         }
     });

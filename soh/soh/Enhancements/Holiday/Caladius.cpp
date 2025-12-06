@@ -6,6 +6,7 @@
 #include "soh/Enhancements/custom-message/CustomMessageManager.h"
 #include "soh/Enhancements/randomizer/randomizer.h"
 #include "soh/frame_interpolation.h"
+#include "soh/ObjectExtension/ActorListIndex.h"
 #include "soh_assets.h"
 
 extern "C" {
@@ -24,7 +25,8 @@ static float fontScale = 1.0f;
 
 extern GetItemEntry vanillaQueuedItemEntry;
 
-std::vector<ActorID> boulderList = { ACTOR_OBJ_BOMBIWA, ACTOR_BG_ICE_SHELTER, ACTOR_EN_ISHI, ACTOR_OBJ_HAMISHI };
+std::vector<ActorID> boulderList = { ACTOR_OBJ_BOMBIWA, ACTOR_BG_ICE_SHELTER, ACTOR_EN_ISHI, ACTOR_EN_ISHI,
+                                     ACTOR_OBJ_HAMISHI };
 
 std::string formatTimestampIceTrapFever(uint32_t value) {
     uint32_t sec = value / 10;
@@ -68,17 +70,30 @@ s32 ActorSnapToFloor(Actor* refActor, PlayState* play, f32 arg2) {
 
 void RandomizeBoulder(Actor* refActor) {
     Actor* actor = (Actor*)refActor;
-    int16_t param = actor->params;
+    int16_t param = 0;
     int32_t yAdj = 0;
-    uint32_t roll = rand() % boulderList.size();
+
+    int32_t seed = gPlayState->sceneNum + actor->id + ((int32_t)(actor->world.pos.x * 10)) +
+                   ((int32_t)(actor->world.pos.y * 10)) + ((int32_t)(actor->world.pos.z * 10)) + actor->params;
+
+    uint32_t finalSeed =
+        ABS(seed) + (IS_RANDO ? Rando::Context::GetInstance()->GetSeed() : gSaveContext.ship.stats.fileCreatedAt);
+    Random_Init(finalSeed);
+    uint32_t roll = Random(0, boulderList.size());
+
+    u32 flag = actor->id == ACTOR_EN_ISHI ? ((actor->params >> 0xA) & 0x3C) | ((actor->params >> 6) & 3)
+                                          : actor->params & 0x3F;
+
     if (boulderList[roll] == ACTOR_EN_ISHI) {
-        param = 3;
+        param = (Random(0, 2)) | ((flag & 0x3C) << 10) | ((flag & 3) << 6);
+    } else {
+        param = flag;
     }
+
     yAdj = ActorSnapToFloor(actor, gPlayState, 0.0f);
 
     Actor_Spawn(&gPlayState->actorCtx, gPlayState, boulderList[roll], actor->world.pos.x,
                 ActorSnapToFloor(actor, gPlayState, 0.0f), actor->world.pos.z, 0, 0, 0, param, false);
-    Actor_Kill(actor);
 }
 
 bool spawningPresents = false;
@@ -215,21 +230,20 @@ static void OnPresentChange() {
                  });
 }
 
+static bool isRandomizingBoulder = false;
 static void OnBlitzChange() {
-    COND_HOOK(OnSceneSpawnActors, CVarGetInteger(CVAR("Blitz.Enabled"), 0), []() {
-        if (!gPlayState) {
+    COND_HOOK(ShouldActorInit, CVarGetInteger(CVAR("Blitz.Enabled"), 0), [](void* actorRef, bool* should) {
+        if (isRandomizingBoulder)
             return;
-        }
-        ActorListEntry boulders = gPlayState->actorCtx.actorLists[ACTORCAT_PROP];
-        Actor* currentActor = boulders.head;
-        if (currentActor != nullptr) {
-            while (currentActor != nullptr) {
-                for (auto& boulderActor : boulderList) {
-                    if (currentActor->id == boulderActor) {
-                        RandomizeBoulder(currentActor);
-                    }
-                }
-                currentActor = currentActor->next;
+
+        Actor* actor = (Actor*)actorRef;
+        for (auto& boulderActor : boulderList) {
+            if (actor->id == boulderActor) {
+                isRandomizingBoulder = true;
+                RandomizeBoulder(actor);
+                isRandomizingBoulder = false;
+                *should = false;
+                return;
             }
         }
     });
@@ -268,7 +282,9 @@ static void RegisterMenu() {
     SohGui::mSohMenu->AddWidget(path, "Holiday Fever", WIDGET_CVAR_CHECKBOX)
         .CVar(CVAR("Fever.Enabled"))
         .Callback([](WidgetInfo& info) { OnFeverConfigurationChanged(); })
-        .Options(UIWidgets::CheckboxOptions().Tooltip("Death will come for you when the timer runs out? Obtaining Ice Traps extends your timer. \n\nShould be enabled before starting a new file, won't work well with existing files."));
+        .Options(UIWidgets::CheckboxOptions().Tooltip(
+            "Death will come for you when the timer runs out? Obtaining Ice Traps extends your timer. \n\nShould be "
+            "enabled before starting a new file, won't work well with existing files."));
     SohGui::mSohMenu->AddWidget(path, "Starting Timer: %d minutes", WIDGET_CVAR_SLIDER_INT)
         .CVar(CVAR("StartTimer"))
         .Callback([](WidgetInfo& info) { OnFeverConfigurationChanged(); })
@@ -285,7 +301,8 @@ static void RegisterMenu() {
     SohGui::mSohMenu->AddWidget(path, "Shuffle Boulders & Ice", WIDGET_CVAR_CHECKBOX)
         .CVar(CVAR("Blitz.Enabled"))
         .Callback([](WidgetInfo& info) { OnBlitzChange(); })
-        .Options(UIWidgets::CheckboxOptions().Tooltip("Boulders & Ice will randomly be replaced with other boulders & ice when the scene loads."));
+        .Options(UIWidgets::CheckboxOptions().Tooltip(
+            "Boulders & Ice will randomly be replaced with other boulders & ice when the scene loads."));
 }
 
 static void RegisterMod() {

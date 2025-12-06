@@ -17,6 +17,7 @@ DEFINE_HOOK(OnEquipmentDelete, (int16_t equipmentType, uint16_t equipValue));
 DEFINE_HOOK(OnSaleEnd, (GetItemEntry itemEntry));
 DEFINE_HOOK(OnTransitionEnd, (int16_t sceneNum));
 DEFINE_HOOK(OnSceneInit, (int16_t sceneNum));
+DEFINE_HOOK(OnRoomInit, (int16_t roomNum));
 DEFINE_HOOK(AfterSceneCommands, (int16_t sceneNum));
 DEFINE_HOOK(OnSceneFlagSet, (int16_t sceneNum, int16_t flagType, int16_t flag));
 DEFINE_HOOK(OnSceneFlagUnset, (int16_t sceneNum, int16_t flagType, int16_t flag));

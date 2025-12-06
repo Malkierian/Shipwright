@@ -1,5 +1,7 @@
 #include "CustomMessageManager.h"
 #include "CustomMessageInterfaceAddon.h"
+#include "CustomMessageTypes.h"
+#include "soh/Enhancements/game-interactor/GameInteractor.h"
 #include <algorithm>
 #include <stdint.h>
 #include <cstring>
@@ -10,6 +12,8 @@
 #include "soh/util.h"
 
 extern "C" {
+#include "functions.h"
+
 extern PlayState* gPlayState;
 }
 
@@ -223,8 +227,20 @@ void CustomMessage::LoadIntoFont() {
     Font* font = &msgCtx->font;
     char* buffer = font->msgBuf;
     const int maxBufferSize = sizeof(font->msgBuf);
+
     font->charTexBuf[0] = (type << 4) | position;
-    msgCtx->msgLength = font->msgLength = SohUtils::CopyStringToCharBuffer(GetEnglish(MF_RAW), buffer, maxBufferSize);
+
+    std::string content = GetEnglish(MF_RAW);
+    switch (gSaveContext.language) {
+        case LANGUAGE_FRA:
+            content = GetFrench(MF_RAW);
+            break;
+        case LANGUAGE_GER:
+            content = GetGerman(MF_RAW);
+            break;
+    }
+
+    msgCtx->msgLength = font->msgLength = SohUtils::CopyStringToCharBuffer(buffer, content, maxBufferSize);
 }
 
 CustomMessage CustomMessage::operator+(const CustomMessage& right) const {
@@ -835,4 +851,22 @@ bool CustomMessageManager::ClearMessageTable(std::string tableID) {
 bool CustomMessageManager::AddCustomMessageTable(std::string tableID) {
     CustomMessageTable newMessageTable;
     return messageTables.emplace(tableID, newMessageTable).second;
+}
+
+void CustomMessageManager::SetActiveCustomMessage(CustomMessage message) {
+    activeCustomMessage = message;
+}
+
+void CustomMessageManager::StartTextbox(CustomMessage message) {
+    activeCustomMessage = message;
+
+    Message_StartTextbox(gPlayState, TEXT_CUSTOM_MESSAGE, &GET_PLAYER(gPlayState)->actor);
+}
+
+void CustomMessageManager::RegisterHooks() {
+    GameInteractor::Instance->RegisterGameHookForID<GameInteractor::OnOpenText>(
+        TEXT_CUSTOM_MESSAGE, [&](u16* textId, bool* loadFromMessageTable) {
+            *loadFromMessageTable = false;
+            activeCustomMessage.LoadIntoFont();
+        });
 }

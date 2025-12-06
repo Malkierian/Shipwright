@@ -2716,6 +2716,8 @@ void Message_OpenText(PlayState* play, u16 textId) {
     bool loadFromMessageTable = true;
     GameInteractor_ExecuteOnOpenText(&textId, &loadFromMessageTable);
 
+    sDisplayNextMessageAsEnglish = false;
+
     if (msgCtx->msgMode == MSGMODE_NONE) {
         gSaveContext.unk_13EE = gSaveContext.unk_13EA;
     }

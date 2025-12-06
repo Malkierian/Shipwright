@@ -8893,8 +8893,7 @@ void Player_Action_80842180(Player* this, PlayState* play) {
             if (this->currentMask == PLAYER_MASK_BUNNY) {
                 if (IS_ROGUELIKE) {
                     sp2C *= 1.0f + (((f32)gSaveContext.ship.quest.data.rogueLike.stats[RL_SPEED]) / 10.0f) * 1.5f;
-                } else if (CVarGetInteger(CVAR_ENHANCEMENT("MMBunnyHood"), BUNNY_HOOD_VANILLA) ==
-                           BUNNY_HOOD_FAST_AND_JUMP) {
+                } else if (CVarGetInteger(CVAR_ENHANCEMENT("MMBunnyHood"), BUNNY_HOOD_VANILLA) != BUNNY_HOOD_VANILLA) {
                     sp2C *= 1.5f;
                 }
             }
@@ -12847,8 +12846,7 @@ s16 func_8084ABD8(PlayState* play, Player* this, s32 arg2, s16 arg3) {
         if (this->currentMask == PLAYER_MASK_BUNNY) {
             if (IS_ROGUELIKE) {
                 movementSpeed *= 1.0f + (((f32)gSaveContext.ship.quest.data.rogueLike.stats[RL_SPEED]) / 10.0f) * 1.5f;
-            } else if (CVarGetInteger(CVAR_ENHANCEMENT("MMBunnyHood"), BUNNY_HOOD_VANILLA) ==
-                       BUNNY_HOOD_FAST_AND_JUMP) {
+            } else if (CVarGetInteger(CVAR_ENHANCEMENT("MMBunnyHood"), BUNNY_HOOD_VANILLA) != BUNNY_HOOD_VANILLA) {
                 movementSpeed *= 1.5f;
             }
         }

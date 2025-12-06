@@ -145,7 +145,7 @@ static void RegisterMenu() {
             "the equivalent of a gold rupee upon death"));
 
     SohGui::mSohMenu->AddWidget(path, "Shiny Chance: %d", WIDGET_CVAR_SLIDER_INT)
-        .CVar(CVAR("OrnExch.Amount"))
+        .CVar(CVAR("Shiny.Chance"))
         .PreFunc([](WidgetInfo& info) { info.options.get()->disabled = !CVarGetInteger(CVAR("Shiny.Enabled"), 0); })
         .Options(UIWidgets::IntSliderOptions().DefaultValue(8192).Min(1).Max(8192).Tooltip(
             "The chance for an enemy to be shiny is 1 / {Shiny Chance}"));

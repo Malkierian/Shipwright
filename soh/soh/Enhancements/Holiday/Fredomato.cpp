@@ -7,7 +7,6 @@
 #include "soh/Enhancements/randomizer/3drando/random.hpp"
 #include "soh/Enhancements/randomizer/location_access.h"
 #include "soh/Enhancements/randomizer/entrance.h"
-#include "soh/Enhancements/custom-collectible/CustomCollectible.h"
 #include "soh/Notification/Notification.h"
 #include "soh/Enhancements/nametag.h"
 
@@ -164,20 +163,6 @@ static void SpawnRandomGrotto() {
 }
 
 void SpawnStick(Vec3f pos) {
-    CustomCollectible::Spawn(
-        pos.x, pos.y + 150.0f, pos.z, 0, CustomCollectible::KILL_ON_TOUCH | CustomCollectible::TOSS_ON_SPAWN, 0,
-        [](Actor* actor, PlayState* play) {
-            FredsQuestWoodOnHand++;
-            Audio_PlaySoundGeneral(NA_SE_SY_METRONOME, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale,
-                                   &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
-        },
-        [](Actor* actor, PlayState* play) {
-            Matrix_Scale(40.0f, 40.0f, 40.0f, MTXMODE_APPLY);
-            for (int i = 4; i < 7; i++) {
-                Matrix_RotateZYX(800 * i, 0, 800 * i, MTXMODE_APPLY);
-                GetItem_Draw(play, GID_STICK);
-            }
-        });
 }
 
 Actor* specialTree = nullptr;
@@ -268,8 +253,6 @@ void DrawCrazyTaxiArrow(Actor* actor, PlayState* play) {
 }
 
 void SpawnCrazyTaxiArrow() {
-    EnItem00* arrow = CustomCollectible::Spawn(0, 0, 0, 0, CustomCollectible::KEEP_ON_PLAYER, 0, NULL, NULL);
-    arrow->actor.draw = DrawCrazyTaxiArrow;
 }
 
 void CollectionPoint_Update(Actor* actor, PlayState* play) {
@@ -338,13 +321,6 @@ void CollectionPoint_Draw(Actor* actor, PlayState* play) {
 }
 
 void SpawnCollectionPoint() {
-    EnItem00* collectionPoint = CustomCollectible::Spawn(859.0f, 347.0f, 5185.0f, 0xB000, 0, 0, NULL, NULL);
-    collectionPoint->actor.update = CollectionPoint_Update;
-    collectionPoint->actor.draw = CollectionPoint_Draw;
-    collectionPoint->actor.flags |= ACTOR_FLAG_DRAW_CULLING_DISABLED;
-    SkelAnime_InitFlex(gPlayState, &collectionPointSkelAnime, (FlexSkeletonHeader*)&object_toryo_Skel_007150,
-                       (AnimationHeader*)&object_toryo_Anim_000E50, collectionPointJointTable,
-                       collectionPointMorphTable, 17);
 }
 
 void RandomTrap_Update(Actor* actor, PlayState* play) {
@@ -398,7 +374,7 @@ void RandomTrap_Draw(Actor* actor, PlayState* play) {
 void SpawnRandomTrap() {
     Vec3f pos = FindValidPos(2000.0f);
     EnItem00* randomTrap =
-        CustomCollectible::Spawn(pos.x, pos.y, pos.z, 0, CustomCollectible::TOSS_ON_SPAWN, 0, NULL, NULL);
+        CustomItem::Spawn(pos.x, pos.y, pos.z, 0, CustomItem::TOSS_ON_SPAWN, 0, NULL, NULL);
     SoundSource_PlaySfxAtFixedWorldPos(gPlayState, &randomTrap->actor.world.pos, 20, NA_SE_EV_LIGHTNING);
     randomTrap->actor.update = RandomTrap_Update;
     randomTrap->actor.draw = RandomTrap_Draw;

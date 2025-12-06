@@ -82,7 +82,6 @@
 #include "Enhancements/mods.h"
 #include "Enhancements/game-interactor/GameInteractor.h"
 #include "Enhancements/randomizer/draw.h"
-#include "Enhancements/custom-collectible/CustomCollectible.h"
 #include <libultraship/libultraship.h>
 #include <libultraship/controller/controldeck/ControlDeck.h>
 #include <fast/resource/ResourceType.h>
@@ -1327,7 +1326,6 @@ extern "C" void InitOTR(int argc, char* argv[]) {
     DebugConsole_Init();
 
     InitMods();
-    CustomCollectible::RegisterHooks();
     ActorDB::AddBuiltInCustomActors();
     // #region SOH [Randomizer] TODO: Remove these and refactor spoiler file handling for randomizer
     CVarClear(CVAR_GENERAL("RandomizerNewFileDropped"));

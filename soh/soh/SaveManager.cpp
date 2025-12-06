@@ -114,6 +114,7 @@ SaveManager::SaveManager() {
     coreSectionIDsByName["scenes"] = SECTION_ID_SCENES;
     coreSectionIDsByName["trackerData"] = SECTION_ID_TRACKER_DATA;
     coreSectionIDsByName["archipelagoData"] = SECTION_ID_ARCHIPELAGO;
+    coreSectionIDsByName["rogueLike"] = SECTION_ID_ROGUELIKE;
     AddLoadFunction("base", 1, LoadBaseVersion1);
     AddLoadFunction("base", 2, LoadBaseVersion2);
     AddLoadFunction("base", 3, LoadBaseVersion3);
@@ -122,6 +123,8 @@ SaveManager::SaveManager() {
 
     AddLoadFunction("randomizer", 1, LoadRandomizer);
     AddSaveFunction("randomizer", 1, SaveRandomizer, true, SECTION_PARENT_NONE);
+    AddLoadFunction("rogueLike", 1, LoadRogueLike);
+    AddSaveFunction("rogueLike", 1, SaveRogueLike, true, SECTION_PARENT_NONE);
 
     AddInitFunction(InitFileImpl);
 
@@ -409,6 +412,36 @@ void SaveManager::SaveRandomizer(SaveContext* saveContext, int sectionID, bool f
 
     SaveManager::Instance->SaveArray("trickOptions", RT_MAX, [&](size_t i) {
         SaveManager::Instance->SaveData("", randoContext->GetTrickOption(RandomizerTrick(i)).Get());
+    });
+}
+
+void SaveManager::LoadRogueLike() {
+    if (gSaveContext.ship.quest.id != QUEST_ROGUELIKE) {
+        return;
+    }
+
+    SaveManager::Instance->LoadData("difficulty", gSaveContext.ship.quest.data.rogueLike.difficulty);
+    SaveManager::Instance->LoadData("lastActivity", gSaveContext.ship.quest.data.rogueLike.lastActivity);
+    SaveManager::Instance->LoadData("xp", gSaveContext.ship.quest.data.rogueLike.xp);
+
+    SaveManager::Instance->LoadArray("stats", ARRAY_COUNT(gSaveContext.ship.quest.data.rogueLike.stats), [&](size_t i) {
+        u32 value = 0;
+        SaveManager::Instance->LoadData("", value);
+        gSaveContext.ship.quest.data.rogueLike.stats[i] = value;
+    });
+}
+
+void SaveManager::SaveRogueLike(SaveContext* saveContext, int sectionID, bool fullSave) {
+    if (saveContext->ship.quest.id != QUEST_ROGUELIKE) {
+        return;
+    }
+
+    SaveManager::Instance->SaveData("difficulty", saveContext->ship.quest.data.rogueLike.difficulty);
+    SaveManager::Instance->SaveData("lastActivity", saveContext->ship.quest.data.rogueLike.lastActivity);
+    SaveManager::Instance->SaveData("xp", saveContext->ship.quest.data.rogueLike.xp);
+
+    SaveManager::Instance->SaveArray("stats", ARRAY_COUNT(saveContext->ship.quest.data.rogueLike.stats), [&](size_t i) {
+        SaveManager::Instance->SaveData("", saveContext->ship.quest.data.rogueLike.stats[i]);
     });
 }
 

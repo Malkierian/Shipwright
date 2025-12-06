@@ -59,10 +59,6 @@ void RogueLike::Difficulty::IncrementDifficulty(u32 amount) {
 }
 
 static void OnLoadGame() {
-    if (IS_ROGUELIKE) {
-        RogueLike::Difficulty::IndicateActivity();
-    }
-
     COND_HOOK(OnPlayerUpdate, IS_ROGUELIKE, []() {
         if (GetUnixTimestamp() - gSaveContext.ship.quest.data.rogueLike.lastActivity >= 10 * 1000) {
             RogueLike::Difficulty::IncrementDifficulty(1);

@@ -74,6 +74,7 @@ typedef enum { // Pre-existing IDs for save sections in base code
     SECTION_ID_SCENES,
     SECTION_ID_TRACKER_DATA,
     SECTION_ID_ARCHIPELAGO,
+    SECTION_ID_ROGUELIKE,
     SECTION_ID_MAX
 } SaveFuncIDs;
 

@@ -490,8 +490,10 @@ static void OnLoadGame() {
     mLevelUpWindow->Hide();
 
     if (IS_ROGUELIKE) {
-        // TODO: Check if this is first start
-        mStartingSelectionWindow->Show();
+        if (gSaveContext.ship.quest.data.rogueLike.lastActivity == 0) {
+            RogueLike::Difficulty::IndicateActivity();
+            mStartingSelectionWindow->Show();
+        }
     }
 
     COND_HOOK(OnPlayerUpdate, IS_ROGUELIKE, [] {

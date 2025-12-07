@@ -14,6 +14,18 @@ namespace SohGui {
 extern std::shared_ptr<SohMenu> mSohMenu;
 }
 
+#define QUEST_TO_TEXTURE(id) \
+    { id, #id }
+
+std::map<uint32_t, const char*> questToTexture = {
+    QUEST_TO_TEXTURE(QUEST_MEDALLION_FOREST), QUEST_TO_TEXTURE(QUEST_MEDALLION_FIRE),
+    QUEST_TO_TEXTURE(QUEST_MEDALLION_WATER),  QUEST_TO_TEXTURE(QUEST_MEDALLION_SPIRIT),
+    QUEST_TO_TEXTURE(QUEST_MEDALLION_SHADOW), QUEST_TO_TEXTURE(QUEST_MEDALLION_LIGHT),
+    QUEST_TO_TEXTURE(QUEST_KOKIRI_EMERALD),   QUEST_TO_TEXTURE(QUEST_GORON_RUBY),
+    QUEST_TO_TEXTURE(QUEST_ZORA_SAPPHIRE),    QUEST_TO_TEXTURE(QUEST_STONE_OF_AGONY),
+    QUEST_TO_TEXTURE(QUEST_GERUDO_CARD),      QUEST_TO_TEXTURE(QUEST_SKULL_TOKEN),
+};
+
 void RogueLike::GUI::BeginFullscreenDimmed(const char* windowName) {
     ImGuiViewport* viewport = ImGui::GetMainViewport();
     ImGui::SetNextWindowPos(viewport->Pos);
@@ -271,6 +283,23 @@ void RogueLike::GUI::HUDWindow::Draw() {
                 TableCellVerticalCenteredText(ImVec4(0, 1, 0, 1), statValueStr.c_str());
             }
 
+            ImGui::TableNextColumn();
+            ImGui::TableNextColumn();
+            TableCellVerticalCenteredText(ImVec4(1, 1, 1, 1), "Required Dungeon Rewards:");
+            ImGui::TableNextColumn();
+            ImGui::TableNextColumn();
+            ImGui::TableNextColumn();
+            for (auto& reward : RogueLike::requiredRewards) {
+                if (reward != RogueLike::requiredRewards[0]) {
+                    ImGui::SameLine();
+                }
+                auto tint = CHECK_QUEST_ITEM(reward) ? ImVec4(1, 1, 1, 1) : ImVec4(1, 1, 1, 0.5f);
+                ImTextureID textureId =
+                    Ship::Context::GetInstance()->GetWindow()->GetGui()->GetTextureByName(questToTexture[reward]);
+                ImGui::Image(textureId, ImVec2(25.0f, 25.0f), ImVec2(0.0f, 0.0f), ImVec2(1, 1), tint,
+                             ImVec4(0, 0, 0, 0));
+            }
+
             ImGui::EndTable();
 
             if (ImGui::BeginChild("QuestWindow", ImVec2(300.0f, 0))) {
@@ -413,12 +442,15 @@ static void InitRogueLikeGUI() {
     path = { "Holiday", "RogueLike", SECTION_COLUMN_1 };
     SohGui::mSohMenu->AddWidget(path, "RogueLikeLeft", WIDGET_CUSTOM).CustomFunction([](WidgetInfo& info) {
         ImGui::TextWrapped(
-            "RogueLike mode is a very unpolished proof of concept that enables you to play through the game doing "
+            "RogueLike mode is an unpolished proof of concept that enables you to play through the game doing "
             "various things to gain XP and gaining items and progression through random rolls instead of finding them "
             "at specific points in the game. There are various settings to tweak the balance on the right hand panel, "
             "the current balance has not really been heavily tested so feel free to experiment and share your "
             "findings. Also if there is interest some one is welcome to pick this up and polish it into a more "
-            "complete mode, all of it is open source.");
+            "complete mode, all of it is open source.\n\n"
+            "\n"
+            "To begin, start a new file and select the RogueLike quest mode. Your goal is to beat a random selection "
+            "of dungeons, which will grant you Ganon's boss key and allow you to finish the game.");
 
         ImGui::SeparatorText("Cheats:");
 

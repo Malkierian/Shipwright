@@ -9,6 +9,8 @@
 
 extern std::vector<RogueLikeQuestObject> activeQuests;
 
-namespace RogueLike {} // namespace RogueLike
+namespace RogueLike {
+extern std::vector<uint32_t> requiredRewards;
+} // namespace RogueLike
 
 #endif // ROGUELIKE_H

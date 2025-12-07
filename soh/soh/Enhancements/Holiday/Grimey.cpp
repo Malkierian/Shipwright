@@ -105,11 +105,11 @@ static void OnConfigurationChanged() {
     COND_HOOK(OnPlayerUpdate, CVarGetInteger(CVAR("Hailstorm"), 0), []() {
         // Every frame has a 1/1000 chance to start a hailstorm if there isn't one already
         if (hailstormActiveTimer == 0 && rand() % 1000 == 0) {
-            hailstormActiveTimer = 20 * 10; // Lasts for 20 seconds
+            hailstormActiveTimer = 20 * 20; // Lasts for 20 seconds
         }
         if (hailstormActiveTimer > 0) {
             hailstormActiveTimer--;
-            if (rand() % 2 == 0) {
+            if (rand() % 3 == 0) {
                 int spawned = 0;
                 while (spawned < 1) {
                     Vec3f pos = GET_PLAYER(gPlayState)->actor.world.pos;
@@ -198,7 +198,7 @@ static void RegisterMenu() {
 
     SohGui::mSohMenu->AddWidget(path, "Hailstorm", WIDGET_CVAR_CHECKBOX)
         .CVar(CVAR("Hailstorm"))
-        .Options(UIWidgets::CheckboxOptions().Tooltip("Ever persistent hailstorm throughout hyrule"));
+        .Options(UIWidgets::CheckboxOptions().Tooltip("Occasional hailstorms throughout hyrule"));
 }
 
 static RegisterShipInitFunc initFunc(OnConfigurationChanged, {

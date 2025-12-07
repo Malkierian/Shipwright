@@ -147,6 +147,8 @@ static Vec3f FindValidPos(f32 distance) {
             return pos;
         }
     }
+
+    return pos;
 }
 
 // TODO: If in hyrule field and treeChopper is on, teleport somewhere else in hyrule field

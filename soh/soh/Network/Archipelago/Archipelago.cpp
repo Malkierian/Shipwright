@@ -572,9 +572,15 @@ void ArchipelagoClient::OnItemGiven(uint32_t rc, GetItemEntry gi, uint8_t isGiSk
                     break;
             }
 
+            std::string itemName = std::string(gSaveContext.ship.quest.data.archipelago.locations[rc].itemName);
+
+            if (itemName == "Triforce Piece") {
+                itemName = "a Christmas Ornament";
+            }
+
             Notification::Emit(
                 { .itemIcon = itemIcon,
-                  .prefix = std::string(gSaveContext.ship.quest.data.archipelago.locations[rc].itemName),
+                  .prefix = itemName,
                   .message = " for ",
                   .suffix = std::string(gSaveContext.ship.quest.data.archipelago.locations[rc].playerName) });
         }

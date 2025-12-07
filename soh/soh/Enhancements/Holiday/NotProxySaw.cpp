@@ -4,6 +4,7 @@
 #include "soh/Enhancements/game-interactor/GameInteractor.h"
 #include "soh/Enhancements/custom-message/CustomMessageManager.h"
 #include "include/message_data_fmt.h"
+#include "soh/Network/Archipelago/Archipelago.h"
 
 extern "C" {
 #include "macros.h"
@@ -879,6 +880,10 @@ static void OnConfigurationChanged() {
 
         if (dialogIndex == -1) {
             if (affection >= TARGET_AFFECTION) {
+                gSaveContext.ship.stats.itemTimestamp[TIMESTAMP_DEFEAT_GANON] = GAMEPLAYSTAT_TOTAL_TIME;
+                gSaveContext.ship.stats.gameComplete = true;
+                ArchipelagoClient::GetInstance().SendGameWon();
+
                 gPlayState->nextEntranceIndex = ENTR_CHAMBER_OF_THE_SAGES_0;
                 gSaveContext.nextCutsceneIndex = 0xFFF2;
                 gPlayState->transitionTrigger = TRANS_TRIGGER_START;

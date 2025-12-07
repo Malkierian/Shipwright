@@ -507,5 +507,5 @@ static void OnLoadGame() {
     });
 }
 
-static RegisterShipInitFunc initFunc(InitRogueLikeGUI, {});
+static RegisterMenuInitFunc menuInitFunc(InitRogueLikeGUI);
 static RegisterShipInitFunc initFunc2(OnLoadGame, { "IS_ROGUELIKE" });

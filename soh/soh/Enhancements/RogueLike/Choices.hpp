@@ -61,6 +61,22 @@ inline bool IsItemInSlot(uint32_t value) {
     return gSaveContext.inventory.items[SLOT(value)] == ITEM_NONE;
 }
 
+inline void UpgradeMagic(uint32_t value) {
+    if (value == ITEM_MAGIC_SMALL) {
+        gSaveContext.isMagicAcquired = true;
+        gSaveContext.magicFillTarget = MAGIC_NORMAL_METER;
+        Magic_Fill(gPlayState);
+    } else if (value == ITEM_MAGIC_LARGE) {
+        if (!gSaveContext.isMagicAcquired) {
+            gSaveContext.isMagicAcquired = true;
+        }
+        gSaveContext.isDoubleMagicAcquired = true;
+        gSaveContext.magicFillTarget = MAGIC_DOUBLE_METER;
+        gSaveContext.magicLevel = 0;
+        Magic_Fill(gPlayState);
+    }
+}
+
 #define SONG_CHOICE(song, name) \
     { "QUEST_SONG_" #song, name, ITEM_SONG_##song, CanSelectSong, GiveItem }
 
@@ -148,6 +164,10 @@ inline std::vector<ChoiceCard> Equipment = {
       [](int32_t _) { return CUR_UPG_VALUE(UPG_STRENGTH) == 1; }, GiveItem },
     { "ITEM_GAUNTLETS_GOLD", "Golden Gauntlets", ITEM_GAUNTLETS_GOLD,
       [](int32_t _) { return CUR_UPG_VALUE(UPG_STRENGTH) == 2; }, GiveItem },
+    { "ITEM_MAGIC_SMALL", "Magic", ITEM_MAGIC_SMALL, [](int32_t _) { return !gSaveContext.isMagicAcquired; },
+      UpgradeMagic },
+    { "ITEM_MAGIC_LARGE", "Large Magic", ITEM_MAGIC_LARGE,
+      [](int32_t _) { return gSaveContext.isMagicAcquired && !gSaveContext.isDoubleMagicAcquired; }, UpgradeMagic },
 };
 
 inline std::vector<ChoiceCard> All = {

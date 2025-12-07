@@ -38,7 +38,6 @@ static void MiscVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, va_li
         case VB_GIVE_ITEM_FROM_MAN_ON_ROOF:
         case VB_GIVE_ITEM_FAIRY_OCARINA:
         case VB_GIVE_ITEM_WEIRD_EGG:
-        case VB_GIVE_ITEM_LIGHT_ARROW:
         case VB_GIVE_ITEM_STRENGTH_1:
         case VB_GIVE_ITEM_ZELDAS_LETTER:
         case VB_GIVE_ITEM_OCARINA_OF_TIME:
@@ -49,11 +48,26 @@ static void MiscVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, va_li
             *should = true;
             break;
         }
+        case VB_GIVE_ITEM_LIGHT_ARROW: {
+            // Give Ganons Boss Key
+            *should = false;
+            break;
+        }
+        case VB_BE_ELIGIBLE_FOR_LIGHT_ARROWS: {
+            // TODO Check Quest
+            *should = false;
+            break;
+        }
         case VB_GIVE_ITEM_FROM_ANJU_AS_ADULT: {
             EnNiwLady* enNiwLady = va_arg(args, EnNiwLady*);
             Flags_SetItemGetInf(ITEMGETINF_2C);
             RogueLike::Quests::AddQuestById(RL_QUEST_KV_STALFOS);
             enNiwLady->actionFunc = func_80ABA778;
+            *should = false;
+            break;
+        }
+        case VB_GIVE_ITEM_FROM_ANJU_AS_CHILD: {
+            Flags_SetItemGetInf(ITEMGETINF_0C);
             *should = false;
             break;
         }

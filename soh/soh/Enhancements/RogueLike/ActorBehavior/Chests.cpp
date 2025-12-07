@@ -38,6 +38,12 @@ static void InitChestsBehavior() {
         EnBox* enBox = va_arg(args, EnBox*);
         Actor* actor = (Actor*)enBox;
         Player* player = GET_PLAYER(gPlayState);
+
+        auto getItemId = actor->params >> 5 & 0x7F;
+        if (getItemId == GI_KEY_BOSS || getItemId == GI_KEY_SMALL) {
+            return;
+        }
+
         Player_SetupWaitForPutAway(gPlayState, player, func_8083A434_overridden);
         *should = false;
     });

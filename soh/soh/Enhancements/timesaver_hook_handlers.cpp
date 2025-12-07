@@ -1214,6 +1214,12 @@ void TimeSaverOnFlagSetHandler(int16_t flagType, int16_t flag) {
         return;
     }
 
+    if (IS_ROGUELIKE &&
+        ((flagType == FLAG_EVENT_CHECK_INF && flag == EVENTCHKINF_SPOKE_TO_SARIA_ON_BRIDGE) ||
+         (flagType == FLAG_EVENT_CHECK_INF && flag == EVENTCHKINF_RETURNED_TO_TEMPLE_OF_TIME_WITH_ALL_MEDALLIONS))) {
+        return;
+    }
+
     if (CVarGetInteger(CVAR_ENHANCEMENT("TimeSavers.SkipCutscene.Story"), IS_RANDO)) {
         switch (flagType) {
             case FLAG_EVENT_CHECK_INF:
@@ -1258,6 +1264,10 @@ void TimeSaverOnFlagSetHandler(int16_t flagType, int16_t flag) {
                 }
                 break;
         }
+    }
+
+    if (IS_ROGUELIKE) {
+        return;
     }
 
     if (CVarGetInteger(CVAR_ENHANCEMENT("TimeSavers.SkipMiscInteractions"), IS_RANDO)) {

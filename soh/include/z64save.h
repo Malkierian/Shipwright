@@ -8,6 +8,7 @@
 #include "soh/Enhancements/gameplaystats.h"
 #include "soh/Enhancements/randomizer/randomizer_entrance.h"
 #include "soh/Enhancements/boss-rush/BossRush.h"
+#include "soh/Enhancements/RogueLike/Types.h"
 
 #define FULL_HEART_HEALTH 0x10
 #define STARTING_HEALTH (3 * FULL_HEART_HEALTH)
@@ -72,6 +73,8 @@ typedef enum { // Pre-existing IDs for save sections in base code
     SECTION_ID_ENTRANCES,
     SECTION_ID_SCENES,
     SECTION_ID_TRACKER_DATA,
+    SECTION_ID_ARCHIPELAGO,
+    SECTION_ID_ROGUELIKE,
     SECTION_ID_MAX
 } SaveFuncIDs;
 
@@ -167,14 +170,39 @@ typedef struct ShipRandomizerSaveContextData {
     u8 bombchuUpgradeLevel;
 } ShipRandomizerSaveContextData;
 
+typedef struct ShipRogueLikeSaveContextData {
+    u32 stats[RL_MAX];
+    u32 xp;
+    u32 difficulty;
+    uint64_t lastActivity;
+    RogueLikeQuestObject quests[RL_QUEST_ID_MAX];
+} ShipRogueLikeSaveContextData;
+
 typedef struct ShipBossRushSaveContextData {
     u32 isPaused;
     u8 options[BR_OPTIONS_MAX];
 } ShipBossRushSaveContextData;
 
-typedef union ShipQuestSpecificSaveContextData {
+typedef struct ArchipelagoLocationData {
+    char itemName[100];
+    char playerName[17];
+} ArchipelagoLocationData;
+
+typedef struct ShipArchipelagoSaveContextData {
+    u8 isArchipelago;
+    u32 lastReceivedItemIndex;
+    char roomHash[100];
+    char slotName[17];
+    char archiUri[50];
+    char roomPass[50];
+    ArchipelagoLocationData locations[RC_MAX];
+} ShipArchipelagoSaveContextData;
+
+typedef struct ShipQuestSpecificSaveContextData {
     ShipRandomizerSaveContextData randomizer;
     ShipBossRushSaveContextData bossRush;
+    ShipArchipelagoSaveContextData archipelago;
+    ShipRogueLikeSaveContextData rogueLike;
 } ShipQuestSpecificSaveContextData;
 
 typedef struct ShipQuestSaveContextData {
@@ -318,12 +346,16 @@ typedef enum {
     /* 01 */ QUEST_MASTER,
     /* 02 */ QUEST_RANDOMIZER,
     /* 03 */ QUEST_BOSSRUSH,
+    /* 04 */ QUEST_ARCHIPELAGO,
+    /* 04 */ QUEST_ROGUELIKE,
 } Quest;
 
 #define IS_VANILLA (gSaveContext.ship.quest.id == QUEST_NORMAL)
 #define IS_MASTER_QUEST (gSaveContext.ship.quest.id == QUEST_MASTER)
 #define IS_RANDO (gSaveContext.ship.quest.id == QUEST_RANDOMIZER)
 #define IS_BOSS_RUSH (gSaveContext.ship.quest.id == QUEST_BOSSRUSH)
+#define IS_ARCHIPELAGO (gSaveContext.ship.quest.data.archipelago.isArchipelago == 1)
+#define IS_ROGUELIKE (gSaveContext.ship.quest.id == QUEST_ROGUELIKE)
 
 typedef enum {
     /* 0x00 */ BTN_ENABLED,

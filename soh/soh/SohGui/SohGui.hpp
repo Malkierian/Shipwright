@@ -29,6 +29,7 @@
 #include "soh/Enhancements/randomizer/randomizer_settings_window.h"
 #include "soh/Enhancements/timesplits/TimeSplits.h"
 #include "soh/Enhancements/randomizer/Plandomizer.h"
+#include "soh/Network/Archipelago/Archipelago.h"
 #include "SohModals.h"
 
 namespace SohGui {
@@ -39,6 +40,8 @@ void Destroy();
 void RegisterPopup(std::string title, std::string message, std::string button1 = "OK", std::string button2 = "",
                    std::function<void()> button1callback = nullptr, std::function<void()> button2callback = nullptr);
 void ShowRandomizerSettingsMenu();
+void ShowArchipelagoSettingsMenu();
+void ShowEscMenu();
 UIWidgets::Colors GetMenuThemeColor();
 } // namespace SohGui
 

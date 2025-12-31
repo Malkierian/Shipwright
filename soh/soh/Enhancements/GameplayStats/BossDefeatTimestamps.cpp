@@ -1,5 +1,6 @@
 #include "soh/Enhancements/game-interactor/GameInteractor_Hooks.h"
 #include "soh/ShipInit.hpp"
+#include "soh/Network/Archipelago/Archipelago.h"
 
 extern "C" SaveContext gSaveContext;
 
@@ -19,8 +20,10 @@ static void RegisterBossDefeatTimestamps() {
     BOSS_DEFEAT_TIMESTAMP(ACTOR_BOSS_GANON, TIMESTAMP_DEFEAT_GANONDORF);
     BOSS_DEFEAT_TIMESTAMP(ACTOR_BOSS_GANON2, TIMESTAMP_DEFEAT_GANON);
 
-    COND_ID_HOOK(OnBossDefeat, ACTOR_BOSS_GANON2, true,
-                 [](void* refActor) { gSaveContext.ship.stats.gameComplete = true; });
+    COND_ID_HOOK(OnBossDefeat, ACTOR_BOSS_GANON2, true, [](void* refActor) {
+        gSaveContext.ship.stats.gameComplete = true;
+        ArchipelagoClient::GetInstance().SendGameWon();
+    });
 }
 
 static RegisterShipInitFunc initFunc(RegisterBossDefeatTimestamps);

@@ -11,6 +11,7 @@ extern "C" {
 void GameInteractor_ExecuteOnZTitleInit(void* gameState);
 void GameInteractor_ExecuteOnZTitleUpdate(void* gameState);
 void GameInteractor_ExecuteOnLoadGame(int32_t fileNum);
+void GameInteractor_ExecutePostLoadGame(int32_t fileNum);
 void GameInteractor_ExecuteOnExitGame(int32_t fileNum);
 void GameInteractor_ExecuteOnGameStateMainStart();
 void GameInteractor_ExecuteOnGameFrameUpdate();
@@ -19,6 +20,7 @@ void GameInteractor_ExecuteOnEquipmentDelete(int16_t equipmentType, uint16_t equ
 void GameInteractor_ExecuteOnSaleEndHooks(GetItemEntry itemEntry);
 void GameInteractor_ExecuteOnTransitionEndHooks(int16_t sceneNum);
 void GameInteractor_ExecuteOnSceneInit(int16_t sceneNum);
+void GameInteractor_ExecuteOnRoomInit(int16_t roomNum);
 void GameInteractor_ExecuteAfterSceneCommands(int16_t sceneNum);
 void GameInteractor_ExecuteOnSceneFlagSet(int16_t sceneNum, int16_t flagType, int16_t flag);
 void GameInteractor_ExecuteOnSceneFlagUnset(int16_t sceneNum, int16_t flagType, int16_t flag);
@@ -26,6 +28,7 @@ void GameInteractor_ExecuteOnFlagSet(int16_t flagType, int16_t flag);
 void GameInteractor_ExecuteOnFlagUnset(int16_t flagType, int16_t flag);
 void GameInteractor_ExecuteOnSceneSpawnActors();
 void GameInteractor_ExecuteOnPlayerUpdate();
+void GameInteractor_ExecuteOnPlayerDeath();
 void GameInteractor_ExecuteOnSetDoAction(uint16_t action);
 void GameInteractor_ExecuteOnPlayerSfx(u16 sfxId);
 void GameInteractor_ExecuteOnOcarinaSongAction();
@@ -36,12 +39,14 @@ void GameInteractor_ExecuteOnActorInit(void* actor);
 void GameInteractor_ExecuteOnActorSpawn(void* actor);
 bool GameInteractor_ShouldActorUpdate(void* actor);
 void GameInteractor_ExecuteOnActorUpdate(void* actor);
+void GameInteractor_ExecuteOnActorDraw(void* actor);
 void GameInteractor_ExecuteOnActorKill(void* actor);
 void GameInteractor_ExecuteOnActorDestroy(void* actor);
 void GameInteractor_ExecuteOnEnemyDefeat(void* actor);
 void GameInteractor_ExecuteOnBossDefeat(void* actor);
 void GameInteractor_ExecuteOnTimestamp(u8 item);
 void GameInteractor_ExecuteOnPlayerBonk();
+void GameInteractor_ExecuteOnPlayerRoll();
 void GameInteractor_ExecuteOnPlayerHealthChange(int16_t amount);
 void GameInteractor_ExecuteOnPlayerBottleUpdate(int16_t contents);
 void GameInteractor_ExecuteOnPlayerHoldUpShield();
@@ -53,11 +58,13 @@ void GameInteractor_ExecuteOnDungeonKeyUsedHooks(uint16_t mapIndex);
 void GameInteractor_ExecuteOnPlayDestroy();
 void GameInteractor_ExecuteOnPlayDrawBegin();
 void GameInteractor_ExecuteOnPlayDrawEnd();
+void GameInteractor_ExecuteOnOpenText(u16* textId, bool* loadFromMessageTable);
 bool GameInteractor_Should(GIVanillaBehavior flag, uint32_t result, ...);
 
 // MARK: -  Save Files
 void GameInteractor_ExecuteOnSaveFile(int32_t fileNum, int32_t sectionID);
 void GameInteractor_ExecuteOnLoadFile(int32_t fileNum);
+void GameInteractor_ExecuteOnCopyFile(int32_t sourceFileNum, int32_t destFileNum);
 void GameInteractor_ExecuteOnDeleteFile(int32_t fileNum);
 
 // MARK: - Dialog
@@ -91,6 +98,13 @@ void GameInteractor_RegisterOnAssetAltChange(void (*fn)(void));
 
 // Mark: - Pause Menu
 void GameInteractor_ExecuteOnKaleidoUpdate();
+
+// Mark: - Randomizer
+void GameInteractor_ExecuteOnRandomizerItemGivenHooks(uint32_t rc, GetItemEntry gi, uint8_t isGiSkipped);
+
+// Mark: - Archipelago
+void GameInteractor_ExecuteOnArchipelagoItemReceived(uint32_t rg);
+void GameInteractor_ExecuteOnRandomizerExternalCheck(uint32_t rc);
 
 // Mark: - Audio
 void GameInteractor_ExecuteOnSeqPlayerInit(int32_t playerIdx, int32_t seqId);

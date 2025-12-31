@@ -1069,6 +1069,7 @@ void Interface_LoadItemIcon1(PlayState* play, u16 button);
 void Interface_LoadItemIcon2(PlayState* play, u16 button);
 void func_80084BF4(PlayState* play, u16 flag);
 uint16_t Interface_DrawTextLine(GraphicsContext* gfx, char text[], int16_t x, int16_t y, uint16_t colorR, uint16_t colorG, uint16_t colorB, uint16_t colorA, float textScale, uint8_t textShadow);
+uint16_t Interface_DrawTextLineOverlay(GraphicsContext* gfx, char text[], int16_t x, int16_t y, uint16_t colorR, uint16_t colorG, uint16_t colorB, uint16_t colorA, float textScale, uint8_t textShadow);
 u8 Item_Give(PlayState* play, u8 item);
 u16 Randomizer_Item_Give(PlayState* play, GetItemEntry giEntry);
 u8 Item_CheckObtainability(u8 item);
@@ -2456,6 +2457,9 @@ void Font_LoadOrderedFontNTSC(Font* font);
 void Interface_RandoRestoreSwordless(void);
 s32 Ship_CalcShouldDrawAndUpdate(PlayState* play, Actor* actor, Vec3f* projectedPos, f32 projectedW, bool* shouldDraw,
                                  bool* shouldUpdate);
+
+// Exposing for Roc's Feather
+void func_80838940(Player* this, LinkAnimationHeader* anim, f32 arg2, PlayState* play, u16 sfxId);
 
 // #endregion
 

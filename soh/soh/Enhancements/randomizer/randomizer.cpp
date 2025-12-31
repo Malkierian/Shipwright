@@ -40,6 +40,7 @@
 #include "soh/util.h"
 #include "fishsanity.h"
 #include "randomizerTypes.h"
+#include "soh/Network/Archipelago/Archipelago.h"
 #include "soh/Notification/Notification.h"
 
 extern std::map<RandomizerCheckArea, std::string> rcAreaNames;
@@ -65,6 +66,8 @@ const std::string Randomizer::triforcePieceMessageTableID = "RandomizerTriforceP
 const std::string Randomizer::NaviRandoMessageTableID = "RandomizerNavi";
 const std::string Randomizer::IceTrapRandoMessageTableID = "RandomizerIceTrap";
 const std::string Randomizer::randoMiscHintsTableID = "RandomizerMiscHints";
+const std::string Randomizer::archipelagoItemsTableID = "ÁrchipelagoItems";
+const std::string Randomizer::christmasTreeMessageTableID = "RandomizerChristmasTree";
 
 static const char* englishRupeeNames[188] = {
     "[P]",
@@ -3640,19 +3643,24 @@ ShopItemIdentity Randomizer::IdentifyShopItem(s32 sceneNum, u8 slotIndex) {
         (sceneNum == SCENE_BAZAAR && gSaveContext.entranceIndex == ENTR_BAZAAR_0) ? SCENE_TEST01 : sceneNum,
         slotIndex - 1);
 
-    if (location->GetRandomizerCheck() != RC_UNKNOWN_CHECK) {
-        shopItemIdentity.randomizerInf = rcToRandomizerInf[location->GetRandomizerCheck()];
-        shopItemIdentity.randomizerCheck = location->GetRandomizerCheck();
-        shopItemIdentity.ogItemId = (GetItemID)Rando::StaticData::RetrieveItem(location->GetVanillaItem()).GetItemID();
+    RandomizerCheck randoCheck = location->GetRandomizerCheck();
 
-        RandomizerGet randoGet =
-            Rando::Context::GetInstance()->GetItemLocation(shopItemIdentity.randomizerCheck)->GetPlacedRandomizerGet();
-        if (randomizerGetToEnGirlShopItem.find(randoGet) != randomizerGetToEnGirlShopItem.end()) {
-            shopItemIdentity.enGirlAShopItem = randomizerGetToEnGirlShopItem[randoGet];
+    if (randoCheck != RC_UNKNOWN_CHECK) {
+        RandomizerGet randoGet = Rando::Context::GetInstance()->GetItemLocation(randoCheck)->GetPlacedRandomizerGet();
+
+        if (randoGet != RG_NONE) {
+            shopItemIdentity.randomizerInf = rcToRandomizerInf[randoCheck];
+            shopItemIdentity.randomizerCheck = randoCheck;
+            shopItemIdentity.ogItemId =
+                (GetItemID)Rando::StaticData::RetrieveItem(location->GetVanillaItem()).GetItemID();
+
+            if (randomizerGetToEnGirlShopItem.find(randoGet) != randomizerGetToEnGirlShopItem.end()) {
+                shopItemIdentity.enGirlAShopItem = randomizerGetToEnGirlShopItem[randoGet];
+            }
+
+            shopItemIdentity.itemPrice =
+                OTRGlobals::Instance->gRandoContext->GetItemLocation(shopItemIdentity.randomizerCheck)->GetPrice();
         }
-
-        shopItemIdentity.itemPrice =
-            OTRGlobals::Instance->gRandoContext->GetItemLocation(shopItemIdentity.randomizerCheck)->GetPrice();
     }
 
     return shopItemIdentity;
@@ -4717,6 +4725,12 @@ CustomMessage Randomizer::GetMerchantMessage(RandomizerCheck rc, TextIDs textId,
     } else if (shopItemGet == RG_ICE_TRAP) {
         shopItemGet = ctx->overrides[rc].LooksLike();
         shopItemName = CustomMessage(ctx->overrides[rc].GetTrickName());
+    } else if (shopItemGet == RG_ARCHIPELAGO_ITEM_PROGRESSIVE || shopItemGet == RG_ARCHIPELAGO_ITEM_USEFUL ||
+               shopItemGet == RG_ARCHIPELAGO_ITEM_JUNK) {
+        auto shopItem = Rando::StaticData::RetrieveItem(shopItemGet);
+        std::string apItemName = std::string(gSaveContext.ship.quest.data.archipelago.locations[rc].itemName) + " (" +
+                                 std::string(gSaveContext.ship.quest.data.archipelago.locations[rc].playerName) + ")";
+        shopItemName = { Text(apItemName) };
     } else {
         auto shopItem = Rando::StaticData::RetrieveItem(shopItemGet);
         shopItemName = { shopItem.GetName() };
@@ -4836,33 +4850,33 @@ CustomMessage Randomizer::GetRupeeMessage(u16 rupeeTextId) {
 void CreateTriforcePieceMessages() {
     CustomMessage TriforcePieceMessages[NUM_TRIFORCE_PIECE_MESSAGES] = {
 
-        { "You found a %yTriforce Piece%w!&%g[[current]]%w down, %c[[remaining]]%w to go. It's a start!",
-          "Ein %yTriforce-Splitter%w! Du hast&%g[[current]]%w von %c[[required]]%w gefunden. Es ist ein&Anfang!",
-          "Vous trouvez un %yFragment de la&Triforce%w! Vous en avez %g[[current]]%w, il en&reste %c[[remaining]]%w à "
+        { "You found a %yChristmas Ornament%w!&%g[[current]]%w down, %c[[remaining]]%w to go. It's a start!",
+          "Ein %yChristmas Ornament%w! Du hast&%g[[current]]%w von %c[[required]]%w gefunden. Es ist ein&Anfang!",
+          "Vous trouvez un %yChristmas Ornament%w! Vous en avez %g[[current]]%w, il en&reste %c[[remaining]]%w à "
           "trouver. C'est un début!" },
 
-        { "You found a %yTriforce Piece%w!&%g[[current]]%w down, %c[[remaining]]%w to go. Progress!",
-          "Ein %yTriforce-Splitter%w! Du hast&%g[[current]]%w von %c[[required]]%w gefunden. Es geht voran!",
-          "Vous trouvez un %yFragment de la&Triforce%w! Vous en avez %g[[current]]%w, il en&reste %c[[remaining]]%w à "
+        { "You found a %yChristmas Ornament%w!&%g[[current]]%w down, %c[[remaining]]%w to go. Progress!",
+          "Ein %yChristmas Ornament%w! Du hast&%g[[current]]%w von %c[[required]]%w gefunden. Es geht voran!",
+          "Vous trouvez un %yChristmas Ornament%w! Vous en avez %g[[current]]%w, il en&reste %c[[remaining]]%w à "
           "trouver. Ça avance!" },
 
-        { "You found a %yTriforce Piece%w!&%g[[current]]%w down, %c[[remaining]]%w to go. Over half-way&there!",
-          "Ein %yTriforce-Splitter%w! Du hast&schon %g[[current]]%w von %c[[required]]%w gefunden. Schon&über die "
+        { "You found a %yChristmas Ornament%w!&%g[[current]]%w down, %c[[remaining]]%w to go. Over half-way&there!",
+          "Ein %yChristmas Ornament%w! Du hast&schon %g[[current]]%w von %c[[required]]%w gefunden. Schon&über die "
           "Hälfte!",
-          "Vous trouvez un %yFragment de la&Triforce%w! Vous en avez %g[[current]]%w, il en&reste %c[[remaining]]%w à "
+          "Vous trouvez un %yChristmas Ornament%w! Vous en avez %g[[current]]%w, il en&reste %c[[remaining]]%w à "
           "trouver. Il en reste un&peu moins que la moitié!" },
 
-        { "You found a %yTriforce Piece%w!&%g[[current]]%w down, %c[[remaining]]%w to go. Almost done!",
-          "Ein %yTriforce-Splitter%w! Du hast&schon %g[[current]]%w von %c[[required]]%w gefunden. Fast&geschafft!",
-          "Vous trouvez un %yFragment de la&Triforce%w! Vous en avez %g[[current]]%w, il en&reste %c[[remaining]]%w à "
+        { "You found a %yChristmas Ornament%w!&%g[[current]]%w down, %c[[remaining]]%w to go. Almost done!",
+          "Ein %yChristmas Ornament%w! Du hast&schon %g[[current]]%w von %c[[required]]%w gefunden. Fast&geschafft!",
+          "Vous trouvez un %yChristmas Ornament%w! Vous en avez %g[[current]]%w, il en&reste %c[[remaining]]%w à "
           "trouver. C'est presque&terminé!" },
 
-        { "You completed the %yTriforce of&Courage%w! %gGG%w!",
+        { "You found all of the %yChristmas&Ornaments%w! Visit the %gChristmas&tree%w in Kakariko Village!",
           "Das %yTriforce des Mutes%w! Du hast&alle Splitter gefunden. %gGut gemacht%w!",
           "Vous avez complété la %yTriforce&du Courage%w! %gFélicitations%w!" },
 
-        { "You found a spare %yTriforce Piece%w!&You only needed %c[[required]]%w, but you have %g[[current]]%w!",
-          "Noch ein %yTriforce-Splitter%w! Du&brauchtest nur %c[[required]]%w, hast jetzt aber %g[[current]]%w!",
+        { "You found a spare %yChristmas Ornament%w!&You only needed %c[[required]]%w, but you have %g[[current]]%w!",
+          "Noch ein %yChristmas Ornament%w! Du&brauchtest nur %c[[required]]%w, hast jetzt aber %g[[current]]%w!",
           "Vous avez trouvé un %yFragment de&Triforce%w en plus! Vous n'aviez besoin&que de %c[[required]]%w, mais "
           "vous en avez %g[[current]]%w en&tout!" },
     };
@@ -4901,6 +4915,44 @@ CustomMessage Randomizer::GetTriforcePieceMessage() {
     messageEntry.Replace("[[remaining]]", std::to_string(remaining));
     messageEntry.Replace("[[required]]", std::to_string(required));
     messageEntry.Format();
+    return messageEntry;
+}
+
+void CreateChristmasTreeMessages() {
+    CustomMessage ChristmasTreeMessages[2] = {
+
+        { "The %yChristmas tree%w seems to be&missing some of %gits magic%w... Find all&ornaments to save "
+          "%rChristmas%w!",
+          "The %yChristmas tree%w seems to be&missing some of %gits magic%w... Find all&ornaments to save "
+          "%rChristmas%w!",
+          "The %yChristmas tree%w seems to be&missing some of %gits magic%w... Find all&ornaments to save "
+          "%rChristmas%w!" },
+
+        { "The tree's magic has been fully&restored. %gMerry %rChristmas%w!",
+          "The tree's magic has been fully&restored. %gMerry %rChristmas%w!",
+          "The tree's magic has been fully&restored. %gMerry %rChristmas%w!" }
+    };
+    CustomMessageManager* customMessageManager = CustomMessageManager::Instance;
+    customMessageManager->AddCustomMessageTable(Randomizer::christmasTreeMessageTableID);
+    for (unsigned int i = 0; i <= 1; i++) {
+        customMessageManager->CreateMessage(Randomizer::christmasTreeMessageTableID, i, ChristmasTreeMessages[i]);
+    }
+}
+
+CustomMessage Randomizer::GetChristmasTreeMessage() {
+    // Item is only given after the textbox, so reflect that inside the textbox.
+    uint8_t current = gSaveContext.ship.quest.data.randomizer.triforcePiecesCollected;
+    uint8_t required = OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_TRIFORCE_HUNT_PIECES_REQUIRED);
+    uint8_t messageIndex;
+
+    if (current < required) {
+        messageIndex = 0;
+    } else {
+        messageIndex = 1;
+    }
+
+    CustomMessage messageEntry =
+        CustomMessageManager::Instance->RetrieveMessage(Randomizer::christmasTreeMessageTableID, messageIndex);
     return messageEntry;
 }
 
@@ -5512,11 +5564,42 @@ CustomMessage Randomizer::GetGoronMessage(u16 index) {
     return messageEntry;
 }
 
+void CreateArchipelagoItemMessage() {
+    CustomMessageManager* customMessageManager = CustomMessageManager::Instance;
+    customMessageManager->AddCustomMessageTable(Randomizer::archipelagoItemsTableID);
+    customMessageManager->CreateMessage(Randomizer::archipelagoItemsTableID, 0,
+                                        CustomMessage("You found [[apcolor]][[apitem]]%w for %r[[applayer]]%w!",
+                                                      "You found [[apcolor]][[apitem]]%w for %r[[applayer]]%w!",
+                                                      "You found [[apcolor]][[apitem]]%w for %r[[applayer]]%w!"));
+}
+
+CustomMessage Randomizer::GetArchipelagoItemMessage(int16_t randomizerGet, uint32_t randomizerCheck) {
+    CustomMessage messageEntry =
+        CustomMessageManager::Instance->RetrieveMessage(Randomizer::archipelagoItemsTableID, 0);
+
+    std::string itemColor = "";
+    if (randomizerGet == RG_ARCHIPELAGO_ITEM_PROGRESSIVE) {
+        itemColor = "%p";
+    } else if (randomizerGet == RG_ARCHIPELAGO_ITEM_USEFUL) {
+        itemColor = "%b";
+    } else {
+        itemColor = "%c";
+    }
+
+    messageEntry.Replace("[[apcolor]]", itemColor);
+    messageEntry.Replace("[[apitem]]",
+                         std::string(gSaveContext.ship.quest.data.archipelago.locations[randomizerCheck].itemName));
+    messageEntry.Replace("[[applayer]]",
+                         std::string(gSaveContext.ship.quest.data.archipelago.locations[randomizerCheck].playerName));
+    messageEntry.AutoFormat();
+    return messageEntry;
+}
+
 void Randomizer::CreateCustomMessages() {
     // RANDTODO: Translate into french and german and replace GIMESSAGE_UNTRANSLATED
     // with GIMESSAGE(getItemID, itemID, english, german, french).
     const std::array<GetItemMessage, 112> getItemMessages = { {
-        GIMESSAGE(RG_GREG_RUPEE, ITEM_MASK_GORON, "You found %gGreg%w!", "%gGreg%w! Du hast ihn&wirklich gefunden!",
+        GIMESSAGE(RG_GREG_RUPEE, ITEM_MASK_GORON, "You found %gGreg%w!", "%gGreg%w! Du hast ihn wirklich gefunden!",
                   "Félicitation! Vous avez trouvé %gGreg%w!"),
         GIMESSAGE(RG_MASTER_SWORD, ITEM_SWORD_MASTER, "You found the %gMaster Sword%w!",
                   "Du erhältst das %gMaster-Schwert%w!", "Vous obtenez %gl'Épée de Légende%w!"),
@@ -5885,6 +5968,7 @@ void Randomizer::CreateCustomMessages() {
     CreateTriforcePieceMessages();
     CreateNaviRandoMessages();
     CreateFireTempleGoronMessages();
+    CreateArchipelagoItemMessage();
 }
 
 class ExtendedVanillaTableInvalidItemIdException : public std::exception {
@@ -6050,6 +6134,12 @@ extern "C" u16 Randomizer_Item_Give(PlayState* play, GetItemEntry giEntry) {
     // if it's an item that just sets a randomizerInf, set it
     if (randomizerGetToRandInf.find(item) != randomizerGetToRandInf.end()) {
         Flags_SetRandomizerInf(randomizerGetToRandInf.find(item)->second);
+        return Return_Item_Entry(giEntry, RG_NONE);
+    }
+
+    // If it's an archipelago item, don't give anything
+    if (item == RG_ARCHIPELAGO_ITEM_USEFUL || item == RG_ARCHIPELAGO_ITEM_JUNK ||
+        item == RG_ARCHIPELAGO_ITEM_PROGRESSIVE) {
         return Return_Item_Entry(giEntry, RG_NONE);
     }
 
@@ -6291,6 +6381,7 @@ extern "C" u16 Randomizer_Item_Give(PlayState* play, GetItemEntry giEntry) {
                 gSaveContext.ship.stats.itemTimestamp[TIMESTAMP_TRIFORCE_COMPLETED] =
                     static_cast<u32>(GAMEPLAYSTAT_TOTAL_TIME);
                 gSaveContext.ship.stats.gameComplete = 1;
+                ArchipelagoClient::GetInstance().SendGameWon();
                 Flags_SetRandomizerInf(RAND_INF_GRANT_GANONS_BOSSKEY);
                 Play_PerformSave(play);
                 Notification::Emit({

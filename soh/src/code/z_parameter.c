@@ -11,6 +11,7 @@
 #include "soh/Enhancements/custom-message/CustomMessageInterfaceAddon.h"
 #include "soh/Enhancements/cosmetics/cosmeticsTypes.h"
 #include "soh/Enhancements/enhancementTypes.h"
+#include "soh/Enhancements/FileSelectEnhancements.h"
 #include "soh/ShipUtils.h"
 
 #include <string.h>
@@ -1872,6 +1873,10 @@ u8 Return_Item(u8 itemID, ModIndex modId, ItemID returnItem) {
  * @return u8
  */
 u8 Item_Give(PlayState* play, u8 item) {
+    // SoH [Enhancements] Ignore ITEM_SHIP, used for CustomItem
+    if (item == ITEM_SHIP)
+        return ITEM_NONE;
+
     // prevents getting sticks without the bag in case something got missed
     if (IS_RANDO && (item == ITEM_STICK || item == ITEM_STICKS_5 || item == ITEM_STICKS_10) &&
         Randomizer_GetSettingValue(RSK_SHUFFLE_DEKU_STICK_BAG) && CUR_UPG_VALUE(UPG_STICKS) == 0) {
@@ -2475,6 +2480,10 @@ u8 Item_CheckObtainability(u8 item) {
     s16 i;
     s16 slot = SLOT(item);
     s32 temp;
+
+    // SoH [Enhancements] Ignore ITEM_SHIP, used for CustomItem
+    if (item == ITEM_SHIP)
+        return ITEM_NONE;
 
     if (item >= ITEM_STICKS_5) {
         slot = SLOT(sExtraItemBases[item - ITEM_STICKS_5]);
@@ -3426,6 +3435,52 @@ void Interface_DrawLineupTick(PlayState* play) {
     CLOSE_DISPS(play->state.gfxCtx);
 }
 
+void Interface_DrawArchipelagoStatusString(PlayState* play) {
+    InterfaceContext* interfaceCtx = &play->interfaceCtx;
+    OPEN_DISPS(play->state.gfxCtx);
+
+    Gfx_SetupDL_39Overlay(play->state.gfxCtx);
+
+    s16 posX = OTRGetRectDimensionFromLeftEdge(4);
+    s16 posY = SCREEN_HEIGHT - 12;
+
+    int32_t scale = R_TEXT_CHAR_SCALE * 0.2f;
+    int32_t sTexSize = (scale / 100.0f) * 64.0f;
+    int32_t sTexScale = 1024.0f / (scale / 100.0f);
+
+    gDPSetEnvColor(OVERLAY_DISP++, 255, 255, 255, 255);
+    gDPSetPrimColor(OVERLAY_DISP++, 0, 0, 255, 255, 255, 255);
+
+    gDPLoadTextureBlock(OVERLAY_DISP++, gArchipelagoItemTex, G_IM_FMT_RGBA, G_IM_SIZ_32b, 64, 64, 0,
+                        G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP, 0, 0, G_TX_NOLOD, G_TX_NOLOD);
+
+    gSPWideTextureRectangle(OVERLAY_DISP++, posX << 2, posY << 2, (posX + sTexSize) << 2, (posY + sTexSize) << 2,
+                            G_TX_RENDERTILE, 0, 0, sTexScale, sTexScale);
+
+    posX += 13;
+
+    uint8_t language = (gSaveContext.language == LANGUAGE_JPN) ? LANGUAGE_ENG : gSaveContext.language;
+    char* statusText = SohFileSelect_GetArchipelagoSettingText(ASM_NOT_CONNECTED, language);
+    switch (CVarGetInteger(CVAR_REMOTE_ARCHIPELAGO("ConnectionStatus"), 0)) {
+        case 0: // Not Connected
+            statusText = SohFileSelect_GetArchipelagoSettingText(ASM_NOT_CONNECTED, language);
+            break;
+        case 1: // Connecting
+        case 2: // Connection error, retrying
+        case 3: // Connected
+            statusText = SohFileSelect_GetArchipelagoSettingText(ASM_CONNECTING, language);
+            break;
+        case 4: // Connected + Locations Scouted
+            statusText = SohFileSelect_GetArchipelagoSettingText(ASM_CONNECTED, language);
+            break;
+    }
+
+    Interface_DrawTextLineOverlay(play->state.gfxCtx, statusText, posX, posY, 255, 255, 255, 255, 0.8f, true);
+
+    gDPPipeSync(OVERLAY_DISP++);
+    CLOSE_DISPS(play->state.gfxCtx);
+}
+
 void Interface_DrawMagicBar(PlayState* play) {
     InterfaceContext* interfaceCtx = &play->interfaceCtx;
     s16 magicDrop = R_MAGIC_BAR_LARGE_Y - R_MAGIC_BAR_SMALL_Y + 2;
@@ -3441,8 +3496,8 @@ void Interface_DrawMagicBar(PlayState* play) {
     if (CVarGetInteger(CVAR_COSMETIC("Consumable.Magic.Changed"), 0)) {
         magicbar_green = CVarGetColor24(CVAR_COSMETIC("Consumable.Magic.Value"), magicbar_green);
     }
-    if (CVarGetInteger("gCosmetics.Consumable_MagicInfinite.Changed", 0)) {
-        magicbar_blue = CVarGetColor24("gCosmetics.Consumable_MagicInfinite.Value", magicbar_blue);
+    if (CVarGetInteger(CVAR_COSMETIC("Consumable.MagicInfinite.Changed"), 0)) {
+        magicbar_blue = CVarGetColor24(CVAR_COSMETIC("Consumable.MagicInfinite.Value"), magicbar_blue);
     }
 
     OPEN_DISPS(play->state.gfxCtx);
@@ -4897,6 +4952,11 @@ void Interface_DrawAmmoCount(PlayState* play, s16 button, s16 alpha) {
         }
 
         ammo = AMMO(i);
+        if (CVarGetInteger("gHoliday.lilDavid.BombArrows.Active", 0) &&
+            gSaveContext.equips.buttonItems[button] == ITEM_BOW && AMMO(ITEM_BOMB) != 0 &&
+            AMMO(ITEM_BOMB) < AMMO(ITEM_BOW)) {
+            ammo = AMMO(ITEM_BOMB);
+        }
 
         gDPPipeSync(OVERLAY_DISP++);
 
@@ -4908,6 +4968,11 @@ void Interface_DrawAmmoCount(PlayState* play, s16 button, s16 alpha) {
             ammo = play->bombchuBowlingStatus;
             if (ammo < 0) {
                 ammo = 0;
+            }
+        } else if (gSaveContext.equips.buttonItems[button] == ITEM_BOW &&
+                   CVarGetInteger("gHoliday.lilDavid.BombArrows.Active", 0)) {
+            if (AMMO(ITEM_BOMB) != 0 && ammo == MIN(CUR_CAPACITY(UPG_QUIVER), CUR_CAPACITY(UPG_BOMB_BAG))) {
+                gDPSetPrimColor(OVERLAY_DISP++, 0, 0, 120, 255, 0, alpha);
             }
         } else if (((i == ITEM_BOW) && (AMMO(i) == CUR_CAPACITY(UPG_QUIVER))) ||
                    ((i == ITEM_BOMB) && (AMMO(i) == CUR_CAPACITY(UPG_BOMB_BAG))) ||
@@ -5399,6 +5464,10 @@ void Interface_Draw(PlayState* play) {
             Interface_DrawLineupTick(play);
         }
 
+        if (IS_ARCHIPELAGO) {
+            Interface_DrawArchipelagoStatusString(play);
+        }
+
         if (fullUi || gSaveContext.magicState > MAGIC_STATE_IDLE) {
             Interface_DrawMagicBar(play);
         }
@@ -5524,6 +5593,10 @@ void Interface_Draw(PlayState* play) {
         if (gSaveContext.equips.buttonItems[1] < 0xF0) {
             gDPSetPrimColor(OVERLAY_DISP++, 0, 0, 255, 255, 255, interfaceCtx->cLeftAlpha);
             gDPSetCombineMode(OVERLAY_DISP++, G_CC_MODULATERGBA_PRIM, G_CC_MODULATERGBA_PRIM);
+            if (gSaveContext.equips.buttonItems[1] == ITEM_BOW &&
+                CVarGetInteger("gHoliday.lilDavid.BombArrows.Active", 0)) {
+                Interface_DrawItemIconTexture(play, gItemIcons[ITEM_BOMB], 1);
+            }
             Interface_DrawItemIconTexture(play, gItemIcons[gSaveContext.equips.buttonItems[1]], 1);
             gDPPipeSync(OVERLAY_DISP++);
             gDPSetCombineLERP(OVERLAY_DISP++, PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, TEXEL0, 0, PRIMITIVE, 0,
@@ -5537,6 +5610,10 @@ void Interface_Draw(PlayState* play) {
         if (gSaveContext.equips.buttonItems[2] < 0xF0) {
             gDPSetPrimColor(OVERLAY_DISP++, 0, 0, 255, 255, 255, interfaceCtx->cDownAlpha);
             gDPSetCombineMode(OVERLAY_DISP++, G_CC_MODULATERGBA_PRIM, G_CC_MODULATERGBA_PRIM);
+            if (gSaveContext.equips.buttonItems[2] == ITEM_BOW &&
+                CVarGetInteger("gHoliday.lilDavid.BombArrows.Active", 0)) {
+                Interface_DrawItemIconTexture(play, gItemIcons[ITEM_BOMB], 2);
+            }
             Interface_DrawItemIconTexture(play, gItemIcons[gSaveContext.equips.buttonItems[2]], 2);
             gDPPipeSync(OVERLAY_DISP++);
             gDPSetCombineLERP(OVERLAY_DISP++, PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, TEXEL0, 0, PRIMITIVE, 0,
@@ -5550,6 +5627,10 @@ void Interface_Draw(PlayState* play) {
         if (gSaveContext.equips.buttonItems[3] < 0xF0) {
             gDPSetPrimColor(OVERLAY_DISP++, 0, 0, 255, 255, 255, interfaceCtx->cRightAlpha);
             gDPSetCombineMode(OVERLAY_DISP++, G_CC_MODULATERGBA_PRIM, G_CC_MODULATERGBA_PRIM);
+            if (gSaveContext.equips.buttonItems[3] == ITEM_BOW &&
+                CVarGetInteger("gHoliday.lilDavid.BombArrows.Active", 0)) {
+                Interface_DrawItemIconTexture(play, gItemIcons[ITEM_BOMB], 3);
+            }
             Interface_DrawItemIconTexture(play, gItemIcons[gSaveContext.equips.buttonItems[3]], 3);
             gDPPipeSync(OVERLAY_DISP++);
             gDPSetCombineLERP(OVERLAY_DISP++, PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, TEXEL0, 0, PRIMITIVE, 0,
@@ -5616,6 +5697,10 @@ void Interface_Draw(PlayState* play) {
             if (gSaveContext.equips.buttonItems[4] < 0xF0) {
                 gDPSetPrimColor(OVERLAY_DISP++, 0, 0, 255, 255, 255, interfaceCtx->dpadUpAlpha);
                 gDPSetCombineMode(OVERLAY_DISP++, G_CC_MODULATERGBA_PRIM, G_CC_MODULATERGBA_PRIM);
+                if (gSaveContext.equips.buttonItems[4] == ITEM_BOW &&
+                    CVarGetInteger("gHoliday.lilDavid.BombArrows.Active", 0)) {
+                    Interface_DrawItemIconTexture(play, gItemIcons[ITEM_BOMB], 4);
+                }
                 Interface_DrawItemIconTexture(play, gItemIcons[gSaveContext.equips.buttonItems[4]], 4);
                 gDPPipeSync(OVERLAY_DISP++);
                 gDPSetCombineLERP(OVERLAY_DISP++, PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, TEXEL0, 0, PRIMITIVE, 0,
@@ -5627,6 +5712,10 @@ void Interface_Draw(PlayState* play) {
             if (gSaveContext.equips.buttonItems[5] < 0xF0) {
                 gDPSetPrimColor(OVERLAY_DISP++, 0, 0, 255, 255, 255, interfaceCtx->dpadDownAlpha);
                 gDPSetCombineMode(OVERLAY_DISP++, G_CC_MODULATERGBA_PRIM, G_CC_MODULATERGBA_PRIM);
+                if (gSaveContext.equips.buttonItems[5] == ITEM_BOW &&
+                    CVarGetInteger("gHoliday.lilDavid.BombArrows.Active", 0)) {
+                    Interface_DrawItemIconTexture(play, gItemIcons[ITEM_BOMB], 5);
+                }
                 Interface_DrawItemIconTexture(play, gItemIcons[gSaveContext.equips.buttonItems[5]], 5);
                 gDPPipeSync(OVERLAY_DISP++);
                 gDPSetCombineLERP(OVERLAY_DISP++, PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, TEXEL0, 0, PRIMITIVE, 0,
@@ -5638,6 +5727,10 @@ void Interface_Draw(PlayState* play) {
             if (gSaveContext.equips.buttonItems[6] < 0xF0) {
                 gDPSetPrimColor(OVERLAY_DISP++, 0, 0, 255, 255, 255, interfaceCtx->dpadLeftAlpha);
                 gDPSetCombineMode(OVERLAY_DISP++, G_CC_MODULATERGBA_PRIM, G_CC_MODULATERGBA_PRIM);
+                if (gSaveContext.equips.buttonItems[6] == ITEM_BOW &&
+                    CVarGetInteger("gHoliday.lilDavid.BombArrows.Active", 0)) {
+                    Interface_DrawItemIconTexture(play, gItemIcons[ITEM_BOMB], 6);
+                }
                 Interface_DrawItemIconTexture(play, gItemIcons[gSaveContext.equips.buttonItems[6]], 6);
                 gDPPipeSync(OVERLAY_DISP++);
                 gDPSetCombineLERP(OVERLAY_DISP++, PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, TEXEL0, 0, PRIMITIVE, 0,
@@ -5649,6 +5742,10 @@ void Interface_Draw(PlayState* play) {
             if (gSaveContext.equips.buttonItems[7] < 0xF0) {
                 gDPSetPrimColor(OVERLAY_DISP++, 0, 0, 255, 255, 255, interfaceCtx->dpadRightAlpha);
                 gDPSetCombineMode(OVERLAY_DISP++, G_CC_MODULATERGBA_PRIM, G_CC_MODULATERGBA_PRIM);
+                if (gSaveContext.equips.buttonItems[7] == ITEM_BOW &&
+                    CVarGetInteger("gHoliday.lilDavid.BombArrows.Active", 0)) {
+                    Interface_DrawItemIconTexture(play, gItemIcons[ITEM_BOMB], 7);
+                }
                 Interface_DrawItemIconTexture(play, gItemIcons[gSaveContext.equips.buttonItems[7]], 7);
                 gDPPipeSync(OVERLAY_DISP++);
                 gDPSetCombineLERP(OVERLAY_DISP++, PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, TEXEL0, 0, PRIMITIVE, 0,
@@ -6937,6 +7034,41 @@ void Interface_DrawTextCharacter(GraphicsContext* gfx, int16_t x, int16_t y, voi
     CLOSE_DISPS(gfx);
 }
 
+void Interface_DrawTextCharacter_overlay(GraphicsContext* gfx, int16_t x, int16_t y, void* texture, uint16_t colorR,
+                                         uint16_t colorG, uint16_t colorB, uint16_t colorA, float textScale,
+                                         uint8_t textShadow) {
+
+    int32_t scale = R_TEXT_CHAR_SCALE * textScale;
+    int32_t sCharTexSize = (scale / 100.0f) * 16.0f;
+    int32_t sCharTexScale = 1024.0f / (scale / 100.0f);
+
+    OPEN_DISPS(gfx);
+
+    gDPPipeSync(OVERLAY_DISP++);
+
+    gDPLoadTextureBlock_4b(OVERLAY_DISP++, texture, G_IM_FMT_I, FONT_CHAR_TEX_WIDTH, FONT_CHAR_TEX_HEIGHT, 0,
+                           G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD,
+                           G_TX_NOLOD);
+
+    if (textShadow) {
+        // Draw drop shadow
+        gDPSetPrimColor(OVERLAY_DISP++, 0, 0, 0, 0, 0, colorA);
+        gSPWideTextureRectangle(
+            OVERLAY_DISP++, (x + R_TEXT_DROP_SHADOW_OFFSET) << 2, (y + R_TEXT_DROP_SHADOW_OFFSET) << 2,
+            (x + R_TEXT_DROP_SHADOW_OFFSET + sCharTexSize) << 2, (y + R_TEXT_DROP_SHADOW_OFFSET + sCharTexSize) << 2,
+            G_TX_RENDERTILE, 0, 0, sCharTexScale, sCharTexScale);
+    }
+
+    gDPPipeSync(OVERLAY_DISP++);
+
+    // Draw normal text
+    gDPSetPrimColor(OVERLAY_DISP++, 0, 0, colorR, colorG, colorB, colorA);
+    gSPWideTextureRectangle(OVERLAY_DISP++, x << 2, y << 2, (x + sCharTexSize) << 2, (y + sCharTexSize) << 2,
+                            G_TX_RENDERTILE, 0, 0, sCharTexScale, sCharTexScale);
+
+    CLOSE_DISPS(gfx);
+}
+
 uint16_t Interface_DrawTextLine(GraphicsContext* gfx, char text[], int16_t x, int16_t y, uint16_t colorR,
                                 uint16_t colorG, uint16_t colorB, uint16_t colorA, float textScale,
                                 uint8_t textShadow) {
@@ -6959,6 +7091,37 @@ uint16_t Interface_DrawTextLine(GraphicsContext* gfx, char text[], int16_t x, in
                 texture = Ship_GetCharFontTexture(processedText[i]);
                 Interface_DrawTextCharacter(gfx, x + kerningOffset, y + lineOffset, texture, colorR, colorG, colorB,
                                             colorA, textScale, textShadow);
+            }
+            kerningOffset +=
+                (uint16_t)(Ship_GetCharFontWidth(processedText[i]) * (R_TEXT_CHAR_SCALE / 100.0f) * textScale);
+        }
+    }
+
+    return kerningOffset;
+}
+
+uint16_t Interface_DrawTextLineOverlay(GraphicsContext* gfx, char text[], int16_t x, int16_t y, uint16_t colorR,
+                                       uint16_t colorG, uint16_t colorB, uint16_t colorA, float textScale,
+                                       uint8_t textShadow) {
+
+    uint16_t textureIndex;
+    uint16_t kerningOffset = 0;
+    uint16_t lineOffset = 0;
+    void* texture;
+    const char* processedText = Interface_ReplaceSpecialCharacters(text);
+    uint8_t textLength = strlen(processedText);
+
+    for (uint16_t i = 0; i < textLength; i++) {
+        if (processedText[i] == '\n') {
+            lineOffset += 15 * textScale;
+            kerningOffset = 0;
+        } else {
+            textureIndex = processedText[i] - 32;
+
+            if (textureIndex != 0) {
+                texture = Ship_GetCharFontTexture(processedText[i]);
+                Interface_DrawTextCharacter_overlay(gfx, (int16_t)(x + kerningOffset), (int16_t)(y + lineOffset),
+                                                    texture, colorR, colorG, colorB, colorA, textScale, textShadow);
             }
             kerningOffset +=
                 (uint16_t)(Ship_GetCharFontWidth(processedText[i]) * (R_TEXT_CHAR_SCALE / 100.0f) * textScale);

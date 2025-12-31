@@ -14,14 +14,15 @@ void GameInteractor_ExecuteOnLoadGame(int32_t fileNum) {
     GameInteractor::Instance->ExecuteHooks<GameInteractor::OnLoadGame>(fileNum);
 }
 
+void GameInteractor_ExecutePostLoadGame(int32_t fileNum) {
+    GameInteractor::Instance->ExecuteHooks<GameInteractor::PostLoadGame>(fileNum);
+}
+
 void GameInteractor_ExecuteOnExitGame(int32_t fileNum) {
     GameInteractor::Instance->ExecuteHooks<GameInteractor::OnExitGame>(fileNum);
 }
 
 void GameInteractor_ExecuteOnGameStateMainStart() {
-    // Cleanup all hooks at the start of each frame
-    GameInteractor::Instance->RemoveAllQueuedHooks();
-
     GameInteractor::Instance->ExecuteHooks<GameInteractor::OnGameStateMainStart>();
 }
 
@@ -56,6 +57,12 @@ void GameInteractor_ExecuteOnSceneInit(int16_t sceneNum) {
     GameInteractor::Instance->ExecuteHooksForFilter<GameInteractor::OnSceneInit>(sceneNum);
 }
 
+void GameInteractor_ExecuteOnRoomInit(int16_t roomNum) {
+    GameInteractor::Instance->ExecuteHooks<GameInteractor::OnRoomInit>(roomNum);
+    GameInteractor::Instance->ExecuteHooksForID<GameInteractor::OnRoomInit>(roomNum, roomNum);
+    GameInteractor::Instance->ExecuteHooksForFilter<GameInteractor::OnRoomInit>(roomNum);
+}
+
 void GameInteractor_ExecuteAfterSceneCommands(int16_t sceneNum) {
     GameInteractor::Instance->ExecuteHooks<GameInteractor::AfterSceneCommands>(sceneNum);
     GameInteractor::Instance->ExecuteHooksForID<GameInteractor::AfterSceneCommands>(sceneNum, sceneNum);
@@ -88,6 +95,10 @@ void GameInteractor_ExecuteOnSceneSpawnActors() {
 
 void GameInteractor_ExecuteOnPlayerUpdate() {
     GameInteractor::Instance->ExecuteHooks<GameInteractor::OnPlayerUpdate>();
+}
+
+void GameInteractor_ExecuteOnPlayerDeath() {
+    GameInteractor::Instance->ExecuteHooks<GameInteractor::OnPlayerDeath>();
 }
 
 void GameInteractor_ExecuteOnSetDoAction(uint16_t action) {
@@ -149,12 +160,18 @@ bool GameInteractor_ShouldActorUpdate(void* actor) {
     GameInteractor::Instance->ExecuteHooksForFilter<GameInteractor::ShouldActorUpdate>(actor, &result);
     return result;
 }
-
 void GameInteractor_ExecuteOnActorUpdate(void* actor) {
     GameInteractor::Instance->ExecuteHooks<GameInteractor::OnActorUpdate>(actor);
     GameInteractor::Instance->ExecuteHooksForID<GameInteractor::OnActorUpdate>(((Actor*)actor)->id, actor);
     GameInteractor::Instance->ExecuteHooksForPtr<GameInteractor::OnActorUpdate>((uintptr_t)actor, actor);
     GameInteractor::Instance->ExecuteHooksForFilter<GameInteractor::OnActorUpdate>(actor);
+}
+
+void GameInteractor_ExecuteOnActorDraw(void* actor) {
+    GameInteractor::Instance->ExecuteHooks<GameInteractor::OnActorDraw>(actor);
+    GameInteractor::Instance->ExecuteHooksForID<GameInteractor::OnActorDraw>(((Actor*)actor)->id, actor);
+    GameInteractor::Instance->ExecuteHooksForPtr<GameInteractor::OnActorDraw>((uintptr_t)actor, actor);
+    GameInteractor::Instance->ExecuteHooksForFilter<GameInteractor::OnActorDraw>(actor);
 }
 
 void GameInteractor_ExecuteOnActorKill(void* actor) {
@@ -193,6 +210,10 @@ void GameInteractor_ExecuteOnPlayerBonk() {
     GameInteractor::Instance->ExecuteHooks<GameInteractor::OnPlayerBonk>();
 }
 
+void GameInteractor_ExecuteOnPlayerRoll() {
+    GameInteractor::Instance->ExecuteHooks<GameInteractor::OnPlayerRoll>();
+}
+
 void GameInteractor_ExecuteOnPlayerHealthChange(int16_t amount) {
     GameInteractor::Instance->ExecuteHooks<GameInteractor::OnPlayerHealthChange>(amount);
 }
@@ -229,6 +250,12 @@ void GameInteractor_ExecuteOnPlayDrawEnd() {
     GameInteractor::Instance->ExecuteHooks<GameInteractor::OnPlayDrawEnd>();
 }
 
+void GameInteractor_ExecuteOnOpenText(u16* textId, bool* loadFromMessageTable) {
+    GameInteractor::Instance->ExecuteHooks<GameInteractor::OnOpenText>(textId, loadFromMessageTable);
+    GameInteractor::Instance->ExecuteHooksForID<GameInteractor::OnOpenText>(*textId, textId, loadFromMessageTable);
+    GameInteractor::Instance->ExecuteHooksForFilter<GameInteractor::OnOpenText>(textId, loadFromMessageTable);
+}
+
 bool GameInteractor_Should(GIVanillaBehavior flag, u32 result, ...) {
     // Only the external function can use the Variadic Function syntax
     // To pass the va args to the next caller must be done using va_list and reading the args into it
@@ -258,6 +285,10 @@ void GameInteractor_ExecuteOnSaveFile(int32_t fileNum, int32_t sectionID) {
 
 void GameInteractor_ExecuteOnLoadFile(int32_t fileNum) {
     GameInteractor::Instance->ExecuteHooks<GameInteractor::OnLoadFile>(fileNum);
+}
+
+void GameInteractor_ExecuteOnCopyFile(int32_t sourceFileNum, int32_t destFileNum) {
+    GameInteractor::Instance->ExecuteHooks<GameInteractor::OnCopyFile>(sourceFileNum, destFileNum);
 }
 
 void GameInteractor_ExecuteOnDeleteFile(int32_t fileNum) {
@@ -361,6 +392,20 @@ void GameInteractor_RegisterOnAssetAltChange(void (*fn)(void)) {
 
 void GameInteractor_ExecuteOnKaleidoUpdate() {
     GameInteractor::Instance->ExecuteHooks<GameInteractor::OnKaleidoUpdate>();
+}
+
+// Mark: Randomizer
+void GameInteractor_ExecuteOnRandomizerItemGivenHooks(uint32_t rc, GetItemEntry gi, uint8_t isGiSkipped) {
+    GameInteractor::Instance->ExecuteHooks<GameInteractor::OnRandomizerItemGivenHooks>(rc, gi, isGiSkipped);
+}
+
+// MARK: Archipelago
+void GameInteractor_ExecuteOnArchipelagoItemReceived(uint32_t rg) {
+    GameInteractor::Instance->ExecuteHooks<GameInteractor::OnArchipelagoItemReceived>(rg);
+}
+
+void GameInteractor_ExecuteOnRandomizerExternalCheck(uint32_t rc) {
+    GameInteractor::Instance->ExecuteHooks<GameInteractor::OnRandomizerExternalCheck>(rc);
 }
 
 // Mark: Audio

@@ -278,7 +278,7 @@ typedef struct {
 std::shared_ptr<Fast::Fast3dWindow> sohFast3dWindow;
 static OTRVersion DetectOTRVersion(std::string path, bool isMq);
 static bool VerifyArchiveVersion(OTRVersion version);
-std::string portArchivePath = "";
+static std::string portArchivePath = "";
 static bool sohArchiveVersionMatch = false;
 
 OTRGlobals::OTRGlobals() {
